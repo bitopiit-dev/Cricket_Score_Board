@@ -1,0 +1,13 @@
+{
+  "name": "Baridhi Premier League-2027",
+  "short_name": "BPL-2027",
+  "description": "Cricket scoring for Baridhi Premier League-2027",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f1f5f9",
+  "theme_color": "#065f46",
+  "lang": "bn",
+  "icons": [{ "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
