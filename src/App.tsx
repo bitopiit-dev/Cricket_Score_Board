@@ -8,7 +8,8 @@ import MorePage from './pages/MorePage';
 import NewMatchPage from './pages/NewMatchPage';
 import RulesPage from './pages/RulesPage';
 import ScoringPage from './pages/ScoringPage';
-import { FixturesPage, MediaPage, PointsPage, StatsPage } from './pages/SoonPages';
+import PointsPage from './pages/PointsPage';
+import { FixturesPage, MediaPage, StatsPage } from './pages/SoonPages';
 import TeamPage from './pages/TeamPage';
 import TeamsPage from './pages/TeamsPage';
 

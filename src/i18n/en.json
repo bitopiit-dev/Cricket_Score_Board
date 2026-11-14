@@ -289,7 +289,23 @@
     "media": "Tournament photos, arranged in albums, will appear here."
   },
   "points": {
-    "group": "Group {{g}}"
+    "group": "Group {{g}}",
+    "team": "Team",
+    "played": "P",
+    "won": "W",
+    "lost": "L",
+    "tied": "T/NR",
+    "points": "Pts",
+    "nrr": "NRR",
+    "playedLong": "Played",
+    "wonLong": "Won",
+    "lostLong": "Lost",
+    "tiedLong": "Tied / no result",
+    "qualifySuperSix": "Top {{n}} go to the Super Six",
+    "qualifySemis": "Top {{n}} go to the semi-finals",
+    "qualifiedMark": "(in a qualifying place)",
+    "superSixPending": "When every group match is finished, the six Super Six teams appear here, starting again from zero points.",
+    "legend": "P = played, W = won, L = lost, T/NR = tied or no result. Win {{win}}, tie/no result {{tie}}, loss {{loss}} points. Teams level on points are split by net run rate (NRR). Worked out from the fixture matches scored in the app."
   },
   "fixtures": {
     "matchNo": "Match {{n}}"

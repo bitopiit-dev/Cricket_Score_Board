@@ -23,20 +23,6 @@ export function FixturesPage() {
   );
 }
 
-export function PointsPage() {
-  const { t } = useTranslation();
-  return (
-    <Page>
-      <ComingSoon
-        icon="📊"
-        title={t('tabs.points')}
-        text={t('comingSoon.points')}
-        items={t('comingSoon.pointsItems', { returnObjects: true }) as string[]}
-      />
-    </Page>
-  );
-}
-
 export function StatsPage() {
   const { t } = useTranslation();
   return (
