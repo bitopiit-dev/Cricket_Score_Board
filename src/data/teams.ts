@@ -11,6 +11,8 @@ export interface TournamentPlayer {
   id: string;
   /** Shown exactly as written, never translated. */
   name: string;
+  /** Short name / nickname for tight spaces such as the scoring screen. */
+  shortName?: string;
   /** Path under public/, e.g. 'players/ddc/rahim-uddin.jpg'. Optional. */
   photo?: string;
   role?: PlayerRole;
@@ -85,7 +87,22 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
     name: 'Quality Flying Fighter',
     group: 'A',
     color: '#2563eb',
-    players: [],
+    players: [
+      squad('quality-flying-fighter', 'Ajmir Hossen', { shortName: 'Rashed', captain: true }),
+      squad('quality-flying-fighter', 'Asad Ahmed'),
+      squad('quality-flying-fighter', 'Billal Hossain'),
+      squad('quality-flying-fighter', 'Ibrahim'),
+      squad('quality-flying-fighter', 'Morshed'),
+      squad('quality-flying-fighter', 'Mamun'),
+      squad('quality-flying-fighter', 'Rakib'),
+      squad('quality-flying-fighter', 'Parvez'),
+      squad('quality-flying-fighter', 'Hridoy'),
+      squad('quality-flying-fighter', 'Abdur Rahman'),
+      squad('quality-flying-fighter', 'Sohel'),
+      squad('quality-flying-fighter', 'Tariqul', { substitute: true }),
+      squad('quality-flying-fighter', 'Saiful', { substitute: true }),
+      squad('quality-flying-fighter', 'Imran', { substitute: true }),
+    ],
   },
   { id: 'rainbow-cutting', name: 'Rainbow Cutting', group: 'A', color: '#db2777', players: [] },
   // Group B

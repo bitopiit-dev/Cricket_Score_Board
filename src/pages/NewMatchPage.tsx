@@ -155,6 +155,7 @@ export default function NewMatchPage() {
               .map((p) => ({
                 id: `${teamIds[i]}/${p.id}`,
                 name: p.name,
+                ...(p.shortName ? { shortName: p.shortName } : {}),
                 ...(p.captain ? { captain: true } : {}),
                 ...(p.viceCaptain ? { viceCaptain: true } : {}),
               }))
@@ -488,6 +489,7 @@ export default function NewMatchPage() {
                             />
                             <span className="flex-1">
                               {p.name}
+                              {p.shortName && ` (${p.shortName})`}
                               {captainMark(p)}
                             </span>
                             {p.substitute && (

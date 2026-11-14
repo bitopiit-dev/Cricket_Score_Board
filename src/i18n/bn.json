@@ -210,7 +210,8 @@
     "warn_tooMany": "স্কোয়াডে {{n}} জন খেলোয়াড়; নিয়ম ৮ অনুযায়ী সর্বোচ্চ {{max}} জন।",
     "warn_tooManySubs": "অতিরিক্ত খেলোয়াড় {{subs}} জনের বেশি।",
     "warn_twoCaptains": "একাধিক অধিনায়ক চিহ্নিত।",
-    "warn_twoViceCaptains": "একাধিক সহ-অধিনায়ক চিহ্নিত।"
+    "warn_twoViceCaptains": "একাধিক সহ-অধিনায়ক চিহ্নিত।",
+    "nickname": "ডাকনাম: {{name}}"
   },
   "role": {
     "batter": "ব্যাটার",

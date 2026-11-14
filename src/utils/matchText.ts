@@ -6,7 +6,7 @@ export function playerName(match: Match, id: string | null | undefined): string 
   if (!id) return '';
   for (const team of match.teams) {
     const p = team.players.find((x) => x.id === id);
-    if (p) return p.name + captainMark(p);
+    if (p) return (p.shortName ?? p.name) + captainMark(p);
   }
   return '?';
 }

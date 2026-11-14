@@ -214,7 +214,8 @@
     "warn_tooMany": "The squad has {{n}} players; rule 8 allows at most {{max}}.",
     "warn_tooManySubs": "More than {{subs}} extras.",
     "warn_twoCaptains": "More than one captain marked.",
-    "warn_twoViceCaptains": "More than one vice-captain marked."
+    "warn_twoViceCaptains": "More than one vice-captain marked.",
+    "nickname": "Known as {{name}}"
   },
   "role": {
     "batter": "Batter",

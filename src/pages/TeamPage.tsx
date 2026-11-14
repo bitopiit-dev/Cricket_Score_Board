@@ -120,6 +120,11 @@ function PlayerGrid({
                 {p.name}
                 {captainMark(p)}
               </span>
+              {p.shortName && (
+                <span className="-mt-1 text-xs text-slate-500 dark:text-slate-400">
+                  {t('team.nickname', { name: p.shortName })}
+                </span>
+              )}
               {tags.length > 0 && (
                 <span className="text-xs text-slate-500 dark:text-slate-400">
                   {tags.join(' · ')}

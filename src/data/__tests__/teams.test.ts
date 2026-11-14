@@ -121,3 +121,41 @@ describe('squad warnings', () => {
     expect(squadWarnings({ players }, SQUAD_LIMITS)).toEqual([]);
   });
 });
+
+describe('Quality Flying Fighter squad', () => {
+  const qff = findTeam('quality-flying-fighter')!;
+
+  it('has the 14 players in the given order, without titles', () => {
+    expect(qff.players.map((p) => p.name)).toEqual([
+      'Ajmir Hossen',
+      'Asad Ahmed',
+      'Billal Hossain',
+      'Ibrahim',
+      'Morshed',
+      'Mamun',
+      'Rakib',
+      'Parvez',
+      'Hridoy',
+      'Abdur Rahman',
+      'Sohel',
+      'Tariqul',
+      'Saiful',
+      'Imran',
+    ]);
+    expect(qff.players.every((p) => !/^mr\.?\s/i.test(p.name))).toBe(true);
+  });
+
+  it('Ajmir Hossen (Rashed) is captain; the last three are the extras', () => {
+    expect(qff.players[0]).toMatchObject({
+      id: 'ajmir-hossen',
+      shortName: 'Rashed',
+      captain: true,
+      photo: 'players/quality-flying-fighter/ajmir-hossen.jpg',
+    });
+    expect(qff.players.filter((p) => p.substitute).map((p) => p.name)).toEqual([
+      'Tariqul',
+      'Saiful',
+      'Imran',
+    ]);
+  });
+});

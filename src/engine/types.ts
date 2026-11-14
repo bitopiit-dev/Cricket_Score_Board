@@ -11,6 +11,8 @@ export type TeamIndex = 0 | 1;
 export interface Player {
   id: string;
   name: string;
+  /** Short name / nickname used where space is tight. */
+  shortName?: string;
   captain?: boolean;
   viceCaptain?: boolean;
 }
