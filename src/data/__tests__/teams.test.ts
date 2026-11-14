@@ -375,3 +375,48 @@ describe('no captain warning', () => {
     ).toEqual([]);
   });
 });
+
+describe('Power Player squad', () => {
+  const pp = findTeam('power-player')!;
+
+  it('has the 14 players in the given order', () => {
+    expect(pp.players.map(playerDisplayName)).toEqual([
+      'Nazmul',
+      'Sharif',
+      'Hridoy',
+      'Arafat',
+      'Saiful',
+      'Saddam',
+      'Al-Amin',
+      'Ali Ashraf',
+      'Ismail',
+      'T.S Tanvir',
+      'Sabuj',
+      'Kalam',
+      'Rashed',
+      'Al-Amin (2)',
+    ]);
+  });
+
+  it('Nazmul is captain; the two Al-Amins are kept apart', () => {
+    expect(pp.players.filter((p) => p.captain).map((p) => p.name)).toEqual(['Nazmul']);
+    expect(pp.players[6]).toMatchObject({
+      id: 'al-amin',
+      photo: 'players/power-player/al-amin.jpg',
+    });
+    expect(pp.players[13]).toMatchObject({
+      id: 'al-amin-2',
+      photo: 'players/power-player/al-amin-2.jpg',
+      substitute: true,
+    });
+    expect(pp.players[9]).toMatchObject({ id: 't-s-tanvir' });
+    expect(squadWarnings(pp, SQUAD_LIMITS)).toEqual([]);
+  });
+
+  it('keeps only names, captaincy and squad role: no contact or department details', () => {
+    const allowed = ['id', 'name', 'photo', 'captain', 'substitute', 'nameTag'];
+    for (const p of pp.players) {
+      for (const key of Object.keys(p)) expect(allowed, `${p.name}: ${key}`).toContain(key);
+    }
+  });
+});
