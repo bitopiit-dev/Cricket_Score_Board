@@ -180,6 +180,13 @@ describe('overs and bowlers', () => {
     expect(bowl(g, 'b2').maidens).toBe(0);
     expect(g.inn.overs).toHaveLength(1);
   });
+
+  it('lifts the quota when it would leave nobody able to bowl', () => {
+    // 2 players per side, quota 1 over: after b1 and b2 bowl one each, b1 must still be allowed.
+    const g = new Game(makeMatch(2, { overs: 5, maxOversPerBowler: 1 })).start('a1', 'a2', 'b1');
+    g.balls(0, 0, 0, 0, 0, 0).bowler('b2').balls(0, 0, 0, 0, 0, 0);
+    expect(g.tryDo({ type: 'newBowler', bowlerId: 'b1' })).toBeNull();
+  });
 });
 
 describe('wickets', () => {

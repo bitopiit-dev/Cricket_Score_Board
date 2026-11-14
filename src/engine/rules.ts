@@ -127,13 +127,17 @@ export function availableBatters(innings: InningsState, team: Team): string[] {
 
 export type BowlerBlockReason = 'previousOver' | 'quotaUsed';
 
-/** For each bowling-team player, why they can't bowl the next over (or null). */
+/**
+ * For each bowling-team player, why they can't bowl the next over (or null).
+ * If the quota would leave nobody able to bowl (small local teams), the quota
+ * is lifted so the match can go on.
+ */
 export function bowlerEligibility(
   innings: InningsState,
   team: Team,
   settings: MatchSettings,
 ): { playerId: string; blocked: BowlerBlockReason | null }[] {
-  return team.players.map((p) => {
+  const result = team.players.map((p): { playerId: string; blocked: BowlerBlockReason | null } => {
     if (p.id === innings.previousOverBowlerId) return { playerId: p.id, blocked: 'previousOver' };
     const stats = innings.bowlers.find((b) => b.playerId === p.id);
     if (
@@ -145,6 +149,10 @@ export function bowlerEligibility(
     }
     return { playerId: p.id, blocked: null };
   });
+  if (result.every((r) => r.blocked !== null)) {
+    return result.map((r) => (r.blocked === 'quotaUsed' ? { ...r, blocked: null } : r));
+  }
+  return result;
 }
 
 /** 75 legal balls -> "12.3" */
