@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { MAX_SQUAD, MAX_SUBSTITUTES } from '../../engine/rules';
 import { TOURNAMENT_TEAMS, findTeam, initials, teamInitial } from '../teams';
 
 describe('tournament teams', () => {
@@ -43,6 +44,11 @@ describe('squads', () => {
         if (p.photo) expect(p.photo.startsWith(`players/${team.id}/`), p.photo).toBe(true);
       }
       expect(team.players.filter((p) => p.captain).length, team.name).toBeLessThanOrEqual(1);
+      // Rule 8: 11 players plus 3 extras
+      expect(team.players.length, team.name).toBeLessThanOrEqual(MAX_SQUAD);
+      expect(team.players.filter((p) => p.substitute).length, team.name).toBeLessThanOrEqual(
+        MAX_SUBSTITUTES,
+      );
     }
   });
 

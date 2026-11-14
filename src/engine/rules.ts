@@ -25,6 +25,16 @@ export const DEFAULT_SETTINGS: MatchSettings = {
 
 export const DEFAULT_PLAYERS_PER_SIDE = 11;
 
+/** Super over: one over, ends after two wickets. */
+export const SUPER_OVER = { overs: 1, wickets: 2 } as const;
+
+/** Runs deducted when a batter deliberately kicks the ball (rule 25). */
+export const KICK_PENALTY_RUNS = 4;
+
+/** Squad size: 11 plus 3 extras (rule 8). */
+export const MAX_SQUAD = 14;
+export const MAX_SUBSTITUTES = 3;
+
 /**
  * The user's tournament rules. Each one can be switched on/off separately
  * in match setup; when on, the matching setting is fixed to this value.
@@ -35,6 +45,9 @@ export const TOURNAMENT_RULES = {
   shortPitch: true,
   sixOut: true,
   maxOversPerBowler: 3,
+  catchNewBatterOnStrike: true,
+  reviewsPerTeam: 1,
+  superOver: true,
 } as const;
 
 export type TournamentRule = keyof typeof TOURNAMENT_RULES;
@@ -77,10 +90,21 @@ export function strikerOnly(kind: Wicket['kind']): boolean {
   return kind !== 'runOut';
 }
 
-export function battingTeamFor(inningsIndex: 0 | 1, toss: Toss): TeamIndex {
+/**
+ * Which team bats in innings `index`. Main innings follow the toss. In a
+ * super over the team that batted second in the previous pair bats first.
+ */
+export function battingTeamFor(
+  index: number,
+  toss: Toss,
+  previous: readonly { battingTeam: TeamIndex }[] = [],
+): TeamIndex {
   const firstBatting: TeamIndex =
     toss.decision === 'bat' ? toss.winner : ((1 - toss.winner) as TeamIndex);
-  return inningsIndex === 0 ? firstBatting : ((1 - firstBatting) as TeamIndex);
+  if (index === 0) return firstBatting;
+  if (index === 1) return (1 - firstBatting) as TeamIndex;
+  const prev = previous[index - 1]?.battingTeam ?? ((1 - firstBatting) as TeamIndex);
+  return index % 2 === 0 ? prev : ((1 - prev) as TeamIndex);
 }
 
 /** Wickets that end the innings. */

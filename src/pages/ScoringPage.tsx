@@ -13,16 +13,25 @@ import {
 import { RunPad } from '../components/scoring/RunPad';
 import { ExtrasSheet, OtherRunsSheet } from '../components/scoring/RunsSheets';
 import { ScorePanel } from '../components/scoring/ScorePanel';
-import { InningsBreakCard, ResultCard } from '../components/scoring/StatusCards';
+import { ReviewSheet } from '../components/scoring/ReviewSheet';
+import {
+  InningsBreakCard,
+  ResultCard,
+  SuperOverBreakCard,
+} from '../components/scoring/StatusCards';
 import { ThisOver } from '../components/scoring/ThisOver';
 import { WicketSheet } from '../components/scoring/WicketSheet';
+import { KICK_PENALTY_RUNS } from '../engine/rules';
 import type { ExtraType } from '../engine/types';
+import { useFormat } from '../hooks/useFormat';
 import { useMatchStore } from '../store/matchStore';
 
-type Open = null | 'wicket' | 'other' | 'more' | 'retire' | 'changeBowler' | 'openers' | ExtraType;
+type Open =
+  null | 'wicket' | 'other' | 'more' | 'retire' | 'changeBowler' | 'openers' | 'review' | ExtraType;
 
 export default function ScoringPage() {
   const { t } = useTranslation();
+  const f = useFormat();
   const { id } = useParams<{ id: string }>();
   const { match, state, notFound, lastError, load, dispatch, undo, clearError } = useMatchStore();
   const [open, setOpen] = useState<Open>(null);
@@ -63,12 +72,16 @@ export default function ScoringPage() {
   };
   const canUndo = match.events.length > 0;
 
+  const duringInnings = phase === 'inPlay' || phase === 'needBowler' || phase === 'needBatter';
   const moreEnabled: Record<MoreAction, boolean> = {
     swapStrike: (phase === 'inPlay' || phase === 'needBowler') && !inn?.loneBatter,
     retire: phase === 'inPlay' || phase === 'needBowler',
     changeBowler: phase === 'inPlay',
-    endInnings: phase === 'inPlay' || phase === 'needBowler' || phase === 'needBatter',
+    review: duringInnings && !!state.reviewsLeft?.some((n) => n > 0),
+    penalty: duringInnings,
+    endInnings: duringInnings,
   };
+  const between = phase === 'inningsBreak' || phase === 'superOverBreak';
 
   function onMore(action: MoreAction) {
     switch (action) {
@@ -80,6 +93,22 @@ export default function ScoringPage() {
         break;
       case 'changeBowler':
         setOpen('changeBowler');
+        break;
+      case 'review':
+        setOpen('review');
+        break;
+      case 'penalty':
+        if (
+          inn &&
+          window.confirm(
+            t('scoring.penaltyConfirm', {
+              n: f.num(KICK_PENALTY_RUNS),
+              team: match!.teams[inn.battingTeam].name,
+            }),
+          )
+        ) {
+          send({ type: 'penalty', runs: -KICK_PENALTY_RUNS });
+        }
         break;
       case 'endInnings':
         if (window.confirm(t('scoring.endInningsConfirm'))) send({ type: 'endInnings' });
@@ -115,7 +144,7 @@ export default function ScoringPage() {
         </div>
       )}
 
-      {inn && <ScorePanel match={match} inn={inn} />}
+      {inn && <ScorePanel match={match} inn={inn} state={state} />}
 
       <main className="mx-auto flex w-full max-w-lg flex-1 flex-col">
         {phase === 'inningsBreak' && (
@@ -126,9 +155,17 @@ export default function ScoringPage() {
             onUndo={undo}
           />
         )}
+        {phase === 'superOverBreak' && (
+          <SuperOverBreakCard
+            match={match}
+            state={state}
+            onStart={() => setOpen('openers')}
+            onUndo={undo}
+          />
+        )}
         {phase === 'completed' && <ResultCard match={match} state={state} onUndo={undo} />}
 
-        {inn && phase !== 'inningsBreak' && phase !== 'completed' && (
+        {inn && !between && phase !== 'completed' && (
           <>
             <CreasePanel match={match} inn={inn} />
             <ThisOver inn={inn} />
@@ -171,16 +208,17 @@ export default function ScoringPage() {
       {phase === 'needOpeners' && (
         <OpenersSheet
           match={match}
-          inningsIndex={0}
+          innings={state.innings}
           onStart={(s, n, b) =>
             send({ type: 'inningsStart', strikerId: s, nonStrikerId: n, bowlerId: b })
           }
         />
       )}
-      {phase === 'inningsBreak' && open === 'openers' && (
+      {between && open === 'openers' && (
         <OpenersSheet
+          key={state.innings.length}
           match={match}
-          inningsIndex={1}
+          innings={state.innings}
           onClose={close}
           onStart={(s, n, b) =>
             send({ type: 'inningsStart', strikerId: s, nonStrikerId: n, bowlerId: b })
@@ -253,6 +291,15 @@ export default function ScoringPage() {
           inn={inn}
           onClose={close}
           onConfirm={(batterId, kind) => send({ type: 'retire', batterId, kind })}
+        />
+      )}
+      {open === 'review' && inn && state.reviewsLeft && (
+        <ReviewSheet
+          match={match}
+          inn={inn}
+          reviewsLeft={state.reviewsLeft}
+          onClose={close}
+          onConfirm={(team, successful) => send({ type: 'review', team, successful })}
         />
       )}
       <MoreSheet

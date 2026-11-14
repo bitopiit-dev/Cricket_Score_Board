@@ -10,8 +10,8 @@ export function economy(b: BowlerStats): number {
   return b.legalBalls === 0 ? 0 : (b.runsConceded * BALLS_PER_OVER) / b.legalBalls;
 }
 
-export function ballsRemaining(inn: InningsState, match: Match): number {
-  return Math.max(0, match.settings.overs * BALLS_PER_OVER - inn.legalBalls);
+export function ballsRemaining(inn: InningsState): number {
+  return Math.max(0, inn.oversLimit * BALLS_PER_OVER - inn.legalBalls);
 }
 
 /** Runs still needed in a chase, or null in the first innings. */
@@ -19,10 +19,10 @@ export function runsNeeded(inn: InningsState): number | null {
   return inn.target === null ? null : Math.max(0, inn.target - inn.runs);
 }
 
-export function requiredRunRate(inn: InningsState, match: Match): number | null {
+export function requiredRunRate(inn: InningsState): number | null {
   const need = runsNeeded(inn);
   if (need === null) return null;
-  const balls = ballsRemaining(inn, match);
+  const balls = ballsRemaining(inn);
   return balls === 0 ? null : (need * BALLS_PER_OVER) / balls;
 }
 

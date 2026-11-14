@@ -60,7 +60,10 @@
     "ruleBowlerLimit": "Max {{n}} overs per bowler",
     "fixedByRule": "Set by tournament rule",
     "pickTeam": "Pick a team from the list",
-    "otherTeam": "Other team (type a name)"
+    "otherTeam": "Other team (type a name)",
+    "ruleCatchStrike": "After a catch, the new batter takes strike",
+    "ruleReview": "{{n}} review per team (kept if successful)",
+    "ruleSuperOver": "Tie decided by a one-over Super Over"
   },
   "scoring": {
     "crr": "CRR",
@@ -117,7 +120,23 @@
     "oversOf": "{{overs}} / {{total}} ov",
     "loneBatter": "Batting alone",
     "sixOut": "Six Out",
-    "shortPitch": "Short pitch"
+    "shortPitch": "Short pitch",
+    "superOver": "Super Over",
+    "superOverN": "Super Over {{n}}",
+    "scoresLevel": "Scores level! Match tied",
+    "superOverNext": "The result will be decided by a one-over Super Over",
+    "startSuperOver": "Start Super Over",
+    "startSuperOverChase": "Start Super Over chase",
+    "penaltyKick": "Penalty: ball kicked (−{{n}} runs)",
+    "penaltyConfirm": "Deduct {{n}} runs from {{team}}'s total?",
+    "penalty": "Penalty",
+    "review": "Review",
+    "reviewsLeft": "Reviews left",
+    "reviewBy": "Which team reviewed?",
+    "reviewResult": "Review result",
+    "reviewSuccessful": "Successful (review kept)",
+    "reviewFailed": "Unsuccessful (review lost)",
+    "reviewNoneLeft": "No review left"
   },
   "endReason": {
     "allOut": "All out",
@@ -130,7 +149,8 @@
     "wonByRuns_other": "{{team}} won by {{n}} runs",
     "wonByWickets_one": "{{team}} won by {{n}} wicket",
     "wonByWickets_other": "{{team}} won by {{n}} wickets",
-    "tie": "Match tied"
+    "tie": "Match tied",
+    "wonSuperOver": "{{team}} won the Super Over"
   },
   "dismissal": {
     "bowled": "Bowled",
@@ -160,7 +180,9 @@
     "dismissalNotAllowed": "That dismissal is not possible on this delivery.",
     "batterNotAtCrease": "That batter cannot be out this way.",
     "batterNotAvailable": "That batter cannot come in.",
-    "bowlerNotEligible": "That bowler cannot bowl now."
+    "bowlerNotEligible": "That bowler cannot bowl now.",
+    "reviewsOff": "Reviews are not on for this match",
+    "noReviewLeft": "This team has no review left"
   },
   "team": {
     "players": "Players",
@@ -176,5 +198,33 @@
     "allRounder": "All-rounder",
     "wicketKeeper": "Wicketkeeper",
     "captain": "Captain"
+  },
+  "nav": {
+    "label": "Main menu",
+    "home": "Home",
+    "rules": "Rules",
+    "awards": "Awards"
+  },
+  "rules": {
+    "title": "Rules",
+    "subtitle": "The {{n}} rules of BPL-2027",
+    "search": "Search rules (word or number)",
+    "noResults": "No rule matches this search",
+    "organisedBy": "Organised by",
+    "inApp": "Applied in the app"
+  },
+  "awards": {
+    "title": "Awards",
+    "manOfSeries": "Man of the Series",
+    "bestWicketTaker": "Best Wicket-Taker",
+    "points": "{{n}} pts",
+    "wickets_one": "{{n}} wicket",
+    "wickets_other": "{{n}} wickets",
+    "mosDetail": "{{runs}} runs, {{wickets}} wkts, {{fielding}} fielding",
+    "bowlingDetail": "{{overs}} ov, {{runs}} runs, econ {{econ}}",
+    "formula": "Points: {{run}} per run, {{wicket}} per wicket, {{fielding}} per catch/stumping/run out, {{maiden}} per maiden.",
+    "note": "Only completed tournament matches count (both teams picked from the list); super overs are left out. This is a calculated suggestion; the committee makes the final decision.",
+    "empty": "No tournament match has finished yet. Matches where both teams are picked from the list are counted here.",
+    "none": "Nobody yet"
   }
 }

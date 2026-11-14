@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { BottomNav } from '../components/common/BottomNav';
 import { LanguageToggle } from '../components/common/Header';
 import { APP_SUBTITLE, APP_TITLE } from '../config/app';
 import { SectionTitle, btn } from '../components/common/controls';
@@ -22,7 +23,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="min-h-dvh">
+    <div className="min-h-dvh pb-24">
       <header className="relative bg-emerald-800 px-4 pt-[max(1.5rem,env(safe-area-inset-top))] pb-6 text-center text-white dark:bg-emerald-950">
         <div className="absolute top-[max(0.75rem,env(safe-area-inset-top))] right-3">
           <LanguageToggle />
@@ -70,6 +71,7 @@ export default function HomePage() {
               </div>
               {s.innings.map((inn) => (
                 <div key={inn.index} className="tabular text-sm text-slate-600 dark:text-slate-400">
+                  {inn.superOver && `${t('scoring.superOver')} · `}
                   {m.teams[inn.battingTeam].name}: {f.num(inn.runs)}/{f.num(inn.wickets)} (
                   {f.overs(inn.legalBalls)})
                 </div>
@@ -102,6 +104,7 @@ export default function HomePage() {
           </ul>
         </section>
       </main>
+      <BottomNav />
     </div>
   );
 }

@@ -118,20 +118,22 @@ export function BowlerSheet({
 /** Openers and opening bowler for an innings. */
 export function OpenersSheet({
   match,
-  inningsIndex,
+  innings,
   onStart,
   onUndo,
   onClose,
 }: {
   match: Match;
-  inningsIndex: 0 | 1;
+  /** Innings played so far; the sheet opens the next one. */
+  innings: InningsState[];
   onStart: (strikerId: string, nonStrikerId: string, bowlerId: string) => void;
   onUndo?: () => void;
   onClose?: () => void;
 }) {
   const { t } = useTranslation();
   const f = useFormat();
-  const batTeam = battingTeamFor(inningsIndex, match.toss);
+  const inningsIndex = innings.length;
+  const batTeam = battingTeamFor(inningsIndex, match.toss, innings);
   const batters = match.teams[batTeam].players;
   const bowlers = match.teams[1 - batTeam].players;
   const [striker, setStriker] = useState(batters[0].id);
@@ -159,7 +161,11 @@ export function OpenersSheet({
   return (
     <Sheet
       open
-      title={`${t('scoring.inningsN', { n: f.num(inningsIndex + 1) })} · ${t('scoring.selectOpeners')}`}
+      title={`${
+        inningsIndex >= 2
+          ? t('scoring.superOver')
+          : t('scoring.inningsN', { n: f.num(inningsIndex + 1) })
+      } · ${t('scoring.selectOpeners')}`}
       onClose={onClose}
       footer={
         <>

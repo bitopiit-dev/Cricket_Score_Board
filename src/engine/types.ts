@@ -40,6 +40,12 @@ export interface MatchSettings {
   sixOut?: boolean;
   /** Played on a short pitch (informational only, no effect on scoring). */
   shortPitch?: boolean;
+  /** After a catch, the incoming batter always takes strike (even at the end of an over). */
+  catchNewBatterOnStrike?: boolean;
+  /** Reviews per team for the whole match; 0 / missing = no reviews. */
+  reviewsPerTeam?: number;
+  /** A tie is decided by a one-over super over (repeated while tied). */
+  superOver?: boolean;
 }
 
 export interface Toss {
@@ -116,6 +122,22 @@ export interface SwapStrikeEvent extends EventBase {
   type: 'swapStrike';
 }
 
+/**
+ * Runs added to (positive) or taken from (negative) the batting team's
+ * total, e.g. -4 when a batter deliberately kicks the ball. Not a delivery.
+ */
+export interface PenaltyEvent extends EventBase {
+  type: 'penalty';
+  runs: number;
+}
+
+/** A team used a review. A failed review is lost; a successful one is kept. */
+export interface ReviewEvent extends EventBase {
+  type: 'review';
+  team: TeamIndex;
+  successful: boolean;
+}
+
 /** Manually close the current innings (e.g. abandoned / conceded). */
 export interface EndInningsEvent extends EventBase {
   type: 'endInnings';
@@ -128,6 +150,8 @@ export type MatchEvent =
   | NewBowlerEvent
   | RetireEvent
   | SwapStrikeEvent
+  | PenaltyEvent
+  | ReviewEvent
   | EndInningsEvent;
 
 /** Distributive Omit so each union member keeps its own fields. */
@@ -224,7 +248,15 @@ export interface OverSummary {
 export type InningsEndReason = 'allOut' | 'oversComplete' | 'targetReached' | 'manual';
 
 export interface InningsState {
-  index: 0 | 1;
+  /** 0 and 1 are the main innings; 2+ are super overs (in pairs). */
+  index: number;
+  superOver: boolean;
+  /** Overs available in this innings (1 in a super over). */
+  oversLimit: number;
+  /** Wickets that end this innings (2 in a super over). */
+  wicketsLimit: number;
+  /** Net penalty runs included in `runs` (negative for deductions). */
+  penaltyRuns: number;
   battingTeam: TeamIndex;
   bowlingTeam: TeamIndex;
   runs: number;
@@ -250,14 +282,34 @@ export interface InningsState {
 }
 
 export type Phase =
-  'needOpeners' | 'needBatter' | 'needBowler' | 'inPlay' | 'inningsBreak' | 'completed';
+  | 'needOpeners'
+  | 'needBatter'
+  | 'needBowler'
+  | 'inPlay'
+  | 'inningsBreak'
+  /** Scores level after a pair of innings: a super over is next. */
+  | 'superOverBreak'
+  | 'completed';
 
 export type MatchResult =
-  { kind: 'won'; winner: TeamIndex; by: 'runs' | 'wickets'; margin: number } | { kind: 'tie' };
+  | { kind: 'won'; winner: TeamIndex; by: 'runs' | 'wickets'; margin: number }
+  /** Decided by a super over; margin is 0. */
+  | { kind: 'won'; winner: TeamIndex; by: 'superOver'; margin: 0 }
+  | { kind: 'tie' };
+
+export interface ReviewRecord {
+  team: TeamIndex;
+  successful: boolean;
+  inningsIndex: number;
+  legalBalls: number;
+}
 
 export interface MatchState {
   innings: InningsState[];
   current: InningsState | null;
   phase: Phase;
   result: MatchResult | null;
+  /** Reviews left per team, or null when reviews are off. */
+  reviewsLeft: [number, number] | null;
+  reviews: ReviewRecord[];
 }

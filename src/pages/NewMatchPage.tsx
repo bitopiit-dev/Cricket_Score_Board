@@ -107,6 +107,9 @@ export default function NewMatchPage() {
         maxOversPerBowler: bowlerLimit,
         sixOut: rules.sixOut,
         shortPitch: rules.shortPitch,
+        catchNewBatterOnStrike: rules.catchNewBatterOnStrike,
+        reviewsPerTeam: rules.reviewsPerTeam ? TOURNAMENT_RULES.reviewsPerTeam : 0,
+        superOver: rules.superOver,
       },
     });
     navigate(`/match/${id}`, { replace: true });
@@ -214,6 +217,21 @@ export default function NewMatchPage() {
               })}
               checked={rules.maxOversPerBowler}
               onChange={(on) => setRule('maxOversPerBowler', on)}
+            />
+            <Toggle
+              label={t('newMatch.ruleCatchStrike')}
+              checked={rules.catchNewBatterOnStrike}
+              onChange={(on) => setRule('catchNewBatterOnStrike', on)}
+            />
+            <Toggle
+              label={t('newMatch.ruleReview', { n: f.num(TOURNAMENT_RULES.reviewsPerTeam) })}
+              checked={rules.reviewsPerTeam}
+              onChange={(on) => setRule('reviewsPerTeam', on)}
+            />
+            <Toggle
+              label={t('newMatch.ruleSuperOver')}
+              checked={rules.superOver}
+              onChange={(on) => setRule('superOver', on)}
             />
           </div>
         </Card>

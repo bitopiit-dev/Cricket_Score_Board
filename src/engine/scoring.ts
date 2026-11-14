@@ -1,5 +1,6 @@
 import {
   BALLS_PER_OVER,
+  SUPER_OVER,
   allowedDismissals,
   availableBatters,
   ballRuns,
@@ -21,7 +22,9 @@ import type {
   MatchEventInput,
   MatchState,
   Phase,
+  ReviewRecord,
   RetireEvent,
+  TeamIndex,
 } from './types';
 
 /** Per-over bookkeeping that is not part of the public state. */
@@ -38,11 +41,14 @@ export function deriveMatchState(match: Match): MatchState {
   const innings: InningsState[] = [];
   let cur: InningsState | null = null;
   let over: OverContext = { conceded: 0, bowlerChanged: false };
+  const perTeam = match.settings.reviewsPerTeam ?? 0;
+  const reviewsLeft: [number, number] | null = perTeam > 0 ? [perTeam, perTeam] : null;
+  const reviews: ReviewRecord[] = [];
 
   for (const ev of match.events) {
     if (ev.type === 'inningsStart') {
-      if (innings.length >= 2) continue;
-      cur = createInnings(innings.length as 0 | 1, match, innings[0]);
+      if (cur && !cur.ended) continue;
+      cur = createInnings(innings.length, match, innings);
       innings.push(cur);
       addBatter(cur, ev.strikerId);
       addBatter(cur, ev.nonStrikerId);
@@ -86,6 +92,21 @@ export function deriveMatchState(match: Match): MatchState {
       case 'swapStrike':
         swapEnds(cur);
         break;
+      case 'penalty':
+        cur.runs += ev.runs;
+        cur.penaltyRuns += ev.runs;
+        break;
+      case 'review':
+        reviews.push({
+          team: ev.team,
+          successful: ev.successful,
+          inningsIndex: cur.index,
+          legalBalls: cur.legalBalls,
+        });
+        if (reviewsLeft && !ev.successful) {
+          reviewsLeft[ev.team] = Math.max(0, reviewsLeft[ev.team] - 1);
+        }
+        break;
       case 'endInnings':
         cur.ended = true;
         cur.endReason = 'manual';
@@ -94,19 +115,24 @@ export function deriveMatchState(match: Match): MatchState {
     checkInningsEnd(cur, match);
   }
 
-  const phase = computePhase(innings);
-  const result =
-    phase === 'completed' && innings.length === 2
-      ? computeResult(innings[0], innings[1], match)
-      : null;
+  const phase = computePhase(innings, match);
+  const result = phase === 'completed' ? computeResult(innings) : null;
 
-  return { innings, current: cur, phase, result };
+  return { innings, current: cur, phase, result, reviewsLeft, reviews };
 }
 
-function createInnings(index: 0 | 1, match: Match, first?: InningsState): InningsState {
-  const battingTeam = battingTeamFor(index, match.toss);
+function createInnings(index: number, match: Match, previous: InningsState[]): InningsState {
+  const battingTeam = battingTeamFor(index, match.toss, previous);
+  const superOver = index >= 2;
+  const allOut = maxWickets(match.teams[battingTeam], match.settings);
+  // The second innings of each pair chases the first.
+  const chasing = index % 2 === 1 ? previous[index - 1] : undefined;
   return {
     index,
+    superOver,
+    oversLimit: superOver ? SUPER_OVER.overs : match.settings.overs,
+    wicketsLimit: superOver ? Math.min(SUPER_OVER.wickets, allOut) : allOut,
+    penaltyRuns: 0,
     battingTeam,
     bowlingTeam: battingTeam === 0 ? 1 : 0,
     runs: 0,
@@ -124,7 +150,7 @@ function createInnings(index: 0 | 1, match: Match, first?: InningsState): Inning
     bowlerId: null,
     previousOverBowlerId: null,
     freeHitNext: false,
-    target: index === 1 && first ? first.runs + 1 : null,
+    target: chasing ? chasing.runs + 1 : null,
     ended: false,
     endReason: null,
   };
@@ -204,7 +230,7 @@ function vacate(inn: InningsState, playerId: string) {
 
 /** Last-man-stands: when nobody is left to come in, the survivor bats alone. */
 function handleVacancy(inn: InningsState, match: Match) {
-  if (!match.settings.lastManStands) return;
+  if (!match.settings.lastManStands || inn.superOver) return;
   const survivors = [inn.strikerId, inn.nonStrikerId].filter((x): x is string => x !== null);
   if (survivors.length !== 1) return;
   if (availableBatters(inn, match.teams[inn.battingTeam]).length > 0) return;
@@ -299,6 +325,19 @@ function applyBall(inn: InningsState, ev: BallEvent, match: Match, over: OverCon
     inn.bowlerId = null;
     swapEnds(inn);
   }
+
+  // Tournament rule: after a catch the incoming batter takes strike,
+  // whatever the runs or the end of the over did to the ends.
+  if (
+    ev.wicket?.kind === 'caught' &&
+    settings.catchNewBatterOnStrike &&
+    inn.strikerId !== null &&
+    inn.nonStrikerId === null &&
+    !inn.loneBatter
+  ) {
+    inn.nonStrikerId = inn.strikerId;
+    inn.strikerId = null;
+  }
 }
 
 function applyRetire(inn: InningsState, ev: RetireEvent, match: Match) {
@@ -326,9 +365,9 @@ function checkInningsEnd(inn: InningsState, match: Match) {
   let reason: InningsState['endReason'] = null;
 
   if (inn.target !== null && inn.runs >= inn.target) reason = 'targetReached';
-  else if (inn.wickets >= maxWickets(team, match.settings)) reason = 'allOut';
+  else if (inn.wickets >= inn.wicketsLimit) reason = 'allOut';
   else if (vacant && availableBatters(inn, team).length === 0) reason = 'allOut';
-  else if (inn.legalBalls >= match.settings.overs * BALLS_PER_OVER) reason = 'oversComplete';
+  else if (inn.legalBalls >= inn.oversLimit * BALLS_PER_OVER) reason = 'oversComplete';
 
   if (reason) {
     inn.ended = true;
@@ -336,10 +375,14 @@ function checkInningsEnd(inn: InningsState, match: Match) {
   }
 }
 
-function computePhase(innings: InningsState[]): Phase {
+function computePhase(innings: InningsState[], match: Match): Phase {
   const cur = innings[innings.length - 1];
   if (!cur) return 'needOpeners';
-  if (cur.ended) return cur.index === 0 ? 'inningsBreak' : 'completed';
+  if (cur.ended) {
+    if (cur.index % 2 === 0) return 'inningsBreak';
+    const tied = cur.runs === innings[cur.index - 1].runs;
+    return tied && match.settings.superOver ? 'superOverBreak' : 'completed';
+  }
   if (cur.strikerId === null || (cur.nonStrikerId === null && !cur.loneBatter)) return 'needBatter';
   if (cur.bowlerId === null) return 'needBowler';
   return 'inPlay';
@@ -356,7 +399,9 @@ export type ValidationError =
   | 'dismissalNotAllowed'
   | 'batterNotAtCrease'
   | 'batterNotAvailable'
-  | 'bowlerNotEligible';
+  | 'bowlerNotEligible'
+  | 'reviewsOff'
+  | 'noReviewLeft';
 
 /** Returns why `input` cannot be applied in `state`, or null if it can. */
 export function validateEvent(
@@ -369,8 +414,10 @@ export function validateEvent(
 
   switch (input.type) {
     case 'inningsStart': {
-      if (phase !== 'needOpeners' && phase !== 'inningsBreak') return 'wrongPhase';
-      const bat = battingTeamFor(state.innings.length as 0 | 1, match.toss);
+      if (phase !== 'needOpeners' && phase !== 'inningsBreak' && phase !== 'superOverBreak') {
+        return 'wrongPhase';
+      }
+      const bat = battingTeamFor(state.innings.length, match.toss, state.innings);
       if (input.strikerId === input.nonStrikerId) return 'samePlayer';
       if (!inTeam(bat, input.strikerId) || !inTeam(bat, input.nonStrikerId)) return 'notInTeam';
       if (!inTeam(1 - bat, input.bowlerId)) return 'notInTeam';
@@ -425,12 +472,27 @@ export function validateEvent(
         return 'wrongPhase';
       }
       return null;
-    case 'endInnings':
-      if (phase !== 'inPlay' && phase !== 'needBowler' && phase !== 'needBatter') {
-        return 'wrongPhase';
+    case 'penalty':
+      if (!duringInnings(phase) || !inn) return 'wrongPhase';
+      if (!Number.isInteger(input.runs) || input.runs === 0 || Math.abs(input.runs) > 10) {
+        return 'invalidRuns';
       }
       return null;
+    case 'review': {
+      if (!state.reviewsLeft) return 'reviewsOff';
+      if (!duringInnings(phase) || !inn) return 'wrongPhase';
+      if (input.team !== 0 && input.team !== 1) return 'notInTeam';
+      if (state.reviewsLeft[input.team as TeamIndex] <= 0) return 'noReviewLeft';
+      return null;
+    }
+    case 'endInnings':
+      if (!duringInnings(phase)) return 'wrongPhase';
+      return null;
   }
+}
+
+function duringInnings(phase: Phase): boolean {
+  return phase === 'inPlay' || phase === 'needBowler' || phase === 'needBatter';
 }
 
 /** Appends an event if it is valid. Returns the new match or the error. */

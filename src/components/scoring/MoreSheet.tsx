@@ -1,7 +1,9 @@
 import { useTranslation } from 'react-i18next';
+import { KICK_PENALTY_RUNS } from '../../engine/rules';
 import { Sheet } from '../common/Sheet';
 
-export type MoreAction = 'swapStrike' | 'retire' | 'changeBowler' | 'endInnings';
+export type MoreAction =
+  'swapStrike' | 'retire' | 'changeBowler' | 'review' | 'penalty' | 'endInnings';
 
 export function MoreSheet({
   open,
@@ -19,6 +21,8 @@ export function MoreSheet({
     { action: 'swapStrike', label: t('scoring.swapStrike') },
     { action: 'retire', label: t('scoring.retire') },
     { action: 'changeBowler', label: t('scoring.changeBowler') },
+    { action: 'review', label: t('scoring.review') },
+    { action: 'penalty', label: t('scoring.penaltyKick', { n: KICK_PENALTY_RUNS }) },
     { action: 'endInnings', label: t('scoring.endInnings'), danger: true },
   ];
   return (

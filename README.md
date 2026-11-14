@@ -31,6 +31,28 @@ Match setup offers a "Tournament rules" preset; each rule can be switched on or 
 - Short pitch
 - Six out: a ball hit over the boundary on the full dismisses the batter (no runs, legal delivery, wicket to the bowler)
 - Max 3 overs per bowler
+- After a catch, the new batter takes strike (rule 22)
+- One review per team: lost if unsuccessful, kept if successful (rule 26)
+- A tie is decided by a one-over Super Over (2 wickets end it; repeated while tied) (rule 4)
+
+Always available on the scoring screen (⋮ menu): **Penalty −4** when a batter
+deliberately kicks the ball (rule 25), and **Review**.
+
+All 34 tournament rules are in the **Rules** tab, in Bengali and English, with
+search. The text lives in [`src/data/rules.ts`](src/data/rules.ts) (source:
+[`docs/rules-bpl-2027.md`](docs/rules-bpl-2027.md)).
+
+### Format and awards
+
+- League: every team plays every other team once (12 teams = 66 matches), then
+  BPL-style play-offs: Qualifier 1 (1st v 2nd), Eliminator (3rd v 4th),
+  Qualifier 2 (loser Q1 v winner Eliminator), Final. Points: win 2, tie or no
+  result 1, loss 0. See [`src/tournament/format.ts`](src/tournament/format.ts).
+- The **Awards** tab ranks Man of the Series candidates (1 point per run, 20 per
+  wicket, 10 per catch, stumping, run out or maiden) and the Best Wicket-Taker
+  (most wickets, then best economy). Only completed matches between two teams
+  picked from the list count; super overs are left out. The committee makes the
+  final choice.
 
 ## Teams, players and photos
 
@@ -62,7 +84,7 @@ Fill the team's `players` array. List the first XI first, then the substitutes:
 | `name`       | yes      | Shown exactly as written                                                         |
 | `role`       | no       | `batter`, `bowler`, `allRounder` or `wicketKeeper`                               |
 | `captain`    | no       | `true` for the captain (one per team)                                            |
-| `substitute` | no       | `true` for players outside the first XI                                          |
+| `substitute` | no       | `true` for extras (max 3; squad max 14)                                          |
 | `photo`      | no       | Path to the photo (see below). Without it, the player's initials are shown.      |
 
 ### Where photos go

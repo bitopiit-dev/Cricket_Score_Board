@@ -1,20 +1,31 @@
 import { useTranslation } from 'react-i18next';
 import { runRate } from '../../engine/rules';
 import { ballsRemaining, requiredRunRate, runsNeeded } from '../../engine/stats';
-import type { InningsState, Match } from '../../engine/types';
+import type { InningsState, Match, MatchState } from '../../engine/types';
 import { useFormat } from '../../hooks/useFormat';
+import { inningsLabel } from '../../utils/matchText';
 
-export function ScorePanel({ match, inn }: { match: Match; inn: InningsState }) {
+export function ScorePanel({
+  match,
+  inn,
+  state,
+}: {
+  match: Match;
+  inn: InningsState;
+  state: MatchState;
+}) {
   const { t } = useTranslation();
   const f = useFormat();
   const need = runsNeeded(inn);
-  const rrr = requiredRunRate(inn, match);
+  const rrr = requiredRunRate(inn);
 
   return (
     <section className="bg-emerald-800 px-4 pt-2 pb-4 text-white dark:bg-emerald-950">
       <div className="flex items-center justify-between text-sm text-emerald-100">
         <span className="truncate font-semibold">{match.teams[inn.battingTeam].name}</span>
-        <span>{t('scoring.inningsN', { n: f.num(inn.index + 1) })}</span>
+        <span className={inn.superOver ? 'rounded bg-amber-400 px-2 font-bold text-amber-950' : ''}>
+          {inningsLabel(inn, t, f)}
+        </span>
       </div>
       <div className="flex items-end gap-3">
         <span className="tabular text-5xl leading-tight font-bold">
@@ -23,7 +34,7 @@ export function ScorePanel({ match, inn }: { match: Match; inn: InningsState }) 
         <span className="tabular pb-2 text-lg text-emerald-100">
           {t('scoring.oversOf', {
             overs: f.overs(inn.legalBalls),
-            total: f.num(match.settings.overs),
+            total: f.num(inn.oversLimit),
           })}
         </span>
         {inn.freeHitNext && (
@@ -48,10 +59,27 @@ export function ScorePanel({ match, inn }: { match: Match; inn: InningsState }) 
             )}
           </>
         )}
+        {inn.penaltyRuns !== 0 && (
+          <span className="font-semibold text-amber-300">
+            {t('scoring.penalty')} {inn.penaltyRuns > 0 ? '+' : '−'}
+            {f.num(Math.abs(inn.penaltyRuns))}
+          </span>
+        )}
       </div>
+      {state.reviewsLeft && (
+        <div className="mt-1 flex flex-wrap gap-x-4 text-xs text-emerald-100">
+          <span>{t('scoring.reviewsLeft')}:</span>
+          {([0, 1] as const).map((team) => (
+            <span key={team}>
+              {match.teams[team].name}{' '}
+              <span className="font-bold text-white">{f.num(state.reviewsLeft![team])}</span>
+            </span>
+          ))}
+        </div>
+      )}
       {need !== null && need > 0 && !inn.ended && (
         <div className="mt-2 rounded-lg bg-white/10 px-3 py-1.5 text-center font-semibold">
-          {t('scoring.need', { runs: f.num(need), balls: f.num(ballsRemaining(inn, match)) })}
+          {t('scoring.need', { runs: f.num(need), balls: f.num(ballsRemaining(inn)) })}
         </div>
       )}
     </section>

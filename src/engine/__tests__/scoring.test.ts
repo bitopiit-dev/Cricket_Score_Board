@@ -348,7 +348,7 @@ describe('second innings and result', () => {
     expect(g.inn.target).toBe(11);
     g.ball(2);
     expect(runsNeeded(g.inn)).toBe(9);
-    expect(requiredRunRate(g.inn, g.match)).toBeCloseTo(10.8);
+    expect(requiredRunRate(g.inn)).toBeCloseTo(10.8);
   });
 
   it('chasing team wins by wickets when target is reached', () => {
