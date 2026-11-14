@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { BottomNav } from '../components/common/BottomNav';
-import { Header } from '../components/common/Header';
 import { Card, SectionTitle } from '../components/common/controls';
 import { TeamAvatar } from '../components/common/TeamAvatar';
+import { SubPageTitle } from '../components/layout/AppShell';
 import { findTeam } from '../data/teams';
 import { matchRepository } from '../db/repository';
 import { useFormat } from '../hooks/useFormat';
@@ -28,9 +27,9 @@ export default function AwardsPage() {
   const mos = totals ? manOfTheSeries(totals) : [];
 
   return (
-    <div className="min-h-dvh pb-24">
-      <Header title={t('awards.title')} />
+    <div>
       <main className="mx-auto flex max-w-lg flex-col gap-4 p-4">
+        <SubPageTitle title={t('awards.title')} parent="/stats" />
         {totals && totals.length === 0 && (
           <p className="rounded-2xl bg-white py-10 text-center text-slate-500 dark:bg-slate-900">
             {t('awards.empty')}
@@ -80,7 +79,6 @@ export default function AwardsPage() {
           </>
         )}
       </main>
-      <BottomNav />
     </div>
   );
 }

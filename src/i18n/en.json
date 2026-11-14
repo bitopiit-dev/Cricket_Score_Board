@@ -24,9 +24,7 @@
     "view": "View",
     "deleteConfirm": "Delete this match? This cannot be undone.",
     "oversFormat_one": "{{overs}} over",
-    "oversFormat_other": "{{overs}} overs",
-    "teams": "Teams",
-    "matches": "Matches"
+    "oversFormat_other": "{{overs}} overs"
   },
   "newMatch": {
     "title": "New match",
@@ -200,13 +198,6 @@
     "wicketKeeper": "Wicketkeeper",
     "captain": "Captain"
   },
-  "nav": {
-    "label": "Main menu",
-    "home": "Home",
-    "rules": "Rules",
-    "awards": "Awards",
-    "committee": "Committee"
-  },
   "rules": {
     "title": "Rules",
     "subtitle": "The {{n}} rules of BPL-2027",
@@ -238,5 +229,43 @@
       "memberSecretary": "Member Secretary",
       "member": "Member"
     }
+  },
+  "app": {
+    "savedOnDevice": "Saved on this device"
+  },
+  "tabs": {
+    "label": "Sections",
+    "live": "Live",
+    "fixtures": "Fixtures",
+    "points": "Points",
+    "stats": "Stats",
+    "teams": "Teams",
+    "more": "More"
+  },
+  "more": {
+    "rules": "Rules",
+    "rulesHint": "The 34 rules of BPL-2027",
+    "committee": "Committee Members",
+    "committeeHint": "BGL Sports Committee",
+    "media": "Media",
+    "mediaHint": "Photo albums",
+    "awards": "Awards",
+    "awardsHint": "Man of the Series and Best Wicket-Taker"
+  },
+  "comingSoon": {
+    "badge": "Coming soon",
+    "fixtures": "The full schedule of the 66 league matches and the play-offs will appear here.",
+    "fixturesItems": ["Date & time", "Venue", "Results", "Play-offs"],
+    "points": "The points table will update itself after every match.",
+    "pointsItems": [
+      "Win 2 points",
+      "Tie / no result 1",
+      "Net run rate",
+      "Top four to the play-offs"
+    ],
+    "stats": "The tournament's leading batters, bowlers and fielders will appear here.",
+    "statsItems": ["Most runs", "Most wickets", "Best strike rate", "Best economy", "Catches"],
+    "seeAwards": "See the current awards ranking",
+    "media": "Tournament photos, arranged in albums, will appear here."
   }
 }

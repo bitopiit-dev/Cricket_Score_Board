@@ -117,7 +117,7 @@ export default function NewMatchPage() {
 
   return (
     <div className="min-h-dvh">
-      <Header title={t('newMatch.title')} backTo="/" />
+      <Header title={t('newMatch.title')} backTo="/live" />
       <form onSubmit={onSubmit} className="mx-auto flex max-w-lg flex-col gap-4 p-4 pb-28">
         <Card>
           <SectionTitle>{t('newMatch.teams')}</SectionTitle>

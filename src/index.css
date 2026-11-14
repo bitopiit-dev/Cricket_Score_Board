@@ -4,6 +4,17 @@
 
 @theme {
   --font-sans: 'Hind Siliguri', ui-sans-serif, system-ui, sans-serif;
+  /* Condensed display face for big titles and scores */
+  --font-display: 'Barlow Condensed', 'Hind Siliguri', 'Arial Narrow', sans-serif;
+
+  /* Night palette for the app header and tab bar */
+  --color-night-950: #05060f;
+  --color-night-900: #0b0e24;
+  --color-night-800: #0f1330;
+  --color-night-line: #1e2547;
+  --color-night-muted: #8a93b8;
+  --color-neon-cyan: #22f0ff;
+  --color-neon-violet: #8b5cff;
 }
 
 html,

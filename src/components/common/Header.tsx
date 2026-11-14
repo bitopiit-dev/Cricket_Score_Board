@@ -10,17 +10,23 @@ interface Props {
   actions?: ReactNode;
 }
 
-export function Header({ title, backTo, actions }: Props) {
-  const { t } = useTranslation();
+/**
+ * Step back through history when we came from inside the app, so the
+ * phone's back button and ours agree; otherwise (opened directly) replace
+ * with the parent route.
+ */
+export function useGoBack(parent?: string) {
   const navigate = useNavigate();
   const location = useLocation();
-  // Step back through history when we came from inside the app, so the
-  // phone's back button and this one agree; otherwise (opened directly)
-  // replace with the parent route.
-  const goBack = () => {
+  return () => {
     if (location.key !== 'default') navigate(-1);
-    else if (backTo) navigate(backTo, { replace: true });
+    else if (parent) navigate(parent, { replace: true });
   };
+}
+
+export function Header({ title, backTo, actions }: Props) {
+  const { t } = useTranslation();
+  const goBack = useGoBack(backTo);
   return (
     <header className="sticky top-0 z-[55] flex items-center gap-2 bg-emerald-800 px-3 py-2 pt-[max(0.5rem,env(safe-area-inset-top))] text-white shadow dark:bg-emerald-950">
       {backTo && (

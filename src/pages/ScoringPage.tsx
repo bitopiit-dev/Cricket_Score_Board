@@ -49,7 +49,7 @@ export default function ScoringPage() {
   if (notFound) {
     return (
       <div className="min-h-dvh">
-        <Header title="404" backTo="/" />
+        <Header title="404" backTo="/live" />
         <p className="p-8 text-center">
           <Link to="/" className="text-emerald-700 underline">
             ← {t('common.back')}
@@ -120,7 +120,7 @@ export default function ScoringPage() {
     <div className="flex min-h-dvh flex-col">
       <Header
         title={title}
-        backTo="/"
+        backTo="/live"
         actions={
           <button
             type="button"

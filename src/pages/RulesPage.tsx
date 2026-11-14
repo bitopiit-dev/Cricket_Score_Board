@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { BottomNav } from '../components/common/BottomNav';
-import { Header } from '../components/common/Header';
 import { inputClass } from '../components/common/controls';
+import { SubPageTitle } from '../components/layout/AppShell';
 import { RULES_ORGANISER, RULE_SECTIONS, searchRules } from '../data/rules';
 import { useFormat } from '../hooks/useFormat';
 import { usePrefs } from '../store/prefsStore';
@@ -17,9 +16,9 @@ export default function RulesPage() {
   const total = RULE_SECTIONS.reduce((n, s) => n + s.rules.length, 0);
 
   return (
-    <div className="min-h-dvh pb-24">
-      <Header title={t('rules.title')} />
+    <div>
       <main className="mx-auto flex max-w-lg flex-col gap-3 p-4">
+        <SubPageTitle title={t('rules.title')} parent="/more" />
         <p className="text-sm text-slate-500 dark:text-slate-400">
           {t('rules.subtitle', { n: f.num(total) })}
         </p>
@@ -80,7 +79,6 @@ export default function RulesPage() {
           {t('rules.organisedBy')}: <span className="font-semibold">{RULES_ORGANISER[lang]}</span>
         </footer>
       </main>
-      <BottomNav />
     </div>
   );
 }

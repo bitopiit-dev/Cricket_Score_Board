@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import { Header } from '../components/common/Header';
 import { SectionTitle } from '../components/common/controls';
+import { SubPageTitle } from '../components/layout/AppShell';
 import { PlayerAvatar, TeamAvatar } from '../components/common/TeamAvatar';
 import { findTeam, type TournamentPlayer, type TournamentTeam } from '../data/teams';
 import { useFormat } from '../hooks/useFormat';
@@ -20,10 +20,10 @@ export default function TeamPage() {
 
   if (!team) {
     return (
-      <div className="min-h-dvh">
-        <Header title={t('team.notFound')} backTo="/" />
+      <main className="mx-auto max-w-lg p-4">
+        <SubPageTitle title={t('tabs.teams')} parent="/teams" />
         <p className="p-10 text-center text-slate-500">{t('team.notFound')}</p>
-      </div>
+      </main>
     );
   }
 
@@ -31,10 +31,12 @@ export default function TeamPage() {
   const subs = team.players.filter((p) => p.substitute);
 
   return (
-    <div className="min-h-dvh">
-      <Header title={team.name} backTo="/" />
+    <div>
+      <div className="mx-auto max-w-lg px-4 pt-4">
+        <SubPageTitle title={t('tabs.teams')} parent="/teams" />
+      </div>
       <section
-        className="flex flex-col items-center gap-3 bg-white px-4 py-6 text-center shadow-sm dark:bg-slate-900"
+        className="mx-4 mt-3 flex flex-col items-center gap-3 rounded-2xl bg-white px-4 py-6 text-center shadow-sm sm:mx-auto sm:max-w-lg dark:bg-slate-900"
         style={{ borderBottom: `4px solid ${team.color}` }}
       >
         <TeamAvatar name={team.name} color={team.color} logo={team.logo} size="xl" />

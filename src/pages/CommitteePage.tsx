@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { BottomNav } from '../components/common/BottomNav';
-import { Header } from '../components/common/Header';
 import { PlayerAvatar } from '../components/common/TeamAvatar';
+import { SubPageTitle } from '../components/layout/AppShell';
 import { COMMITTEE_LOGO, COMMITTEE_MEMBERS, COMMITTEE_NAME } from '../data/committee';
 import { useFormat } from '../hooks/useFormat';
 
@@ -16,9 +15,11 @@ export default function CommitteePage() {
   const f = useFormat();
 
   return (
-    <div className="min-h-dvh pb-24">
-      <Header title={t('committee.title')} />
-      <section className="flex flex-col items-center gap-2 bg-white px-4 py-6 text-center shadow-sm dark:bg-slate-900">
+    <div>
+      <div className="mx-auto max-w-lg px-4 pt-4">
+        <SubPageTitle title={t('committee.title')} parent="/more" />
+      </div>
+      <section className="mx-4 mt-3 flex flex-col items-center gap-2 rounded-2xl bg-white px-4 py-6 text-center shadow-sm sm:mx-auto sm:max-w-lg dark:bg-slate-900">
         <img
           src={COMMITTEE_LOGO}
           alt={COMMITTEE_NAME}
@@ -53,7 +54,6 @@ export default function CommitteePage() {
           })}
         </ul>
       </main>
-      <BottomNav />
     </div>
   );
 }

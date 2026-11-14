@@ -22,6 +22,21 @@ To test on a phone, connect it to the same Wi-Fi and open `http://<your-PC-IP>:5
 | `npm run lint`      | ESLint                          |
 | `npm run typecheck` | TypeScript only                 |
 
+## Sections
+
+Every section has its own link, so the phone's back button returns to the previous tab:
+
+| Tab      | Link         | Contents                                           |
+| -------- | ------------ | -------------------------------------------------- |
+| Live     | `#/live`     | Matches on this device; tap one to open the scorer |
+| Fixtures | `#/fixtures` | Coming soon                                        |
+| Points   | `#/points`   | Coming soon                                        |
+| Stats    | `#/stats`    | Coming soon (link to the current awards ranking)   |
+| Teams    | `#/teams`    | The 12 teams; tap one for its squad                |
+| More     | `#/more`     | Rules, Committee, Media (coming soon), Awards      |
+
+On phones the tabs sit at the bottom of the screen; on wider screens they sit in the header.
+
 ## Tournament rules
 
 Match setup offers a "Tournament rules" preset; each rule can be switched on or off:
