@@ -216,7 +216,8 @@
     "warn_twoCaptains": "More than one captain marked.",
     "warn_twoViceCaptains": "More than one vice-captain marked.",
     "nickname": "Known as {{name}}",
-    "warn_duplicateName": "Players with the same name who cannot be told apart: {{names}}"
+    "warn_duplicateName": "Players with the same name who cannot be told apart: {{names}}",
+    "warn_noCaptain": "No captain has been set"
   },
   "role": {
     "batter": "Batter",

@@ -107,7 +107,23 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
     name: 'Power (Printing & Washing)',
     group: 'A',
     color: '#16a34a',
-    players: [],
+    // Captain not named yet: the team page shows a warning until one is set.
+    players: [
+      squad('power-printing-washing', 'Shubroto'),
+      squad('power-printing-washing', 'Salah Uddin'),
+      squad('power-printing-washing', 'Johurul'),
+      squad('power-printing-washing', 'Kawsar'),
+      squad('power-printing-washing', 'Alal'),
+      squad('power-printing-washing', 'Jahidul'),
+      squad('power-printing-washing', 'Hridoy'),
+      squad('power-printing-washing', 'Jamal'),
+      squad('power-printing-washing', 'Shawon'),
+      squad('power-printing-washing', 'Mojir'),
+      squad('power-printing-washing', 'Shafiqul'),
+      squad('power-printing-washing', 'Easin', { substitute: true }),
+      squad('power-printing-washing', 'Shuvo', { substitute: true }),
+      squad('power-printing-washing', 'Nazmul', { substitute: true }),
+    ],
   },
   {
     id: 'quality-flying-fighter',
@@ -277,7 +293,7 @@ export function duplicateNames(team: Pick<TournamentTeam, 'players'>): string[] 
 }
 
 export type SquadWarning =
-  'tooMany' | 'tooManySubs' | 'twoCaptains' | 'twoViceCaptains' | 'duplicateName';
+  'tooMany' | 'tooManySubs' | 'twoCaptains' | 'twoViceCaptains' | 'duplicateName' | 'noCaptain';
 
 /** Problems with a squad that the admin should fix (empty when fine). */
 export function squadWarnings(
@@ -296,5 +312,7 @@ export function squadWarnings(
   if (count((p) => p.captain) > 1) w.push('twoCaptains');
   if (count((p) => p.viceCaptain) > 1) w.push('twoViceCaptains');
   if (duplicateNames(team).length > 0) w.push('duplicateName');
+  // Only once players are in: a team without a squad yet has nothing to fix.
+  if (team.players.length > 0 && count((p) => p.captain) === 0) w.push('noCaptain');
   return w;
 }

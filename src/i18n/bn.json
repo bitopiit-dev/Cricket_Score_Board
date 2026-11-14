@@ -212,7 +212,8 @@
     "warn_twoCaptains": "একাধিক অধিনায়ক চিহ্নিত।",
     "warn_twoViceCaptains": "একাধিক সহ-অধিনায়ক চিহ্নিত।",
     "nickname": "ডাকনাম: {{name}}",
-    "warn_duplicateName": "একই নামে একাধিক খেলোয়াড়, আলাদা করা যাচ্ছে না: {{names}}"
+    "warn_duplicateName": "একই নামে একাধিক খেলোয়াড়, আলাদা করা যাচ্ছে না: {{names}}",
+    "warn_noCaptain": "অধিনায়ক নির্ধারণ করা হয়নি"
   },
   "role": {
     "batter": "ব্যাটার",

@@ -57,8 +57,9 @@ describe('squads', () => {
       }
       // One captain and one vice-captain at most. A squad over the size limit is
       // allowed in the data (the team page warns the admin), so 'tooMany' is not checked here.
+      // A missing captain is also allowed in the data (shown as a warning).
       expect(
-        squadWarnings(team, SQUAD_LIMITS).filter((w) => w !== 'tooMany'),
+        squadWarnings(team, SQUAD_LIMITS).filter((w) => w !== 'tooMany' && w !== 'noCaptain'),
         team.name,
       ).toEqual([]);
     }
@@ -124,7 +125,9 @@ describe('squad warnings', () => {
   });
 
   it('flags more than 3 extras in a squad within the limit', () => {
-    const players = Array.from({ length: 14 }, (_, i) => p(i, { substitute: i >= 10 }));
+    const players = Array.from({ length: 14 }, (_, i) =>
+      p(i, { substitute: i >= 10, captain: i === 0 }),
+    );
     expect(squadWarnings({ players }, SQUAD_LIMITS)).toEqual(['tooManySubs']);
   });
 
@@ -321,5 +324,54 @@ describe('duplicate names', () => {
       ],
     };
     expect(duplicateNames(team)).toEqual([]);
+  });
+});
+
+describe('Power (Printing & Washing) squad', () => {
+  const ppw = findTeam('power-printing-washing')!;
+
+  it('has the 14 players in the given order, the last three as extras', () => {
+    expect(ppw.players.map((p) => p.name)).toEqual([
+      'Shubroto',
+      'Salah Uddin',
+      'Johurul',
+      'Kawsar',
+      'Alal',
+      'Jahidul',
+      'Hridoy',
+      'Jamal',
+      'Shawon',
+      'Mojir',
+      'Shafiqul',
+      'Easin',
+      'Shuvo',
+      'Nazmul',
+    ]);
+    expect(ppw.players.filter((p) => p.substitute).map((p) => p.name)).toEqual([
+      'Easin',
+      'Shuvo',
+      'Nazmul',
+    ]);
+    expect(ppw.players[1]).toMatchObject({
+      id: 'salah-uddin',
+      photo: 'players/power-printing-washing/salah-uddin.jpg',
+    });
+  });
+
+  it('has no captain yet, which the team page reports', () => {
+    expect(ppw.players.some((p) => p.captain)).toBe(false);
+    expect(squadWarnings(ppw, SQUAD_LIMITS)).toEqual(['noCaptain']);
+  });
+});
+
+describe('no captain warning', () => {
+  it('applies to any team with players but no captain, not to an empty squad', () => {
+    expect(squadWarnings({ players: [{ id: 'a', name: 'A' }] }, SQUAD_LIMITS)).toEqual([
+      'noCaptain',
+    ]);
+    expect(squadWarnings({ players: [] }, SQUAD_LIMITS)).toEqual([]);
+    expect(
+      squadWarnings({ players: [{ id: 'a', name: 'A', captain: true }] }, SQUAD_LIMITS),
+    ).toEqual([]);
   });
 });
