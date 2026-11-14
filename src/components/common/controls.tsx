@@ -121,17 +121,28 @@ export function Toggle({
   checked,
   onChange,
   label,
+  disabled,
+  hint,
 }: {
   checked: boolean;
   onChange: (v: boolean) => void;
   label: string;
+  /** Fixed by a rule; shown but cannot be changed. */
+  disabled?: boolean;
+  hint?: string;
 }) {
   return (
-    <label className="flex cursor-pointer items-center justify-between gap-3 py-2">
-      <span>{label}</span>
+    <label
+      className={`flex items-center justify-between gap-3 py-2 ${disabled ? 'opacity-60' : 'cursor-pointer'}`}
+    >
+      <span className="flex flex-col">
+        <span>{label}</span>
+        {hint && <span className="text-xs text-emerald-700 dark:text-emerald-400">{hint}</span>}
+      </span>
       <input
         type="checkbox"
         role="switch"
+        disabled={disabled}
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
         className="peer sr-only"

@@ -63,7 +63,8 @@
     "otherTeam": "Other team (type a name)",
     "ruleCatchStrike": "After a catch, the new batter takes strike",
     "ruleReview": "{{n}} review per team (kept if successful)",
-    "ruleSuperOver": "Tie decided by a one-over Super Over"
+    "ruleSuperOver": "Tie decided by a one-over Super Over",
+    "ruleNoFreeHit": "No free hit (the ball after a no-ball is a normal delivery)"
   },
   "scoring": {
     "crr": "CRR",

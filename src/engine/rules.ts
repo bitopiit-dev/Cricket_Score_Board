@@ -15,7 +15,7 @@ export const BALLS_PER_OVER = 6;
 export const DEFAULT_SETTINGS: MatchSettings = {
   overs: 12,
   lastManStands: false,
-  freeHit: true,
+  freeHit: false,
   wideRuns: 1,
   noBallRuns: 1,
   maxOversPerBowler: defaultMaxOversPerBowler(12),
@@ -44,6 +44,8 @@ export const TOURNAMENT_RULES = {
   playersPerSide: 11, // 10 wickets
   shortPitch: true,
   sixOut: true,
+  /** No free hit after a no-ball. */
+  noFreeHit: true,
   maxOversPerBowler: 3,
   catchNewBatterOnStrike: true,
   reviewsPerTeam: 1,

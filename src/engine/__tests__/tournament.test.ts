@@ -8,6 +8,7 @@ const tournament = () =>
     sixOut: TOURNAMENT_RULES.sixOut,
     shortPitch: TOURNAMENT_RULES.shortPitch,
     maxOversPerBowler: TOURNAMENT_RULES.maxOversPerBowler,
+    freeHit: !TOURNAMENT_RULES.noFreeHit,
   });
 
 const sixOut = (g: Game) => g.ball(0, { wicket: { kind: 'sixOut', batterId: g.inn.strikerId! } });
@@ -17,6 +18,15 @@ describe('defaults', () => {
     expect(DEFAULT_SETTINGS.overs).toBe(12);
     expect(DEFAULT_SETTINGS.maxOversPerBowler).toBe(3);
     expect(DEFAULT_SETTINGS.sixOut).toBe(false);
+  });
+
+  it('there is no free hit: the ball after a no-ball is a normal delivery', () => {
+    expect(DEFAULT_SETTINGS.freeHit).toBe(false);
+    expect(TOURNAMENT_RULES.noFreeHit).toBe(true);
+    const g = new Game(tournament()).start('a1', 'a2', 'b1').noBall();
+    expect(g.inn.freeHitNext).toBe(false);
+    g.out('bowled');
+    expect(g.inn.wickets).toBe(1);
   });
 
   it('11 players means 10 wickets end the innings', () => {
@@ -52,8 +62,10 @@ describe('six out', () => {
     expect(g.inn.bowlers[0].maidens).toBe(1);
   });
 
-  it('applies on a free hit too', () => {
-    const g = new Game(tournament()).start('a1', 'a2', 'b1').noBall();
+  it('applies on a free hit too, when a match uses free hits', () => {
+    const m = tournament();
+    m.settings.freeHit = true;
+    const g = new Game(m).start('a1', 'a2', 'b1').noBall();
     expect(g.inn.freeHitNext).toBe(true);
     sixOut(g);
     expect(g.inn.wickets).toBe(1);

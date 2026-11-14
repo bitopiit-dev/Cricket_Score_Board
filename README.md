@@ -31,6 +31,7 @@ Match setup offers a "Tournament rules" preset; each rule can be switched on or 
 - Short pitch
 - Six out: a ball hit over the boundary on the full dismisses the batter (no runs, legal delivery, wicket to the bowler)
 - Max 3 overs per bowler
+- No free hit: the ball after a no-ball is a normal delivery
 - After a catch, the new batter takes strike (rule 22)
 - One review per team: lost if unsuccessful, kept if successful (rule 26)
 - A tie is decided by a one-over Super Over (2 wickets end it; repeated while tied) (rule 4)

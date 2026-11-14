@@ -102,7 +102,7 @@ export default function NewMatchPage() {
         overs,
         wideRuns,
         noBallRuns,
-        freeHit,
+        freeHit: rules.noFreeHit ? false : freeHit,
         lastManStands,
         maxOversPerBowler: bowlerLimit,
         sixOut: rules.sixOut,
@@ -210,6 +210,11 @@ export default function NewMatchPage() {
               label={t('newMatch.ruleSixOut')}
               checked={rules.sixOut}
               onChange={(on) => setRule('sixOut', on)}
+            />
+            <Toggle
+              label={t('newMatch.ruleNoFreeHit')}
+              checked={rules.noFreeHit}
+              onChange={(on) => setRule('noFreeHit', on)}
             />
             <Toggle
               label={t('newMatch.ruleBowlerLimit', {
@@ -341,7 +346,13 @@ export default function NewMatchPage() {
                 max={5}
                 onChange={setNoBallRuns}
               />
-              <Toggle label={t('newMatch.freeHit')} checked={freeHit} onChange={setFreeHit} />
+              <Toggle
+                label={t('newMatch.freeHit')}
+                checked={rules.noFreeHit ? false : freeHit}
+                onChange={setFreeHit}
+                disabled={rules.noFreeHit}
+                hint={rules.noFreeHit ? ruleHint : undefined}
+              />
               <Toggle
                 label={t('newMatch.lastManStands')}
                 checked={lastManStands}

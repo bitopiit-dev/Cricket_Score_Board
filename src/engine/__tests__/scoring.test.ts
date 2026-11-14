@@ -113,7 +113,7 @@ describe('extras', () => {
 
 describe('free hit', () => {
   it('follows a no-ball, survives a wide, clears after a legal ball', () => {
-    const g = new Game(makeMatch()).start('a1', 'a2', 'b1').noBall();
+    const g = new Game(makeMatch(11, { freeHit: true })).start('a1', 'a2', 'b1').noBall();
     expect(g.inn.freeHitNext).toBe(true);
     g.wide();
     expect(g.inn.freeHitNext).toBe(true);
@@ -122,7 +122,7 @@ describe('free hit', () => {
   });
 
   it('only run out is allowed on a free hit', () => {
-    const g = new Game(makeMatch()).start('a1', 'a2', 'b1').noBall();
+    const g = new Game(makeMatch(11, { freeHit: true })).start('a1', 'a2', 'b1').noBall();
     expect(
       g.tryDo({ type: 'ball', runs: 0, extra: null, wicket: { kind: 'bowled', batterId: 'a1' } }),
     ).toBe('dismissalNotAllowed');
