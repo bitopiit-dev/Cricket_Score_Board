@@ -26,14 +26,14 @@ To test on a phone, connect it to the same Wi-Fi and open `http://<your-PC-IP>:5
 
 Every section has its own link, so the phone's back button returns to the previous tab:
 
-| Tab      | Link         | Contents                                           |
-| -------- | ------------ | -------------------------------------------------- |
-| Live     | `#/live`     | Matches on this device; tap one to open the scorer |
-| Fixtures | `#/fixtures` | Coming soon                                        |
-| Points   | `#/points`   | Coming soon                                        |
-| Stats    | `#/stats`    | Coming soon (link to the current awards ranking)   |
-| Teams    | `#/teams`    | The 12 teams; tap one for its squad                |
-| More     | `#/more`     | Rules, Committee, Media (coming soon), Awards      |
+| Tab      | Link         | Contents                                                                              |
+| -------- | ------------ | ------------------------------------------------------------------------------------- |
+| Live     | `#/live`     | Matches on this device; tap one to open the scorer                                    |
+| Fixtures | `#/fixtures` | The 48 fixture matches by date, filter by stage, today first, results and live status |
+| Points   | `#/points`   | Group A, Group B and Super Six tables (points, NRR) from scored matches               |
+| Stats    | `#/stats`    | Coming soon (link to the current awards ranking)                                      |
+| Teams    | `#/teams`    | The 12 teams; tap one for its squad                                                   |
+| More     | `#/more`     | Rules, Committee, Media (coming soon), Awards                                         |
 
 On phones the tabs sit at the bottom of the screen; on wider screens they sit in the header.
 

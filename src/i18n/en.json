@@ -274,15 +274,6 @@
   },
   "comingSoon": {
     "badge": "Coming soon",
-    "fixtures": "The full schedule of the 66 league matches and the play-offs will appear here.",
-    "fixturesItems": ["Date & time", "Venue", "Results", "Play-offs"],
-    "points": "The points table will update itself after every match.",
-    "pointsItems": [
-      "Win 2 points",
-      "Tie / no result 1",
-      "Net run rate",
-      "Top four to the play-offs"
-    ],
     "stats": "The tournament's leading batters, bowlers and fielders will appear here.",
     "statsItems": ["Most runs", "Most wickets", "Best strike rate", "Best economy", "Catches"],
     "seeAwards": "See the current awards ranking",
@@ -308,7 +299,20 @@
     "legend": "P = played, W = won, L = lost, T/NR = tied or no result. Win {{win}}, tie/no result {{tie}}, loss {{loss}} points. Teams level on points are split by net run rate (NRR). Worked out from the fixture matches scored in the app."
   },
   "fixtures": {
-    "matchNo": "Match {{n}}"
+    "matchNo": "Match {{n}}",
+    "today": "Today",
+    "noneToday": "No match today.",
+    "nextOn": "Next match: {{date}}",
+    "filter": "Filter by stage",
+    "filter_all": "All",
+    "filter_groupA": "Group A",
+    "filter_groupB": "Group B",
+    "filter_superSix": "Super Six",
+    "filter_knockout": "Semis & Final",
+    "live": "Live",
+    "completed": "Completed",
+    "restDay": "Rest day",
+    "holiday": "holiday"
   },
   "stage": {
     "groupA": "Group A",

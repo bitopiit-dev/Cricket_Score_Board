@@ -9,7 +9,8 @@ import NewMatchPage from './pages/NewMatchPage';
 import RulesPage from './pages/RulesPage';
 import ScoringPage from './pages/ScoringPage';
 import PointsPage from './pages/PointsPage';
-import { FixturesPage, MediaPage, StatsPage } from './pages/SoonPages';
+import FixturesPage from './pages/FixturesPage';
+import { MediaPage, StatsPage } from './pages/SoonPages';
 import TeamPage from './pages/TeamPage';
 import TeamsPage from './pages/TeamsPage';
 

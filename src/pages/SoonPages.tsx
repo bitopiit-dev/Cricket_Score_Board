@@ -9,20 +9,6 @@ const Page = ({ children }: { children: React.ReactNode }) => (
   <main className="mx-auto flex max-w-lg flex-col gap-4 p-4 md:max-w-2xl">{children}</main>
 );
 
-export function FixturesPage() {
-  const { t } = useTranslation();
-  return (
-    <Page>
-      <ComingSoon
-        icon="📅"
-        title={t('tabs.fixtures')}
-        text={t('comingSoon.fixtures')}
-        items={t('comingSoon.fixturesItems', { returnObjects: true }) as string[]}
-      />
-    </Page>
-  );
-}
-
 export function StatsPage() {
   const { t } = useTranslation();
   return (

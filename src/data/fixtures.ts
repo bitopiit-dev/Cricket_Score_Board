@@ -449,6 +449,23 @@ export function fixturesOn(date: string): Fixture[] {
   return FIXTURES.filter((f) => f.date === date);
 }
 
+/** Every calendar date from the first to the last fixture. */
+export function tournamentDays(): string[] {
+  const days: string[] = [];
+  const last = FIXTURES[FIXTURES.length - 1].date;
+  for (let d = new Date(`${FIXTURES[0].date}T12:00:00Z`); ; d.setUTCDate(d.getUTCDate() + 1)) {
+    const iso = d.toISOString().slice(0, 10);
+    days.push(iso);
+    if (iso >= last) break;
+  }
+  return days;
+}
+
+/** A planned day off: a Friday or one of the HOLIDAYS. */
+export function isRestDay(date: string): boolean {
+  return new Date(`${date}T12:00:00Z`).getUTCDay() === 5 || HOLIDAYS.includes(date);
+}
+
 /** Today's date in Bangladesh as YYYY-MM-DD, whatever the device's time zone. */
 export function todayInDhaka(now: Date = new Date()): string {
   return new Intl.DateTimeFormat('en-CA', {

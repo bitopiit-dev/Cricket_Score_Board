@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { FIXTURES, HOLIDAYS, todayInDhaka, type Fixture, type Slot } from '../fixtures';
+import {
+  FIXTURES,
+  HOLIDAYS,
+  isRestDay,
+  todayInDhaka,
+  tournamentDays,
+  type Fixture,
+  type Slot,
+} from '../fixtures';
 import { TOURNAMENT_TEAMS, findTeam } from '../teams';
 import officialFixture from '../../../docs/fixture-bpl-2027.json';
 
@@ -121,6 +129,20 @@ describe('fixture data', () => {
   it('starts on Monday 16 November', () => {
     expect(FIXTURES[0].date).toBe('2026-11-16');
     expect(new Date('2026-11-16T12:00:00Z').getUTCDay()).toBe(1);
+  });
+});
+
+describe('tournament days', () => {
+  it('runs from 16 November to 19 December, and every day without a match is a rest day', () => {
+    const days = tournamentDays();
+    expect(days[0]).toBe('2026-11-16');
+    expect(days[days.length - 1]).toBe('2026-12-19');
+    const matchDays = new Set(FIXTURES.map((f) => f.date));
+    const rest = days.filter((d) => !matchDays.has(d));
+    expect(rest.every(isRestDay)).toBe(true);
+    expect(rest).toEqual(
+      expect.arrayContaining(['2026-11-20', '2026-11-30', '2026-12-01', '2026-12-16']),
+    );
   });
 });
 
