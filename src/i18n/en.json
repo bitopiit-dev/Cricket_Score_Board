@@ -24,7 +24,9 @@
     "view": "View",
     "deleteConfirm": "Delete this match? This cannot be undone.",
     "oversFormat_one": "{{overs}} over",
-    "oversFormat_other": "{{overs}} overs"
+    "oversFormat_other": "{{overs}} overs",
+    "teams": "Teams",
+    "matches": "Matches"
   },
   "newMatch": {
     "title": "New match",
@@ -56,7 +58,9 @@
     "ruleShortPitch": "Short pitch",
     "ruleSixOut": "Six out (ball over the boundary on the full = out)",
     "ruleBowlerLimit": "Max {{n}} overs per bowler",
-    "fixedByRule": "Set by tournament rule"
+    "fixedByRule": "Set by tournament rule",
+    "pickTeam": "Pick a team from the list",
+    "otherTeam": "Other team (type a name)"
   },
   "scoring": {
     "crr": "CRR",

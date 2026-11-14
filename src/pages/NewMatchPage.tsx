@@ -19,6 +19,8 @@ import {
   type TournamentRule,
 } from '../engine/rules';
 import type { Team, TeamIndex } from '../engine/types';
+import { TeamAvatar } from '../components/common/TeamAvatar';
+import { TOURNAMENT_TEAMS, findTeam } from '../data/teams';
 import { createMatch } from '../store/matchStore';
 import { useFormat } from '../hooks/useFormat';
 import { newId } from '../utils/id';
@@ -34,6 +36,8 @@ export default function NewMatchPage() {
   const f = useFormat();
   const navigate = useNavigate();
 
+  /** Tournament team id per side; '' = other team with a typed name. */
+  const [teamIds, setTeamIds] = useState<[string, string]>(['', '']);
   const [teamNames, setTeamNames] = useState<[string, string]>(['', '']);
   const [playerNames, setPlayerNames] = useState<[string[], string[]]>([
     emptyNames(),
@@ -69,7 +73,8 @@ export default function NewMatchPage() {
   const ruleHint = t('newMatch.fixedByRule');
 
   const displayName = (i: TeamIndex) =>
-    teamNames[i].trim() || t('newMatch.teamDefault', { n: f.num(i + 1) });
+    findTeam(teamIds[i])?.name ??
+    (teamNames[i].trim() || t('newMatch.teamDefault', { n: f.num(i + 1) }));
 
   const setPlayerName = (team: TeamIndex, idx: number, name: string) =>
     setPlayerNames((prev) => {
@@ -83,6 +88,7 @@ export default function NewMatchPage() {
     if (saving) return;
     setSaving(true);
     const teams = ([0, 1] as const).map((i): Team => ({
+      ...(findTeam(teamIds[i]) ? { teamId: teamIds[i] } : {}),
       name: displayName(i),
       players: playerNames[i].slice(0, playersPerSide).map((n, j) => ({
         id: newId(),
@@ -112,23 +118,60 @@ export default function NewMatchPage() {
       <form onSubmit={onSubmit} className="mx-auto flex max-w-lg flex-col gap-4 p-4 pb-28">
         <Card>
           <SectionTitle>{t('newMatch.teams')}</SectionTitle>
-          <div className="flex flex-col gap-3">
-            {([0, 1] as const).map((i) => (
-              <label key={i} className="flex flex-col gap-1">
-                <span className="text-sm text-slate-600 dark:text-slate-400">
-                  {t('newMatch.teamName', { n: f.num(i + 1) })}
-                </span>
-                <input
-                  className={inputClass}
-                  value={teamNames[i]}
-                  maxLength={30}
-                  placeholder={t('newMatch.teamDefault', { n: f.num(i + 1) })}
-                  onChange={(e) =>
-                    setTeamNames((p) => (i === 0 ? [e.target.value, p[1]] : [p[0], e.target.value]))
-                  }
-                />
-              </label>
-            ))}
+          <div className="flex flex-col gap-4">
+            {([0, 1] as const).map((i) => {
+              const picked = findTeam(teamIds[i]);
+              const other = teamIds[i === 0 ? 1 : 0];
+              return (
+                <div key={i} className="flex flex-col gap-2">
+                  <label className="flex flex-col gap-1">
+                    <span className="text-sm text-slate-600 dark:text-slate-400">
+                      {t('newMatch.teamName', { n: f.num(i + 1) })}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <TeamAvatar
+                        name={displayName(i)}
+                        color={picked?.color}
+                        logo={picked?.logo}
+                        size="sm"
+                      />
+                      <select
+                        className={inputClass}
+                        value={teamIds[i]}
+                        onChange={(e) =>
+                          setTeamIds((p) =>
+                            i === 0 ? [e.target.value, p[1]] : [p[0], e.target.value],
+                          )
+                        }
+                      >
+                        <option value="">{t('newMatch.otherTeam')}</option>
+                        <optgroup label={t('newMatch.pickTeam')}>
+                          {TOURNAMENT_TEAMS.map((team) => (
+                            <option key={team.id} value={team.id} disabled={team.id === other}>
+                              {team.name}
+                            </option>
+                          ))}
+                        </optgroup>
+                      </select>
+                    </div>
+                  </label>
+                  {!picked && (
+                    <input
+                      className={inputClass}
+                      aria-label={t('newMatch.teamName', { n: f.num(i + 1) })}
+                      value={teamNames[i]}
+                      maxLength={30}
+                      placeholder={t('newMatch.teamDefault', { n: f.num(i + 1) })}
+                      onChange={(e) =>
+                        setTeamNames((p) =>
+                          i === 0 ? [e.target.value, p[1]] : [p[0], e.target.value],
+                        )
+                      }
+                    />
+                  )}
+                </div>
+              );
+            })}
           </div>
         </Card>
 

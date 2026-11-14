@@ -14,6 +14,8 @@ export interface Player {
 }
 
 export interface Team {
+  /** Tournament team id (src/data/teams.ts) when picked from the list. */
+  teamId?: string;
   name: string;
   players: Player[];
 }

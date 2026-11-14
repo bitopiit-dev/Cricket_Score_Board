@@ -3,7 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { LanguageToggle } from '../components/common/Header';
 import { APP_SUBTITLE, APP_TITLE } from '../config/app';
-import { btn } from '../components/common/controls';
+import { SectionTitle, btn } from '../components/common/controls';
+import { TeamAvatar } from '../components/common/TeamAvatar';
+import { TOURNAMENT_TEAMS } from '../data/teams';
 import { matchRepository } from '../db/repository';
 import { deriveMatchState } from '../engine/scoring';
 import type { Match } from '../engine/types';
@@ -32,6 +34,11 @@ export default function HomePage() {
         <Link to="/new" className={`${btn.primary} text-center text-lg`}>
           + {t('home.newMatch')}
         </Link>
+        {matches && matches.length > 0 && (
+          <h2 className="mt-2 text-sm font-semibold tracking-wide text-slate-500 uppercase dark:text-slate-400">
+            {t('home.matches')}
+          </h2>
+        )}
         {matches?.length === 0 && (
           <p className="py-10 text-center text-slate-500">{t('home.noMatches')}</p>
         )}
@@ -70,6 +77,28 @@ export default function HomePage() {
             </Link>
           );
         })}
+
+        <section className="mt-4" aria-labelledby="teams-heading">
+          <SectionTitle>
+            <span id="teams-heading">
+              {t('home.teams')} ({f.num(TOURNAMENT_TEAMS.length)})
+            </span>
+          </SectionTitle>
+          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {TOURNAMENT_TEAMS.map((team) => (
+              <li
+                key={team.id}
+                className="flex flex-col items-center gap-2 rounded-2xl bg-white p-3 text-center shadow-sm dark:bg-slate-900"
+                style={{ borderTop: `4px solid ${team.color}` }}
+              >
+                <TeamAvatar name={team.name} color={team.color} logo={team.logo} size="lg" />
+                <span lang="en" className="text-sm leading-tight font-semibold break-words">
+                  {team.name}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
       </main>
     </div>
   );
