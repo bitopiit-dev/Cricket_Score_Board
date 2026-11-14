@@ -50,7 +50,12 @@ export default function HomePage() {
               className="rounded-2xl bg-white p-4 shadow-sm active:bg-slate-50 dark:bg-slate-900 dark:active:bg-slate-800"
             >
               <div className="flex items-center justify-between text-xs text-slate-500">
-                <span>{t('home.oversFormat', { overs: f.num(m.settings.overs) })}</span>
+                <span>
+                  {t('home.oversFormat', {
+                    overs: f.num(m.settings.overs),
+                    count: m.settings.overs,
+                  })}
+                </span>
                 <span>{status}</span>
               </div>
               <div className="mt-1 font-semibold">

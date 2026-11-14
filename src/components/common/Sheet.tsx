@@ -30,7 +30,7 @@ export function Sheet({ open, title, onClose, children, footer }: Props) {
       aria-label={title}
     >
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative flex max-h-[90dvh] w-full max-w-lg flex-col rounded-t-3xl bg-white pb-[env(safe-area-inset-bottom)] shadow-xl sm:rounded-3xl dark:bg-slate-900">
+      <div className="relative flex max-h-[calc(100dvh-4.5rem)] w-full max-w-lg flex-col rounded-t-3xl bg-white pb-[env(safe-area-inset-bottom)] shadow-xl sm:rounded-3xl dark:bg-slate-900">
         <div className="flex items-center gap-2 border-b border-slate-200 px-4 py-3 dark:border-slate-800">
           <h2 className="flex-1 text-lg font-semibold">{title}</h2>
           {onClose && (

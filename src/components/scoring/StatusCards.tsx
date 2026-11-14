@@ -1,0 +1,94 @@
+import { useTranslation } from 'react-i18next';
+import type { MatchState, Match } from '../../engine/types';
+import { useFormat } from '../../hooks/useFormat';
+import { resultText } from '../../utils/matchText';
+import { btn } from '../common/controls';
+
+function InningsLines({ match, state }: { match: Match; state: MatchState }) {
+  const { t } = useTranslation();
+  const f = useFormat();
+  return (
+    <ul className="flex flex-col gap-2">
+      {state.innings.map((inn) => (
+        <li key={inn.index} className="rounded-xl bg-slate-100 px-4 py-3 dark:bg-slate-800">
+          <div className="flex items-baseline justify-between gap-2">
+            <span className="truncate font-semibold">{match.teams[inn.battingTeam].name}</span>
+            <span className="tabular text-xl font-bold">
+              {f.num(inn.runs)}/{f.num(inn.wickets)}
+            </span>
+          </div>
+          <div className="tabular flex justify-between text-sm text-slate-500">
+            <span>{inn.endReason && t(`endReason.${inn.endReason}`)}</span>
+            <span>
+              {t('scoring.oversOf', {
+                overs: f.overs(inn.legalBalls),
+                total: f.num(match.settings.overs),
+              })}
+            </span>
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export function InningsBreakCard({
+  match,
+  state,
+  onStart,
+  onUndo,
+}: {
+  match: Match;
+  state: MatchState;
+  onStart: () => void;
+  onUndo: () => void;
+}) {
+  const { t } = useTranslation();
+  const f = useFormat();
+  const first = state.innings[0];
+  return (
+    <div className="flex flex-col gap-4 p-4">
+      <h2 className="text-center text-xl font-bold">{t('scoring.inningsBreak')}</h2>
+      <InningsLines match={match} state={state} />
+      <p className="text-center text-lg">
+        {match.teams[first.bowlingTeam].name} — {t('scoring.target')}{' '}
+        <span className="font-bold">{f.num(first.runs + 1)}</span>
+      </p>
+      <button type="button" className={`${btn.primary} text-lg`} onClick={onStart}>
+        {t('scoring.startSecondInnings')}
+      </button>
+      <button type="button" className={btn.secondary} onClick={onUndo}>
+        ↶ {t('common.undoLast')}
+      </button>
+    </div>
+  );
+}
+
+export function ResultCard({
+  match,
+  state,
+  onUndo,
+}: {
+  match: Match;
+  state: MatchState;
+  onUndo: () => void;
+}) {
+  const { t } = useTranslation();
+  const f = useFormat();
+  return (
+    <div className="flex flex-col gap-4 p-4">
+      <h2 className="text-center text-sm font-semibold tracking-wide text-slate-500 uppercase">
+        {t('scoring.matchOver')}
+      </h2>
+      {state.result && (
+        <p className="text-center text-2xl font-bold text-emerald-700 dark:text-emerald-400">
+          {resultText(state.result, match, t, f)}
+        </p>
+      )}
+      <InningsLines match={match} state={state} />
+      <button type="button" className={btn.secondary} onClick={onUndo}>
+        ↶ {t('common.undoLast')}
+      </button>
+    </div>
+  );
+}

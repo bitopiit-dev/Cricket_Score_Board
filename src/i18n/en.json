@@ -23,7 +23,8 @@
     "resume": "Resume",
     "view": "View",
     "deleteConfirm": "Delete this match? This cannot be undone.",
-    "oversFormat": "{{overs}} overs"
+    "oversFormat_one": "{{overs}} over",
+    "oversFormat_other": "{{overs}} overs"
   },
   "newMatch": {
     "title": "New match",
