@@ -107,20 +107,20 @@ Fill the team's `players` array. List the first XI first, then the substitutes:
 
 Each team has its own folder under `public/players/`, named after the team's `id`:
 
-| Team                          | Folder                                      |
-| ----------------------------- | ------------------------------------------- |
-| Power Player                  | `public/players/power-player/`              |
-| Sky Warrior                   | `public/players/sky-warrior/`               |
-| Finishing Victorians          | `public/players/finishing-victorians/`      |
-| Rainbow Cutting               | `public/players/rainbow-cutting/`           |
-| Power House X1                | `public/players/power-house-x1/`            |
-| HR Vikings                    | `public/players/hr-vikings/`                |
-| Engineer Warriors             | `public/players/engineer-warriors/`         |
-| Red Bulls Warrior             | `public/players/red-bulls-warrior/`         |
-| MCD Super Stars               | `public/players/mcd-super-stars/`           |
-| Quality Flying Fighter        | `public/players/quality-flying-fighter/`    |
-| Power X1 (Printing & Washing) | `public/players/power-x1-printing-washing/` |
-| DDC                           | `public/players/ddc/`                       |
+| Team                       | Folder                                   |
+| -------------------------- | ---------------------------------------- |
+| Power Player               | `public/players/power-player/`           |
+| Sky Warrior                | `public/players/sky-warrior/`            |
+| Finishing Victorians       | `public/players/finishing-victorians/`   |
+| Rainbow Cutting            | `public/players/rainbow-cutting/`        |
+| Power House X1             | `public/players/power-house-x1/`         |
+| HR Vikings                 | `public/players/hr-vikings/`             |
+| IE Warrior                 | `public/players/ie-warrior/`             |
+| Red Bulls Warriors         | `public/players/red-bulls-warriors/`     |
+| MCD Super Stars            | `public/players/mcd-super-stars/`        |
+| Quality Flying Fighter     | `public/players/quality-flying-fighter/` |
+| Power (Printing & Washing) | `public/players/power-printing-washing/` |
+| DDC                        | `public/players/ddc/`                    |
 
 - Name each photo after the player's `id`, for example
   `public/players/ddc/rahim-uddin.jpg`.

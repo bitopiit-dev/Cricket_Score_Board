@@ -23,6 +23,8 @@ export interface TournamentTeam {
   /** Stable slug, used as the key in matches and later as the seed id. */
   id: string;
   name: string;
+  /** Group in the first round. */
+  group: 'A' | 'B';
   /** Badge colour (shown until a logo exists). */
   color: string;
   /** Logo URL or path; when missing, a coloured initial badge is shown. */
@@ -43,24 +45,56 @@ export interface TournamentTeam {
  * Photos go in public/players/<team id>/ (see README).
  */
 export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
-  { id: 'power-player', name: 'Power Player', color: '#dc2626', players: [] },
-  { id: 'sky-warrior', name: 'Sky Warrior', color: '#0284c7', players: [] },
-  { id: 'finishing-victorians', name: 'Finishing Victorians', color: '#7c3aed', players: [] },
-  { id: 'rainbow-cutting', name: 'Rainbow Cutting', color: '#db2777', players: [] },
-  { id: 'power-house-x1', name: 'Power House X1', color: '#ea580c', players: [] },
-  { id: 'hr-vikings', name: 'HR Vikings', color: '#4f46e5', players: [] },
-  { id: 'engineer-warriors', name: 'Engineer Warriors', color: '#0d9488', players: [] },
-  { id: 'red-bulls-warrior', name: 'Red Bulls Warrior', color: '#b91c1c', players: [] },
-  { id: 'mcd-super-stars', name: 'MCD Super Stars', color: '#ca8a04', players: [] },
-  { id: 'quality-flying-fighter', name: 'Quality Flying Fighter', color: '#2563eb', players: [] },
+  // Group A
   {
-    id: 'power-x1-printing-washing',
-    name: 'Power X1 (Printing & Washing)',
+    id: 'finishing-victorians',
+    name: 'Finishing Victorians',
+    group: 'A',
+    color: '#7c3aed',
+    players: [],
+  },
+  { id: 'power-house-x1', name: 'Power House X1', group: 'A', color: '#ea580c', players: [] },
+  { id: 'mcd-super-stars', name: 'MCD Super Stars', group: 'A', color: '#ca8a04', players: [] },
+  {
+    id: 'power-printing-washing',
+    name: 'Power (Printing & Washing)',
+    group: 'A',
     color: '#16a34a',
     players: [],
   },
-  { id: 'ddc', name: 'DDC', color: '#475569', players: [] },
+  {
+    id: 'quality-flying-fighter',
+    name: 'Quality Flying Fighter',
+    group: 'A',
+    color: '#2563eb',
+    players: [],
+  },
+  { id: 'rainbow-cutting', name: 'Rainbow Cutting', group: 'A', color: '#db2777', players: [] },
+  // Group B
+  { id: 'ie-warrior', name: 'IE Warrior', group: 'B', color: '#0d9488', players: [] },
+  { id: 'hr-vikings', name: 'HR Vikings', group: 'B', color: '#4f46e5', players: [] },
+  { id: 'power-player', name: 'Power Player', group: 'B', color: '#dc2626', players: [] },
+  { id: 'ddc', name: 'DDC', group: 'B', color: '#475569', players: [] },
+  {
+    id: 'red-bulls-warriors',
+    name: 'Red Bulls Warriors',
+    group: 'B',
+    color: '#b91c1c',
+    players: [],
+  },
+  { id: 'sky-warrior', name: 'Sky Warrior', group: 'B', color: '#0284c7', players: [] },
 ];
+
+export type GroupId = 'A' | 'B';
+
+export function teamsInGroup(group: GroupId): TournamentTeam[] {
+  return TOURNAMENT_TEAMS.filter((t) => t.group === group);
+}
+
+/** Team by its exact name (as written in the fixture). */
+export function teamByName(name: string): TournamentTeam | undefined {
+  return TOURNAMENT_TEAMS.find((t) => t.name === name);
+}
 
 export function findTeam(id: string | undefined): TournamentTeam | undefined {
   return id ? TOURNAMENT_TEAMS.find((t) => t.id === id) : undefined;

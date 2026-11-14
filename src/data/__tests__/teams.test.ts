@@ -3,21 +3,25 @@ import { MAX_SQUAD, MAX_SUBSTITUTES } from '../../engine/rules';
 import { TOURNAMENT_TEAMS, findTeam, initials, teamInitial } from '../teams';
 
 describe('tournament teams', () => {
-  it('has the 12 teams in order, names exactly as given', () => {
-    expect(TOURNAMENT_TEAMS.map((t) => t.name)).toEqual([
-      'Power Player',
-      'Sky Warrior',
+  it('has the 12 teams, names exactly as in the fixture, six per group', () => {
+    const names = (g: string) => TOURNAMENT_TEAMS.filter((t) => t.group === g).map((t) => t.name);
+    expect(names('A')).toEqual([
       'Finishing Victorians',
-      'Rainbow Cutting',
       'Power House X1',
-      'HR Vikings',
-      'Engineer Warriors',
-      'Red Bulls Warrior',
       'MCD Super Stars',
+      'Power (Printing & Washing)',
       'Quality Flying Fighter',
-      'Power X1 (Printing & Washing)',
-      'DDC',
+      'Rainbow Cutting',
     ]);
+    expect(names('B')).toEqual([
+      'IE Warrior',
+      'HR Vikings',
+      'Power Player',
+      'DDC',
+      'Red Bulls Warriors',
+      'Sky Warrior',
+    ]);
+    expect(TOURNAMENT_TEAMS).toHaveLength(12);
   });
 
   it('has unique ids and colours', () => {

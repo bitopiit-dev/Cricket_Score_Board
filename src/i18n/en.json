@@ -267,5 +267,8 @@
     "statsItems": ["Most runs", "Most wickets", "Best strike rate", "Best economy", "Catches"],
     "seeAwards": "See the current awards ranking",
     "media": "Tournament photos, arranged in albums, will appear here."
+  },
+  "points": {
+    "group": "Group {{g}}"
   }
 }
