@@ -204,7 +204,8 @@
     "label": "Main menu",
     "home": "Home",
     "rules": "Rules",
-    "awards": "Awards"
+    "awards": "Awards",
+    "committee": "Committee"
   },
   "rules": {
     "title": "Rules",
@@ -227,5 +228,15 @@
     "note": "Only completed tournament matches count (both teams picked from the list); super overs are left out. This is a calculated suggestion; the committee makes the final decision.",
     "empty": "No tournament match has finished yet. Matches where both teams are picked from the list are counted here.",
     "none": "Nobody yet"
+  },
+  "committee": {
+    "title": "Committee Members",
+    "subtitle": "{{n}} members",
+    "placeholder": "Member {{n}}",
+    "role": {
+      "convener": "Convener",
+      "memberSecretary": "Member Secretary",
+      "member": "Member"
+    }
   }
 }

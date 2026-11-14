@@ -119,6 +119,24 @@ Each team has its own folder under `public/players/`, named after the team's `id
 Team logos work the same way. Put the file in `public/icons/teams/`, for example
 `public/icons/teams/ddc.png`, and add `logo: 'icons/teams/ddc.png'` to the team.
 
+## Committee members
+
+The **Committee** tab shows the BGL Sports Committee logo
+(`public/images/bgl-sports-committee-logo.png`) and its 10 members. The logo also
+sits next to the BPL-2027 title on the home page and links to this page.
+
+Members are in [`src/data/committee.ts`](src/data/committee.ts). Until a name is
+set, a member shows as "Member 1" / "সদস্য ১". To fill one in:
+
+```ts
+{ id: 'member-1', name: 'Rahim Uddin', role: 'convener', photo: 'committee/member-1.jpg' },
+```
+
+- `role`: `convener` (আহ্বায়ক), `memberSecretary` (সদস্য সচিব) or `member` (সদস্য)
+- Photos go in `public/committee/`, named after the member's `id`
+  (for example `public/committee/member-1.jpg`), square, about 400 × 400 px.
+  Without a photo, the initials are shown.
+
 ## Project layout
 
 ```

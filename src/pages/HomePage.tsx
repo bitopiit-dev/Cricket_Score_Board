@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { BottomNav } from '../components/common/BottomNav';
 import { LanguageToggle } from '../components/common/Header';
 import { APP_SUBTITLE, APP_TITLE } from '../config/app';
+import { COMMITTEE_LOGO, COMMITTEE_NAME } from '../data/committee';
 import { SectionTitle, btn } from '../components/common/controls';
 import { TeamAvatar } from '../components/common/TeamAvatar';
 import { TOURNAMENT_TEAMS } from '../data/teams';
@@ -28,8 +29,19 @@ export default function HomePage() {
         <div className="absolute top-[max(0.75rem,env(safe-area-inset-top))] right-3">
           <LanguageToggle />
         </div>
-        <h1 className="text-4xl font-bold tracking-tight">{APP_TITLE}</h1>
-        <p className="mt-1 text-emerald-100">{APP_SUBTITLE}</p>
+        <div className="flex items-center justify-center gap-3">
+          <Link
+            to="/committee"
+            aria-label={t('committee.title')}
+            className="shrink-0 rounded-xl bg-white p-1 shadow active:scale-95"
+          >
+            <img src={COMMITTEE_LOGO} alt={COMMITTEE_NAME} className="h-16 w-auto" />
+          </Link>
+          <div className="text-left">
+            <h1 className="text-4xl font-bold tracking-tight">{APP_TITLE}</h1>
+            <p className="mt-1 text-sm text-emerald-100">{APP_SUBTITLE}</p>
+          </div>
+        </div>
       </header>
       <main className="mx-auto flex max-w-lg flex-col gap-3 p-4">
         <Link to="/new" className={`${btn.primary} text-center text-lg`}>

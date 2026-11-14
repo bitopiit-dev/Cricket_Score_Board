@@ -1,6 +1,7 @@
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { useApplyTheme } from './hooks/useApplyTheme';
 import AwardsPage from './pages/AwardsPage';
+import CommitteePage from './pages/CommitteePage';
 import HomePage from './pages/HomePage';
 import NewMatchPage from './pages/NewMatchPage';
 import RulesPage from './pages/RulesPage';
@@ -22,6 +23,7 @@ export default function App() {
         <Route path="/team/:id" element={<TeamPage />} />
         <Route path="/rules" element={<RulesPage />} />
         <Route path="/awards" element={<AwardsPage />} />
+        <Route path="/committee" element={<CommitteePage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </HashRouter>

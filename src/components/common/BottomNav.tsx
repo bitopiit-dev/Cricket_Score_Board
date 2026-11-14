@@ -5,6 +5,7 @@ const TABS = [
   { to: '/', key: 'nav.home', icon: '🏏' },
   { to: '/rules', key: 'nav.rules', icon: '📜' },
   { to: '/awards', key: 'nav.awards', icon: '🏆' },
+  { to: '/committee', key: 'nav.committee', icon: '👥' },
 ] as const;
 
 /** Bottom tab bar for the main sections. Pages using it need bottom padding (pb-24). */
@@ -15,7 +16,7 @@ export function BottomNav() {
       aria-label={t('nav.label')}
       className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur dark:border-slate-800 dark:bg-slate-900/95"
     >
-      <ul className="mx-auto grid max-w-lg grid-cols-3">
+      <ul className="mx-auto grid max-w-lg grid-cols-4">
         {TABS.map((tab) => (
           <li key={tab.to}>
             <NavLink
