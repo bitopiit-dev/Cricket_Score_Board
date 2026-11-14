@@ -9,8 +9,8 @@
    Each match will be played over 12 overs.
 2. একজন বোলার সর্বোচ্চ ৩ ওভার বল করতে পারবে।
    A bowler may bowl a maximum of 3 overs.
-3. খেলা সম্পূর্ণ বিপিএল (বাংলাদেশ প্রিমিয়ার লিগ) পদ্ধতিতে হবে। তবে প্রত্যেক দল অন্য দলের সাথে একটি করে ম্যাচ খেলবে।
-   The tournament follows the BPL (Bangladesh Premier League) format, but each team plays every other team once.
+3. খেলা সম্পূর্ণ বিপিএল (বাংলাদেশ প্রিমিয়ার লিগ) পদ্ধতিতে হবে: ১২টি দল দুই গ্রুপে (A ও B, ৬টি করে) ভাগ হয়ে নিজ গ্রুপের প্রত্যেক দলের সাথে একটি করে ম্যাচ খেলবে। প্রতি গ্রুপের শীর্ষ ৩ দল সুপার সিক্সে উঠবে; সেখানে পয়েন্ট নতুন করে শুরু হবে এবং প্রত্যেক দল অন্য সব দলের সাথে একটি করে ম্যাচ খেলবে। সুপার সিক্সের শীর্ষ ৪ দল সেমিফাইনালে খেলবে (১ম বনাম ৪র্থ, ২য় বনাম ৩য়), আর দুই সেমিফাইনালের বিজয়ী ফাইনালে মুখোমুখি হবে।
+   The tournament follows the BPL (Bangladesh Premier League) style: the 12 teams are split into two groups (A and B, six each) and play every team in their group once. The top 3 of each group go to the Super Six, where points start again and each team plays every other team once. The top 4 of the Super Six play the semi-finals (1st v 4th, 2nd v 3rd), and the two semi-final winners meet in the final.
 4. খেলা ড্র হলে ১ ওভার সুপার ওভারের খেলার মাধ্যমে খেলা নিষ্পত্তি হবে।
    If a match is tied, it will be decided by a 1-over Super Over.
 5. অনিবার্য কারণ বশতঃ খেলার সময়সূচী পরিবর্তন হতে পারে।
