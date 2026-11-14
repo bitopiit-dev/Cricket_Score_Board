@@ -15,6 +15,7 @@ export interface TournamentPlayer {
   photo?: string;
   role?: PlayerRole;
   captain?: boolean;
+  viceCaptain?: boolean;
   /** On the squad but not in the first XI. */
   substitute?: boolean;
 }
@@ -44,6 +45,23 @@ export interface TournamentTeam {
  *
  * Photos go in public/players/<team id>/ (see README).
  */
+/**
+ * A squad player whose id and photo file follow the name:
+ * "Jakir" in hr-vikings -> id 'jakir', photo 'players/hr-vikings/jakir.jpg'.
+ */
+function squad(
+  teamId: string,
+  name: string,
+  extra: Partial<Omit<TournamentPlayer, 'id' | 'name'>> = {},
+): TournamentPlayer {
+  const id = name
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+  return { id, name, photo: `players/${teamId}/${id}.jpg`, ...extra };
+}
+
 export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
   // Group A
   {
@@ -72,7 +90,28 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
   { id: 'rainbow-cutting', name: 'Rainbow Cutting', group: 'A', color: '#db2777', players: [] },
   // Group B
   { id: 'engineer-warriors', name: 'Engineer Warriors', group: 'B', color: '#0d9488', players: [] },
-  { id: 'hr-vikings', name: 'HR Vikings', group: 'B', color: '#4f46e5', players: [] },
+  {
+    id: 'hr-vikings',
+    name: 'HR Vikings',
+    group: 'B',
+    color: '#4f46e5',
+    players: [
+      squad('hr-vikings', 'Jakir', { captain: true }),
+      squad('hr-vikings', 'Atiq', { viceCaptain: true }),
+      squad('hr-vikings', 'Hasnat'),
+      squad('hr-vikings', 'Ashik'),
+      squad('hr-vikings', 'Hasib'),
+      squad('hr-vikings', 'Arman'),
+      squad('hr-vikings', 'Habib'),
+      squad('hr-vikings', 'Kader'),
+      squad('hr-vikings', 'Salauddin'),
+      squad('hr-vikings', 'Rakib'),
+      squad('hr-vikings', 'Sulove'),
+      squad('hr-vikings', 'Nayeem', { substitute: true }),
+      squad('hr-vikings', 'Salmon', { substitute: true }),
+      squad('hr-vikings', 'Mamun', { substitute: true }),
+    ],
+  },
   { id: 'power-player', name: 'Power Player', group: 'B', color: '#dc2626', players: [] },
   { id: 'ddc', name: 'DDC', group: 'B', color: '#475569', players: [] },
   {
@@ -137,4 +176,20 @@ export function initials(name: string): string {
 /** First letter of the name, for the placeholder badge. */
 export function teamInitial(name: string): string {
   return (Array.from(name.trim())[0] ?? '?').toUpperCase();
+}
+
+export type SquadWarning = 'tooMany' | 'tooManySubs' | 'twoCaptains' | 'twoViceCaptains';
+
+/** Problems with a squad that the admin should fix (empty when fine). */
+export function squadWarnings(
+  team: Pick<TournamentTeam, 'players'>,
+  limits: { maxPlayers: number; maxSubstitutes: number },
+): SquadWarning[] {
+  const w: SquadWarning[] = [];
+  const count = (f: (p: TournamentPlayer) => boolean | undefined) => team.players.filter(f).length;
+  if (team.players.length > limits.maxPlayers) w.push('tooMany');
+  if (count((p) => p.substitute) > limits.maxSubstitutes) w.push('tooManySubs');
+  if (count((p) => p.captain) > 1) w.push('twoCaptains');
+  if (count((p) => p.viceCaptain) > 1) w.push('twoViceCaptains');
+  return w;
 }

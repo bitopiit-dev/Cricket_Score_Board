@@ -26,6 +26,7 @@ import { useTournament } from '../hooks/useTournament';
 import { usePrefs } from '../store/prefsStore';
 import { fixtureTeams } from '../tournament/standings';
 import { fixtureLabel, formatTime, slotLabel, stageLabel } from '../utils/fixtureText';
+import { captainMark } from '../utils/matchText';
 import { createMatch } from '../store/matchStore';
 import { useFormat } from '../hooks/useFormat';
 import { newId } from '../utils/id';
@@ -151,7 +152,12 @@ export default function NewMatchPage() {
           ? // Squad players keep a stable id (team/player) across matches
             squad
               .filter((p) => xiOf(i).includes(p.id))
-              .map((p) => ({ id: `${teamIds[i]}/${p.id}`, name: p.name }))
+              .map((p) => ({
+                id: `${teamIds[i]}/${p.id}`,
+                name: p.name,
+                ...(p.captain ? { captain: true } : {}),
+                ...(p.viceCaptain ? { viceCaptain: true } : {}),
+              }))
           : playerNames[i].slice(0, playersPerSide).map((n, j) => ({
               id: newId(),
               name: n.trim() || t('newMatch.playerDefault', { n: f.num(j + 1) }),
@@ -480,7 +486,10 @@ export default function NewMatchPage() {
                               disabled={full}
                               onChange={() => toggleXi(ti, p.id)}
                             />
-                            <span className="flex-1">{p.name}</span>
+                            <span className="flex-1">
+                              {p.name}
+                              {captainMark(p)}
+                            </span>
                             {p.substitute && (
                               <span className="text-xs text-slate-500">
                                 {t('team.substitutes')}

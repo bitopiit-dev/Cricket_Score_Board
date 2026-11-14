@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { allowedDismissals, strikerOnly } from '../../engine/rules';
 import type { ExtraType, InningsState, Match, Wicket } from '../../engine/types';
 import { useFormat } from '../../hooks/useFormat';
-import { playerName } from '../../utils/matchText';
+import { captainMark, playerName } from '../../utils/matchText';
 import { btn, inputClass } from '../common/controls';
 import { FieldLabel, OptionGrid } from '../common/OptionGrid';
 import { Sheet } from '../common/Sheet';
@@ -129,7 +129,7 @@ export function WicketSheet({
             <option value="">{t('common.none')}</option>
             {match.teams[inn.bowlingTeam].players.map((p) => (
               <option key={p.id} value={p.id}>
-                {p.name}
+                {p.name + captainMark(p)}
               </option>
             ))}
           </select>

@@ -6,7 +6,7 @@ export function playerName(match: Match, id: string | null | undefined): string 
   if (!id) return '';
   for (const team of match.teams) {
     const p = team.players.find((x) => x.id === id);
-    if (p) return p.name;
+    if (p) return p.name + captainMark(p);
   }
   return '?';
 }
@@ -29,4 +29,9 @@ export function inningsLabel(inn: InningsState, t: TFunction, f: Formatter): str
   if (!inn.superOver) return t('scoring.inningsN', { n: f.num(inn.index + 1) });
   const n = Math.floor(inn.index / 2);
   return n === 1 ? t('scoring.superOver') : t('scoring.superOverN', { n: f.num(n) });
+}
+
+/** " (C)" / " (VC)" after a captain's or vice-captain's name. */
+export function captainMark(p: { captain?: boolean; viceCaptain?: boolean }): string {
+  return p.captain ? ' (C)' : p.viceCaptain ? ' (VC)' : '';
 }

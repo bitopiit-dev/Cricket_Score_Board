@@ -31,10 +31,6 @@ export const SUPER_OVER = { overs: 1, wickets: 2 } as const;
 /** Runs deducted when a batter deliberately kicks the ball (rule 25). */
 export const KICK_PENALTY_RUNS = 4;
 
-/** Squad size: 11 plus 3 extras (rule 8). */
-export const MAX_SQUAD = 14;
-export const MAX_SUBSTITUTES = 3;
-
 /**
  * The user's tournament rules. Each one can be switched on/off separately
  * in match setup; when on, the matching setting is fixed to this value.

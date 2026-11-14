@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { MAX_SQUAD, MAX_SUBSTITUTES } from '../../engine/rules';
-import { TOURNAMENT_TEAMS, findTeam, initials, teamInitial } from '../teams';
+import { SQUAD_LIMITS } from '../../config/tournament';
+import { TOURNAMENT_TEAMS, findTeam, initials, squadWarnings, teamInitial } from '../teams';
 
 describe('tournament teams', () => {
   it('has the 12 teams, names exactly as in the fixture, six per group', () => {
@@ -47,12 +47,8 @@ describe('squads', () => {
         expect(p.name.trim(), `${team.name} player ${p.id}`).not.toBe('');
         if (p.photo) expect(p.photo.startsWith(`players/${team.id}/`), p.photo).toBe(true);
       }
-      expect(team.players.filter((p) => p.captain).length, team.name).toBeLessThanOrEqual(1);
-      // Rule 8: 11 players plus 3 extras
-      expect(team.players.length, team.name).toBeLessThanOrEqual(MAX_SQUAD);
-      expect(team.players.filter((p) => p.substitute).length, team.name).toBeLessThanOrEqual(
-        MAX_SUBSTITUTES,
-      );
+      // Rule 8: at most 14 (11 plus 3 extras), one captain, one vice-captain
+      expect(squadWarnings(team, SQUAD_LIMITS), team.name).toEqual([]);
     }
   });
 
@@ -60,5 +56,68 @@ describe('squads', () => {
     expect(initials('Rahim Uddin Khan')).toBe('RU');
     expect(initials('shakib')).toBe('S');
     expect(initials('  ')).toBe('?');
+  });
+});
+
+describe('HR Vikings squad', () => {
+  const hr = findTeam('hr-vikings')!;
+
+  it('has the 14 players in the given order', () => {
+    expect(hr.players.map((p) => p.name)).toEqual([
+      'Jakir',
+      'Atiq',
+      'Hasnat',
+      'Ashik',
+      'Hasib',
+      'Arman',
+      'Habib',
+      'Kader',
+      'Salauddin',
+      'Rakib',
+      'Sulove',
+      'Nayeem',
+      'Salmon',
+      'Mamun',
+    ]);
+  });
+
+  it('Jakir is captain, Atiq vice-captain; the last three are the extras', () => {
+    expect(hr.players.filter((p) => p.captain).map((p) => p.name)).toEqual(['Jakir']);
+    expect(hr.players.filter((p) => p.viceCaptain).map((p) => p.name)).toEqual(['Atiq']);
+    expect(hr.players.filter((p) => p.substitute).map((p) => p.name)).toEqual([
+      'Nayeem',
+      'Salmon',
+      'Mamun',
+    ]);
+  });
+
+  it('photo files are named after the player', () => {
+    expect(hr.players[0]).toMatchObject({ id: 'jakir', photo: 'players/hr-vikings/jakir.jpg' });
+    expect(hr.players[8]).toMatchObject({
+      id: 'salauddin',
+      photo: 'players/hr-vikings/salauddin.jpg',
+    });
+  });
+});
+
+describe('squad warnings', () => {
+  const p = (i: number, extra = {}) => ({ id: `p${i}`, name: `P${i}`, ...extra });
+
+  it('flags more than 14 players, more than 3 extras and a second captain', () => {
+    const players = Array.from({ length: 15 }, (_, i) =>
+      p(i, { substitute: i >= 11, captain: i < 2 }),
+    );
+    expect(squadWarnings({ players }, SQUAD_LIMITS)).toEqual([
+      'tooMany',
+      'tooManySubs',
+      'twoCaptains',
+    ]);
+  });
+
+  it('accepts 14 players with 3 extras and one captain', () => {
+    const players = Array.from({ length: 14 }, (_, i) =>
+      p(i, { substitute: i >= 11, captain: i === 0 }),
+    );
+    expect(squadWarnings({ players }, SQUAD_LIMITS)).toEqual([]);
   });
 });

@@ -209,14 +209,20 @@
     "noPlayers": "No players added yet",
     "notFound": "Team not found",
     "playerCount_one": "{{n}} player",
-    "playerCount_other": "{{n}} players"
+    "playerCount_other": "{{n}} players",
+    "adminWarning": "Squad problem (for the admin to fix)",
+    "warn_tooMany": "The squad has {{n}} players; rule 8 allows at most {{max}}.",
+    "warn_tooManySubs": "More than {{subs}} extras.",
+    "warn_twoCaptains": "More than one captain marked.",
+    "warn_twoViceCaptains": "More than one vice-captain marked."
   },
   "role": {
     "batter": "Batter",
     "bowler": "Bowler",
     "allRounder": "All-rounder",
     "wicketKeeper": "Wicketkeeper",
-    "captain": "Captain"
+    "captain": "Captain",
+    "viceCaptain": "Vice-captain"
   },
   "rules": {
     "title": "Rules",

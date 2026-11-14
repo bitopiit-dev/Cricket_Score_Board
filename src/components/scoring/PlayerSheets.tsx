@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { availableBatters, battingTeamFor, bowlerEligibility } from '../../engine/rules';
 import type { InningsState, Match, RetireKind } from '../../engine/types';
 import { useFormat } from '../../hooks/useFormat';
-import { playerName } from '../../utils/matchText';
+import { captainMark, playerName } from '../../utils/matchText';
 import { btn, inputClass } from '../common/controls';
 import { FieldLabel, OptionGrid } from '../common/OptionGrid';
 import { Sheet } from '../common/Sheet';
@@ -152,7 +152,7 @@ export function OpenersSheet({
       {placeholder && <option value="">— {t('scoring.selectPlayer')} —</option>}
       {list.map((p) => (
         <option key={p.id} value={p.id}>
-          {p.name}
+          {p.name + captainMark(p)}
         </option>
       ))}
     </select>

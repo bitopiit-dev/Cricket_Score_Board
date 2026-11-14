@@ -83,7 +83,9 @@ become the seed data when the teams move to Supabase.
 
 ### Adding players
 
-Fill the team's `players` array. List the first XI first, then the substitutes:
+Fill the team's `players` array. List the first XI first, then the substitutes.
+The squad limit (14 players, 3 extras) is in [`src/config/tournament.ts`](src/config/tournament.ts);
+a team page shows a warning if a squad breaks it. Example:
 
 ```ts
 {
@@ -99,14 +101,15 @@ Fill the team's `players` array. List the first XI first, then the substitutes:
 },
 ```
 
-| Field        | Required | Notes                                                                            |
-| ------------ | -------- | -------------------------------------------------------------------------------- |
-| `id`         | yes      | Lowercase, words joined with `-`, unique within the team. Never change it later. |
-| `name`       | yes      | Shown exactly as written                                                         |
-| `role`       | no       | `batter`, `bowler`, `allRounder` or `wicketKeeper`                               |
-| `captain`    | no       | `true` for the captain (one per team)                                            |
-| `substitute` | no       | `true` for extras (max 3; squad max 14)                                          |
-| `photo`      | no       | Path to the photo (see below). Without it, the player's initials are shown.      |
+| Field         | Required | Notes                                                                            |
+| ------------- | -------- | -------------------------------------------------------------------------------- |
+| `id`          | yes      | Lowercase, words joined with `-`, unique within the team. Never change it later. |
+| `name`        | yes      | Shown exactly as written                                                         |
+| `role`        | no       | `batter`, `bowler`, `allRounder` or `wicketKeeper`                               |
+| `captain`     | no       | `true` for the captain (one per team)                                            |
+| `viceCaptain` | no       | `true` for the vice-captain (one per team); shown as (VC)                        |
+| `substitute`  | no       | `true` for extras (max 3; squad max 14)                                          |
+| `photo`       | no       | Path to the photo (see below). Without it, the player's initials are shown.      |
 
 ### Where photos go
 

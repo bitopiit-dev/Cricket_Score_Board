@@ -11,6 +11,8 @@ export type TeamIndex = 0 | 1;
 export interface Player {
   id: string;
   name: string;
+  captain?: boolean;
+  viceCaptain?: boolean;
 }
 
 export interface Team {

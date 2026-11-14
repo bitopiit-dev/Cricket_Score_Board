@@ -4,7 +4,9 @@ import { useParams } from 'react-router-dom';
 import { SectionTitle } from '../components/common/controls';
 import { SubPageTitle } from '../components/layout/AppShell';
 import { PlayerAvatar, TeamAvatar } from '../components/common/TeamAvatar';
-import { findTeam, type TournamentPlayer, type TournamentTeam } from '../data/teams';
+import { SQUAD_LIMITS } from '../config/tournament';
+import { findTeam, squadWarnings, type TournamentPlayer, type TournamentTeam } from '../data/teams';
+import { captainMark } from '../utils/matchText';
 import { useFormat } from '../hooks/useFormat';
 
 export default function TeamPage() {
@@ -51,6 +53,25 @@ export default function TeamPage() {
       </section>
 
       <main className="mx-auto flex max-w-lg flex-col gap-5 p-4">
+        {squadWarnings(team, SQUAD_LIMITS).length > 0 && (
+          <div
+            role="alert"
+            className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-200"
+          >
+            <p className="font-semibold">⚠️ {t('team.adminWarning')}</p>
+            <ul className="mt-1 list-disc pl-5">
+              {squadWarnings(team, SQUAD_LIMITS).map((w) => (
+                <li key={w}>
+                  {t(`team.warn_${w}`, {
+                    n: f.num(team.players.length),
+                    max: f.num(SQUAD_LIMITS.maxPlayers),
+                    subs: f.num(SQUAD_LIMITS.maxSubstitutes),
+                  })}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         {team.players.length === 0 ? (
           <p className="rounded-2xl bg-white py-10 text-center text-slate-500 dark:bg-slate-900">
             {t('team.noPlayers')}
@@ -84,9 +105,11 @@ function PlayerGrid({
       <SectionTitle>{title}</SectionTitle>
       <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {players.map((p) => {
-          const tags = [p.captain && t('role.captain'), p.role && t(`role.${p.role}`)].filter(
-            Boolean,
-          );
+          const tags = [
+            p.captain && t('role.captain'),
+            p.viceCaptain && t('role.viceCaptain'),
+            p.role && t(`role.${p.role}`),
+          ].filter(Boolean);
           return (
             <li
               key={p.id}
@@ -95,6 +118,7 @@ function PlayerGrid({
               <PlayerAvatar name={p.name} color={team.color} photo={p.photo} size="lg" />
               <span lang="en" className="text-sm leading-tight font-semibold break-words">
                 {p.name}
+                {captainMark(p)}
               </span>
               {tags.length > 0 && (
                 <span className="text-xs text-slate-500 dark:text-slate-400">
