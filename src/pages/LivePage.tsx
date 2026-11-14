@@ -3,10 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { btn } from '../components/common/controls';
 import { PageTitle } from '../components/layout/AppShell';
+import { fixtureByNo } from '../data/fixtures';
 import { matchRepository } from '../db/repository';
 import { deriveMatchState } from '../engine/scoring';
 import type { Match, MatchState } from '../engine/types';
 import { useFormat } from '../hooks/useFormat';
+import { stageLabel } from '../utils/fixtureText';
 
 /** Live tab: matches being scored on this device, newest first; tap to open the scoring screen. */
 export default function LivePage() {
@@ -49,6 +51,7 @@ function MatchCard({ m, s }: { m: Match; s: MatchState }) {
   const { t } = useTranslation();
   const f = useFormat();
   const live = isLive({ m, s });
+  const fx = fixtureByNo(m.fixtureNo);
   const status =
     s.phase === 'completed'
       ? t('home.completed')
@@ -64,7 +67,9 @@ function MatchCard({ m, s }: { m: Match; s: MatchState }) {
     >
       <div className="flex items-center justify-between text-xs text-slate-500">
         <span>
-          {t('home.oversFormat', { overs: f.num(m.settings.overs), count: m.settings.overs })}
+          {fx
+            ? `${t('fixtures.matchNo', { n: f.num(fx.no) })} · ${stageLabel(fx.stage, t)}`
+            : t('home.oversFormat', { overs: f.num(m.settings.overs), count: m.settings.overs })}
         </span>
         <span
           className={`flex items-center gap-1.5 ${live ? 'font-bold text-lime-700 dark:text-lime-400' : ''}`}

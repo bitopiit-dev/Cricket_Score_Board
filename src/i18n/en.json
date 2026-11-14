@@ -62,7 +62,27 @@
     "ruleCatchStrike": "After a catch, the new batter takes strike",
     "ruleReview": "{{n}} review per team (kept if successful)",
     "ruleSuperOver": "Tie decided by a one-over Super Over",
-    "ruleNoFreeHit": "No free hit (the ball after a no-ball is a normal delivery)"
+    "ruleNoFreeHit": "No free hit (the ball after a no-ball is a normal delivery)",
+    "fixture": "Fixture",
+    "date": "Date",
+    "fixtureMatch": "Match on that day",
+    "noFixtureOnDate": "No match on this date. You can still play a friendly / practice match by filling in everything below.",
+    "outsideFixture": "Outside the fixture (friendly / practice)",
+    "outsideFixtureHint": "A match outside the fixture: pick the teams, players and rules yourself. It does not count in the points table.",
+    "matchNo": "Match no.",
+    "stage": "Stage",
+    "startTime": "Start time",
+    "venue": "Venue",
+    "venueTbd": "To be decided",
+    "fixtureStarted": "This match has already been started. Open it instead of starting again.",
+    "fixtureDone": "This match is already finished.",
+    "openMatch": "Open the started match",
+    "viewMatch": "View the match",
+    "editManually": "Edit manually",
+    "lockAgain": "Lock again",
+    "fromFixture": "Filled from the fixture",
+    "slotPending": "{{slot}}: team not decided yet, pick it from the list",
+    "xiCount": "Playing XI: {{n}}/{{of}} picked"
   },
   "scoring": {
     "crr": "CRR",
@@ -270,5 +290,25 @@
   },
   "points": {
     "group": "Group {{g}}"
+  },
+  "fixtures": {
+    "matchNo": "Match {{n}}"
+  },
+  "stage": {
+    "groupA": "Group A",
+    "groupB": "Group B",
+    "superSix": "Super Six",
+    "semi1": "Semi-Final 1",
+    "semi2": "Semi-Final 2",
+    "final": "Final"
+  },
+  "slot": {
+    "groupPos": "Group {{g}} – {{pos}}",
+    "superSixPos": "Super Six – {{pos}}",
+    "winnerOf": "Winner SF-{{n}}",
+    "ord1": "1st",
+    "ord2": "2nd",
+    "ord3": "3rd",
+    "ord4": "4th"
   }
 }
