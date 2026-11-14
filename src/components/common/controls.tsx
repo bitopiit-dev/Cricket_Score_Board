@@ -68,12 +68,17 @@ export function Stepper({
   max,
   onChange,
   label,
+  locked = false,
+  hint,
 }: {
   value: number;
   min: number;
   max: number;
   onChange: (v: number) => void;
   label: string;
+  /** Value fixed by a rule; shown but not editable. */
+  locked?: boolean;
+  hint?: string;
 }) {
   const f = useFormat();
   const clamp = (v: number) => Math.min(max, Math.max(min, v));
@@ -81,12 +86,17 @@ export function Stepper({
     'h-10 w-10 rounded-full bg-slate-100 text-xl font-bold active:bg-slate-200 disabled:opacity-30 dark:bg-slate-800';
   return (
     <div className="flex items-center justify-between gap-3 py-1">
-      <span>{label}</span>
-      <div className="flex items-center gap-3">
+      <span className="min-w-0">
+        {label}
+        {hint && (
+          <span className="block text-xs text-emerald-700 dark:text-emerald-400">{hint}</span>
+        )}
+      </span>
+      <div className="flex shrink-0 items-center gap-3">
         <button
           type="button"
           className={stepBtn}
-          disabled={value <= min}
+          disabled={locked || value <= min}
           onClick={() => onChange(clamp(value - 1))}
           aria-label={`${label} −`}
         >
@@ -96,7 +106,7 @@ export function Stepper({
         <button
           type="button"
           className={stepBtn}
-          disabled={value >= max}
+          disabled={locked || value >= max}
           onClick={() => onChange(clamp(value + 1))}
           aria-label={`${label} +`}
         >

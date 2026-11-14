@@ -380,11 +380,16 @@ export function validateEvent(
       if (phase !== 'inPlay' || !inn) return 'wrongPhase';
       if (!Number.isInteger(input.runs) || input.runs < 0 || input.runs > 10) return 'invalidRuns';
       if (input.boundary && input.runs !== 4 && input.runs !== 6) return 'invalidBoundary';
+      // With six out on, a six is not possible: it is recorded as a dismissal.
+      if (match.settings.sixOut && input.boundary && input.runs === 6) return 'invalidBoundary';
       if (input.wicket) {
         const w = input.wicket;
-        if (!allowedDismissals(input.extra, inn.freeHitNext).includes(w.kind)) {
+        if (
+          !allowedDismissals(input.extra, inn.freeHitNext, match.settings.sixOut).includes(w.kind)
+        ) {
           return 'dismissalNotAllowed';
         }
+        if (w.kind === 'sixOut' && input.runs !== 0) return 'invalidRuns';
         if (w.batterId !== inn.strikerId && w.batterId !== inn.nonStrikerId) {
           return 'batterNotAtCrease';
         }

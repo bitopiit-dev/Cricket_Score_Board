@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Header } from '../components/common/Header';
+import { LanguageToggle } from '../components/common/Header';
+import { APP_SUBTITLE, APP_TITLE } from '../config/app';
 import { btn } from '../components/common/controls';
 import { matchRepository } from '../db/repository';
 import { deriveMatchState } from '../engine/scoring';
@@ -20,7 +21,13 @@ export default function HomePage() {
 
   return (
     <div className="min-h-dvh">
-      <Header title={t('app.title')} />
+      <header className="relative bg-emerald-800 px-4 pt-[max(1.5rem,env(safe-area-inset-top))] pb-6 text-center text-white dark:bg-emerald-950">
+        <div className="absolute top-[max(0.75rem,env(safe-area-inset-top))] right-3">
+          <LanguageToggle />
+        </div>
+        <h1 className="text-4xl font-bold tracking-tight">{APP_TITLE}</h1>
+        <p className="mt-1 text-emerald-100">{APP_SUBTITLE}</p>
+      </header>
       <main className="mx-auto flex max-w-lg flex-col gap-3 p-4">
         <Link to="/new" className={`${btn.primary} text-center text-lg`}>
           + {t('home.newMatch')}

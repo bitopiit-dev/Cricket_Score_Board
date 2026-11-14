@@ -11,7 +11,13 @@ import {
   btn,
   inputClass,
 } from '../components/common/controls';
-import { DEFAULT_SETTINGS, defaultMaxOversPerBowler } from '../engine/rules';
+import {
+  DEFAULT_PLAYERS_PER_SIDE,
+  DEFAULT_SETTINGS,
+  TOURNAMENT_RULES,
+  defaultMaxOversPerBowler,
+  type TournamentRule,
+} from '../engine/rules';
 import type { Team, TeamIndex } from '../engine/types';
 import { createMatch } from '../store/matchStore';
 import { useFormat } from '../hooks/useFormat';
@@ -19,6 +25,9 @@ import { newId } from '../utils/id';
 
 const MAX_PLAYERS = 20;
 const emptyNames = () => Array.from({ length: MAX_PLAYERS }, () => '');
+const RULE_KEYS = Object.keys(TOURNAMENT_RULES) as TournamentRule[];
+const allRules = (on: boolean) =>
+  Object.fromEntries(RULE_KEYS.map((k) => [k, on])) as Record<TournamentRule, boolean>;
 
 export default function NewMatchPage() {
   const { t } = useTranslation();
@@ -26,14 +35,21 @@ export default function NewMatchPage() {
   const navigate = useNavigate();
 
   const [teamNames, setTeamNames] = useState<[string, string]>(['', '']);
-  const [playersPerSide, setPlayersPerSide] = useState(11);
   const [playerNames, setPlayerNames] = useState<[string[], string[]]>([
     emptyNames(),
     emptyNames(),
   ]);
-  const [overs, setOvers] = useState(DEFAULT_SETTINGS.overs);
   const [tossWinner, setTossWinner] = useState<TeamIndex>(0);
   const [decision, setDecision] = useState<'bat' | 'bowl'>('bat');
+
+  // Tournament rules: each one, when on, fixes its setting.
+  const [rules, setRules] = useState(allRules(true));
+  const setRule = (k: TournamentRule, on: boolean) => setRules((r) => ({ ...r, [k]: on }));
+  const allOn = RULE_KEYS.every((k) => rules[k]);
+
+  // Free values, used when the matching rule is off.
+  const [oversFree, setOvers] = useState(DEFAULT_SETTINGS.overs);
+  const [playersFree, setPlayersPerSide] = useState(DEFAULT_PLAYERS_PER_SIDE);
   const [wideRuns, setWideRuns] = useState(DEFAULT_SETTINGS.wideRuns);
   const [noBallRuns, setNoBallRuns] = useState(DEFAULT_SETTINGS.noBallRuns);
   const [freeHit, setFreeHit] = useState(DEFAULT_SETTINGS.freeHit);
@@ -43,7 +59,15 @@ export default function NewMatchPage() {
   const [customLimit, setCustomLimit] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
 
-  const bowlerLimit = customLimit ?? defaultMaxOversPerBowler(overs);
+  const overs = rules.overs ? TOURNAMENT_RULES.overs : oversFree;
+  const playersPerSide = rules.playersPerSide ? TOURNAMENT_RULES.playersPerSide : playersFree;
+  const bowlerLimit: number | null = rules.maxOversPerBowler
+    ? Math.min(TOURNAMENT_RULES.maxOversPerBowler, overs)
+    : limitOn
+      ? Math.min(customLimit ?? defaultMaxOversPerBowler(overs), overs)
+      : null;
+  const ruleHint = t('newMatch.fixedByRule');
+
   const displayName = (i: TeamIndex) =>
     teamNames[i].trim() || t('newMatch.teamDefault', { n: f.num(i + 1) });
 
@@ -74,7 +98,9 @@ export default function NewMatchPage() {
         noBallRuns,
         freeHit,
         lastManStands,
-        maxOversPerBowler: limitOn ? Math.min(bowlerLimit, overs) : null,
+        maxOversPerBowler: bowlerLimit,
+        sixOut: rules.sixOut,
+        shortPitch: rules.shortPitch,
       },
     });
     navigate(`/match/${id}`, { replace: true });
@@ -106,14 +132,67 @@ export default function NewMatchPage() {
           </div>
         </Card>
 
+        <Card className="ring-2 ring-emerald-600/30">
+          <div className="flex items-center justify-between gap-3">
+            <SectionTitle>{t('newMatch.tournamentRules')}</SectionTitle>
+          </div>
+          <Toggle
+            label={t('newMatch.applyAll')}
+            checked={allOn}
+            onChange={(on) => setRules(allRules(on))}
+          />
+          <div className="mt-1 border-t border-slate-200 pt-1 pl-2 dark:border-slate-800">
+            <Toggle
+              label={t('newMatch.ruleOvers', { n: f.num(TOURNAMENT_RULES.overs) })}
+              checked={rules.overs}
+              onChange={(on) => setRule('overs', on)}
+            />
+            <Toggle
+              label={t('newMatch.rulePlayers', {
+                n: f.num(TOURNAMENT_RULES.playersPerSide),
+                w: f.num(TOURNAMENT_RULES.playersPerSide - 1),
+              })}
+              checked={rules.playersPerSide}
+              onChange={(on) => setRule('playersPerSide', on)}
+            />
+            <Toggle
+              label={t('newMatch.ruleShortPitch')}
+              checked={rules.shortPitch}
+              onChange={(on) => setRule('shortPitch', on)}
+            />
+            <Toggle
+              label={t('newMatch.ruleSixOut')}
+              checked={rules.sixOut}
+              onChange={(on) => setRule('sixOut', on)}
+            />
+            <Toggle
+              label={t('newMatch.ruleBowlerLimit', {
+                n: f.num(TOURNAMENT_RULES.maxOversPerBowler),
+              })}
+              checked={rules.maxOversPerBowler}
+              onChange={(on) => setRule('maxOversPerBowler', on)}
+            />
+          </div>
+        </Card>
+
         <Card>
-          <Stepper label={t('newMatch.overs')} value={overs} min={1} max={50} onChange={setOvers} />
+          <Stepper
+            label={t('newMatch.overs')}
+            value={overs}
+            min={1}
+            max={50}
+            onChange={setOvers}
+            locked={rules.overs}
+            hint={rules.overs ? ruleHint : undefined}
+          />
           <Stepper
             label={t('newMatch.playersPerSide')}
             value={playersPerSide}
             min={2}
             max={MAX_PLAYERS}
             onChange={setPlayersPerSide}
+            locked={rules.playersPerSide}
+            hint={rules.playersPerSide ? ruleHint : undefined}
           />
         </Card>
 
@@ -207,19 +286,33 @@ export default function NewMatchPage() {
                 checked={lastManStands}
                 onChange={setLastManStands}
               />
-              <Toggle
-                label={`${t('newMatch.bowlerLimit')}${limitOn ? '' : ` — ${t('newMatch.noLimit')}`}`}
-                checked={limitOn}
-                onChange={setLimitOn}
-              />
-              {limitOn && (
+              {rules.maxOversPerBowler ? (
                 <Stepper
                   label={t('newMatch.bowlerLimit')}
-                  value={Math.min(bowlerLimit, overs)}
+                  value={bowlerLimit ?? 0}
                   min={1}
                   max={overs}
                   onChange={setCustomLimit}
+                  locked
+                  hint={ruleHint}
                 />
+              ) : (
+                <>
+                  <Toggle
+                    label={`${t('newMatch.bowlerLimit')}${limitOn ? '' : ` — ${t('newMatch.noLimit')}`}`}
+                    checked={limitOn}
+                    onChange={setLimitOn}
+                  />
+                  {limitOn && bowlerLimit !== null && (
+                    <Stepper
+                      label={t('newMatch.bowlerLimit')}
+                      value={bowlerLimit}
+                      min={1}
+                      max={overs}
+                      onChange={setCustomLimit}
+                    />
+                  )}
+                </>
               )}
             </div>
           </details>

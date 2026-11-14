@@ -13,13 +13,31 @@ import type {
 export const BALLS_PER_OVER = 6;
 
 export const DEFAULT_SETTINGS: MatchSettings = {
-  overs: 20,
+  overs: 12,
   lastManStands: false,
   freeHit: true,
   wideRuns: 1,
   noBallRuns: 1,
-  maxOversPerBowler: defaultMaxOversPerBowler(20),
+  maxOversPerBowler: defaultMaxOversPerBowler(12),
+  sixOut: false,
+  shortPitch: false,
 };
+
+export const DEFAULT_PLAYERS_PER_SIDE = 11;
+
+/**
+ * The user's tournament rules. Each one can be switched on/off separately
+ * in match setup; when on, the matching setting is fixed to this value.
+ */
+export const TOURNAMENT_RULES = {
+  overs: 12,
+  playersPerSide: 11, // 10 wickets
+  shortPitch: true,
+  sixOut: true,
+  maxOversPerBowler: 3,
+} as const;
+
+export type TournamentRule = keyof typeof TOURNAMENT_RULES;
 
 /** Default bowling quota: one fifth of the overs, rounded up. */
 export function defaultMaxOversPerBowler(overs: number): number {
@@ -36,12 +54,22 @@ export function creditsBowler(kind: DismissalKind): boolean {
   return kind !== 'runOut' && kind !== 'retiredOut';
 }
 
-/** Which ways of getting out are possible on this kind of delivery. */
-export function allowedDismissals(extra: ExtraType | null, freeHit: boolean): Wicket['kind'][] {
-  if (extra === 'noBall' || freeHit) return ['runOut'];
+/**
+ * Which ways of getting out are possible on this kind of delivery.
+ * Six out (when enabled) applies to every legal delivery, free hit included:
+ * the tournament rule says a ball over the boundary is always out.
+ */
+export function allowedDismissals(
+  extra: ExtraType | null,
+  freeHit: boolean,
+  sixOut = false,
+): Wicket['kind'][] {
+  const six: Wicket['kind'][] = sixOut && extra === null ? ['sixOut'] : [];
+  if (extra === 'noBall') return ['runOut'];
+  if (freeHit) return ['runOut', ...six];
   if (extra === 'wide') return ['runOut', 'stumped'];
   if (extra === 'bye' || extra === 'legBye') return ['runOut'];
-  return ['bowled', 'caught', 'lbw', 'runOut', 'stumped', 'hitWicket'];
+  return ['bowled', 'caught', 'lbw', 'runOut', 'stumped', 'hitWicket', ...six];
 }
 
 /** Dismissals where only the striker can be out. */

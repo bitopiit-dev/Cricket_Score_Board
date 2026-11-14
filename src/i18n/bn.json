@@ -1,5 +1,4 @@
 {
-  "app": { "title": "ক্রিকেট স্কোরবোর্ড", "short": "স্কোরবোর্ড" },
   "common": {
     "back": "পেছনে",
     "cancel": "বাতিল",
@@ -48,7 +47,15 @@
     "lastManStands": "শেষ ব্যাটার একা খেলতে পারবে",
     "bowlerLimit": "বোলারপ্রতি সর্বোচ্চ ওভার",
     "noLimit": "সীমা নেই",
-    "startMatch": "ম্যাচ শুরু করুন"
+    "startMatch": "ম্যাচ শুরু করুন",
+    "tournamentRules": "টুর্নামেন্ট নিয়ম",
+    "applyAll": "সব টুর্নামেন্ট নিয়ম চালু",
+    "ruleOvers": "প্রতি ইনিংস {{n}} ওভার",
+    "rulePlayers": "দলপ্রতি {{n}} জন ({{w}} উইকেটে অলআউট)",
+    "ruleShortPitch": "শর্ট পিচ",
+    "ruleSixOut": "ছক্কা আউট (বল সরাসরি বাউন্ডারির বাইরে গেলে আউট)",
+    "ruleBowlerLimit": "বোলারপ্রতি সর্বোচ্চ {{n}} ওভার",
+    "fixedByRule": "টুর্নামেন্ট নিয়মে নির্ধারিত"
   },
   "scoring": {
     "crr": "রান রেট",
@@ -103,7 +110,9 @@
     "matchOver": "ম্যাচ শেষ",
     "inningsN": "ইনিংস {{n}}",
     "oversOf": "{{overs}} / {{total}} ওভার",
-    "loneBatter": "একা ব্যাট করছে"
+    "loneBatter": "একা ব্যাট করছে",
+    "sixOut": "ছক্কা আউট",
+    "shortPitch": "শর্ট পিচ"
   },
   "endReason": {
     "allOut": "অলআউট",
@@ -125,9 +134,16 @@
     "hitWicket": "হিট উইকেট",
     "retiredOut": "রিটায়ার্ড আউট",
     "retiredHurt": "রিটায়ার্ড হার্ট",
-    "notOut": "নট আউট"
+    "notOut": "নট আউট",
+    "sixOut": "ছক্কা আউট (Six Out)"
   },
-  "ball": { "wicket": "W", "wide": "wd", "noBall": "nb", "bye": "b", "legBye": "lb" },
+  "ball": {
+    "wicket": "W",
+    "wide": "wd",
+    "noBall": "nb",
+    "bye": "b",
+    "legBye": "lb"
+  },
   "errors": {
     "wrongPhase": "এখন এই কাজটা করা যাবে না।",
     "samePlayer": "দুজন আলাদা ব্যাটার বাছুন।",

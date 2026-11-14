@@ -31,6 +31,13 @@ export interface MatchSettings {
   noBallRuns: number;
   /** Max overs a single bowler may bowl; null = no limit. */
   maxOversPerBowler: number | null;
+  /**
+   * "Six out": a ball hit over the boundary on the full dismisses the striker.
+   * No runs, legal delivery, credited to the bowler. Replaces the six.
+   */
+  sixOut?: boolean;
+  /** Played on a short pitch (informational only, no effect on scoring). */
+  shortPitch?: boolean;
 }
 
 export interface Toss {
@@ -41,7 +48,7 @@ export interface Toss {
 export type ExtraType = 'wide' | 'noBall' | 'bye' | 'legBye';
 
 export type DismissalKind =
-  'bowled' | 'caught' | 'lbw' | 'runOut' | 'stumped' | 'hitWicket' | 'retiredOut';
+  'bowled' | 'caught' | 'lbw' | 'runOut' | 'stumped' | 'hitWicket' | 'sixOut' | 'retiredOut';
 
 export type RetireKind = 'retiredHurt' | 'retiredOut';
 

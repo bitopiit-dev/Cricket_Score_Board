@@ -1,5 +1,4 @@
 {
-  "app": { "title": "Cricket Score Board", "short": "Score Board" },
   "common": {
     "back": "Back",
     "cancel": "Cancel",
@@ -48,7 +47,15 @@
     "lastManStands": "Last batter can bat alone",
     "bowlerLimit": "Max overs per bowler",
     "noLimit": "No limit",
-    "startMatch": "Start match"
+    "startMatch": "Start match",
+    "tournamentRules": "Tournament rules",
+    "applyAll": "Use all tournament rules",
+    "ruleOvers": "{{n}} overs per innings",
+    "rulePlayers": "{{n}} players per side ({{w}} wickets)",
+    "ruleShortPitch": "Short pitch",
+    "ruleSixOut": "Six out (ball over the boundary on the full = out)",
+    "ruleBowlerLimit": "Max {{n}} overs per bowler",
+    "fixedByRule": "Set by tournament rule"
   },
   "scoring": {
     "crr": "CRR",
@@ -103,7 +110,9 @@
     "matchOver": "Match over",
     "inningsN": "Innings {{n}}",
     "oversOf": "{{overs}} / {{total}} ov",
-    "loneBatter": "Batting alone"
+    "loneBatter": "Batting alone",
+    "sixOut": "Six Out",
+    "shortPitch": "Short pitch"
   },
   "endReason": {
     "allOut": "All out",
@@ -127,9 +136,16 @@
     "hitWicket": "Hit wicket",
     "retiredOut": "Retired out",
     "retiredHurt": "Retired hurt",
-    "notOut": "not out"
+    "notOut": "not out",
+    "sixOut": "Six Out"
   },
-  "ball": { "wicket": "W", "wide": "wd", "noBall": "nb", "bye": "b", "legBye": "lb" },
+  "ball": {
+    "wicket": "W",
+    "wide": "wd",
+    "noBall": "nb",
+    "bye": "b",
+    "legBye": "lb"
+  },
   "errors": {
     "wrongPhase": "That action is not possible right now.",
     "samePlayer": "Choose two different batters.",
