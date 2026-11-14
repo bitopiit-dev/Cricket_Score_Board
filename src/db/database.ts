@@ -1,4 +1,5 @@
 import Dexie, { type EntityTable } from 'dexie';
+import { migrateTeamIds } from '../data/teams';
 import type { Match } from '../engine/types';
 
 /**
@@ -14,6 +15,17 @@ export class ScoreBoardDB extends Dexie {
     this.version(1).stores({
       matches: 'id, updatedAt',
     });
+    // v2: renamed teams (e.g. IE Warrior -> Engineer Warriors) get their new id and name.
+    this.version(2)
+      .stores({ matches: 'id, updatedAt' })
+      .upgrade((tx) =>
+        tx
+          .table<Match, string>('matches')
+          .toCollection()
+          .modify((m) => {
+            migrateTeamIds(m);
+          }),
+      );
   }
 }
 

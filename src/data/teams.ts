@@ -96,6 +96,29 @@ export function teamByName(name: string): TournamentTeam | undefined {
   return TOURNAMENT_TEAMS.find((t) => t.name === name);
 }
 
+/** Old team ids that were renamed, mapped to the current id. */
+export const RENAMED_TEAM_IDS: Readonly<Record<string, string>> = {
+  'ie-warrior': 'engineer-warriors',
+  'red-bulls-warrior': 'red-bulls-warriors',
+  'power-x1-printing-washing': 'power-printing-washing',
+};
+
+/**
+ * Moves a saved match's teams from renamed ids to the current id and name.
+ * Returns true if anything changed.
+ */
+export function migrateTeamIds(match: { teams: { teamId?: string; name: string }[] }): boolean {
+  let changed = false;
+  for (const team of match.teams) {
+    const newId = team.teamId && RENAMED_TEAM_IDS[team.teamId];
+    if (!newId) continue;
+    team.teamId = newId;
+    team.name = TOURNAMENT_TEAMS.find((t) => t.id === newId)?.name ?? team.name;
+    changed = true;
+  }
+  return changed;
+}
+
 export function findTeam(id: string | undefined): TournamentTeam | undefined {
   return id ? TOURNAMENT_TEAMS.find((t) => t.id === id) : undefined;
 }
