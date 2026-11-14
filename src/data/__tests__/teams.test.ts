@@ -159,3 +159,37 @@ describe('Quality Flying Fighter squad', () => {
     ]);
   });
 });
+
+describe('Engineer Warriors squad', () => {
+  const ew = findTeam('engineer-warriors')!;
+
+  it('has the 14 players in the given order with their roles', () => {
+    expect(ew.players.map((p) => [p.name, p.role ?? null])).toEqual([
+      ['Farhad', null],
+      ['Akhtar', 'bowler'],
+      ['Avijit', 'bowler'],
+      ['Harun', 'wicketKeeper'],
+      ['Shakil', 'batter'],
+      ['Akbar', 'batter'],
+      ['Mohiuddin', 'batter'],
+      ['Aktar', 'bowler'],
+      ['Imran', 'bowler'],
+      ['Masud', 'batter'],
+      ['Shimanto', 'allRounder'],
+      ['Tawhid', null],
+      ['Samad', null],
+      ['Amzad', null],
+    ]);
+  });
+
+  it('Farhad is captain; Tawhid, Samad and Amzad are the extras; Akhtar and Aktar are different players', () => {
+    expect(ew.players.filter((p) => p.captain).map((p) => p.name)).toEqual(['Farhad']);
+    expect(ew.players.filter((p) => p.substitute).map((p) => p.name)).toEqual([
+      'Tawhid',
+      'Samad',
+      'Amzad',
+    ]);
+    expect(ew.players.find((p) => p.name === 'Akhtar')!.id).toBe('akhtar');
+    expect(ew.players.find((p) => p.name === 'Aktar')!.id).toBe('aktar');
+  });
+});

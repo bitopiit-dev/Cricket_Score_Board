@@ -5,7 +5,13 @@ import { SectionTitle } from '../components/common/controls';
 import { SubPageTitle } from '../components/layout/AppShell';
 import { PlayerAvatar, TeamAvatar } from '../components/common/TeamAvatar';
 import { SQUAD_LIMITS } from '../config/tournament';
-import { findTeam, squadWarnings, type TournamentPlayer, type TournamentTeam } from '../data/teams';
+import {
+  findTeam,
+  squadWarnings,
+  type PlayerRole,
+  type TournamentPlayer,
+  type TournamentTeam,
+} from '../data/teams';
 import { captainMark } from '../utils/matchText';
 import { useFormat } from '../hooks/useFormat';
 
@@ -89,6 +95,23 @@ export default function TeamPage() {
   );
 }
 
+const ROLE_BADGE: Record<PlayerRole, string> = {
+  batter: 'bg-sky-100 text-sky-800 dark:bg-sky-900/50 dark:text-sky-200',
+  bowler: 'bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-200',
+  allRounder: 'bg-violet-100 text-violet-800 dark:bg-violet-900/50 dark:text-violet-200',
+  wicketKeeper: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-200',
+};
+
+function Badge({ className, children }: { className: string; children: React.ReactNode }) {
+  return (
+    <span
+      className={`rounded-full px-2 py-0.5 text-[11px] leading-tight font-semibold ${className}`}
+    >
+      {children}
+    </span>
+  );
+}
+
 function PlayerGrid({
   title,
   players,
@@ -105,11 +128,6 @@ function PlayerGrid({
       <SectionTitle>{title}</SectionTitle>
       <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {players.map((p) => {
-          const tags = [
-            p.captain && t('role.captain'),
-            p.viceCaptain && t('role.viceCaptain'),
-            p.role && t(`role.${p.role}`),
-          ].filter(Boolean);
           return (
             <li
               key={p.id}
@@ -125,9 +143,17 @@ function PlayerGrid({
                   {t('team.nickname', { name: p.shortName })}
                 </span>
               )}
-              {tags.length > 0 && (
-                <span className="text-xs text-slate-500 dark:text-slate-400">
-                  {tags.join(' · ')}
+              {(p.captain || p.viceCaptain || p.role) && (
+                <span className="flex flex-wrap justify-center gap-1">
+                  {p.captain && (
+                    <Badge className="bg-amber-400 text-amber-950">{t('role.captain')}</Badge>
+                  )}
+                  {p.viceCaptain && (
+                    <Badge className="bg-amber-100 text-amber-900 dark:bg-amber-900/50 dark:text-amber-200">
+                      {t('role.viceCaptain')}
+                    </Badge>
+                  )}
+                  {p.role && <Badge className={ROLE_BADGE[p.role]}>{t(`role.${p.role}`)}</Badge>}
                 </span>
               )}
             </li>
