@@ -4,6 +4,21 @@
  * This list is the seed data for the future Supabase `teams` table, so each
  * team has a stable `id` that will not change when the name is edited.
  */
+export type PlayerRole = 'batter' | 'bowler' | 'allRounder' | 'wicketKeeper';
+
+export interface TournamentPlayer {
+  /** Stable slug, unique within the team (e.g. 'rahim-uddin'). */
+  id: string;
+  /** Shown exactly as written, never translated. */
+  name: string;
+  /** Path under public/, e.g. 'players/ddc/rahim-uddin.jpg'. Optional. */
+  photo?: string;
+  role?: PlayerRole;
+  captain?: boolean;
+  /** On the squad but not in the first XI. */
+  substitute?: boolean;
+}
+
 export interface TournamentTeam {
   /** Stable slug, used as the key in matches and later as the seed id. */
   id: string;
@@ -12,25 +27,54 @@ export interface TournamentTeam {
   color: string;
   /** Logo URL or path; when missing, a coloured initial badge is shown. */
   logo?: string;
+  /** Squad: first XI then substitutes. Empty until players are added. */
+  players: TournamentPlayer[];
 }
 
+/**
+ * To add players, fill a team's `players` array, e.g.
+ *
+ *   players: [
+ *     { id: 'rahim-uddin', name: 'Rahim Uddin', role: 'batter', captain: true,
+ *       photo: 'players/ddc/rahim-uddin.jpg' },
+ *     { id: 'karim-ali', name: 'Karim Ali', role: 'bowler', substitute: true },
+ *   ]
+ *
+ * Photos go in public/players/<team id>/ (see README).
+ */
 export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
-  { id: 'power-player', name: 'Power Player', color: '#dc2626' },
-  { id: 'sky-warrior', name: 'Sky Warrior', color: '#0284c7' },
-  { id: 'finishing-victorians', name: 'Finishing Victorians', color: '#7c3aed' },
-  { id: 'rainbow-cutting', name: 'Rainbow Cutting', color: '#db2777' },
-  { id: 'power-house-x1', name: 'Power House X1', color: '#ea580c' },
-  { id: 'hr-vikings', name: 'HR Vikings', color: '#4f46e5' },
-  { id: 'engineer-warriors', name: 'Engineer Warriors', color: '#0d9488' },
-  { id: 'red-bulls-warrior', name: 'Red Bulls Warrior', color: '#b91c1c' },
-  { id: 'mcd-super-stars', name: 'MCD Super Stars', color: '#ca8a04' },
-  { id: 'quality-flying-fighter', name: 'Quality Flying Fighter', color: '#2563eb' },
-  { id: 'power-x1-printing-washing', name: 'Power X1 (Printing & Washing)', color: '#16a34a' },
-  { id: 'ddc', name: 'DDC', color: '#475569' },
+  { id: 'power-player', name: 'Power Player', color: '#dc2626', players: [] },
+  { id: 'sky-warrior', name: 'Sky Warrior', color: '#0284c7', players: [] },
+  { id: 'finishing-victorians', name: 'Finishing Victorians', color: '#7c3aed', players: [] },
+  { id: 'rainbow-cutting', name: 'Rainbow Cutting', color: '#db2777', players: [] },
+  { id: 'power-house-x1', name: 'Power House X1', color: '#ea580c', players: [] },
+  { id: 'hr-vikings', name: 'HR Vikings', color: '#4f46e5', players: [] },
+  { id: 'engineer-warriors', name: 'Engineer Warriors', color: '#0d9488', players: [] },
+  { id: 'red-bulls-warrior', name: 'Red Bulls Warrior', color: '#b91c1c', players: [] },
+  { id: 'mcd-super-stars', name: 'MCD Super Stars', color: '#ca8a04', players: [] },
+  { id: 'quality-flying-fighter', name: 'Quality Flying Fighter', color: '#2563eb', players: [] },
+  {
+    id: 'power-x1-printing-washing',
+    name: 'Power X1 (Printing & Washing)',
+    color: '#16a34a',
+    players: [],
+  },
+  { id: 'ddc', name: 'DDC', color: '#475569', players: [] },
 ];
 
 export function findTeam(id: string | undefined): TournamentTeam | undefined {
   return id ? TOURNAMENT_TEAMS.find((t) => t.id === id) : undefined;
+}
+
+/** First letters of the first two words, for a player's placeholder badge. */
+export function initials(name: string): string {
+  const words = name.trim().split(/\s+/).filter(Boolean);
+  if (words.length === 0) return '?';
+  return words
+    .slice(0, 2)
+    .map((w) => Array.from(w)[0])
+    .join('')
+    .toUpperCase();
 }
 
 /** First letter of the name, for the placeholder badge. */

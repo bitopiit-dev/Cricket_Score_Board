@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { TOURNAMENT_TEAMS, findTeam, teamInitial } from '../teams';
+import { TOURNAMENT_TEAMS, findTeam, initials, teamInitial } from '../teams';
 
 describe('tournament teams', () => {
   it('has the 12 teams in order, names exactly as given', () => {
@@ -30,5 +30,25 @@ describe('tournament teams', () => {
     expect(findTeam(undefined)).toBeUndefined();
     expect(teamInitial('  sky Warrior')).toBe('S');
     expect(teamInitial('')).toBe('?');
+  });
+});
+
+describe('squads', () => {
+  it('player ids are unique within each team and photos sit in the team folder', () => {
+    for (const team of TOURNAMENT_TEAMS) {
+      const ids = team.players.map((p) => p.id);
+      expect(new Set(ids).size, team.name).toBe(ids.length);
+      for (const p of team.players) {
+        expect(p.name.trim(), `${team.name} player ${p.id}`).not.toBe('');
+        if (p.photo) expect(p.photo.startsWith(`players/${team.id}/`), p.photo).toBe(true);
+      }
+      expect(team.players.filter((p) => p.captain).length, team.name).toBeLessThanOrEqual(1);
+    }
+  });
+
+  it('initials take the first letters of two words', () => {
+    expect(initials('Rahim Uddin Khan')).toBe('RU');
+    expect(initials('shakib')).toBe('S');
+    expect(initials('  ')).toBe('?');
   });
 });

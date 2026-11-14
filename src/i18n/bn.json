@@ -158,5 +158,19 @@
     "batterNotAtCrease": "এই ব্যাটার এভাবে আউট হতে পারে না।",
     "batterNotAvailable": "এই ব্যাটার নামতে পারবে না।",
     "bowlerNotEligible": "এই বোলার এখন বল করতে পারবে না।"
+  },
+  "team": {
+    "players": "খেলোয়াড়",
+    "substitutes": "বদলি খেলোয়াড়",
+    "noPlayers": "এখনো খেলোয়াড় যোগ করা হয়নি",
+    "notFound": "দলটা খুঁজে পাওয়া যায়নি",
+    "playerCount": "{{n}} জন খেলোয়াড়"
+  },
+  "role": {
+    "batter": "ব্যাটার",
+    "bowler": "বোলার",
+    "allRounder": "অলরাউন্ডার",
+    "wicketKeeper": "উইকেটকিপার",
+    "captain": "অধিনায়ক"
   }
 }

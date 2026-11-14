@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { usePrefs } from '../../store/prefsStore';
 
 interface Props {
@@ -12,16 +12,26 @@ interface Props {
 
 export function Header({ title, backTo, actions }: Props) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
+  // Step back through history when we came from inside the app, so the
+  // phone's back button and this one agree; otherwise (opened directly)
+  // replace with the parent route.
+  const goBack = () => {
+    if (location.key !== 'default') navigate(-1);
+    else if (backTo) navigate(backTo, { replace: true });
+  };
   return (
     <header className="sticky top-0 z-[55] flex items-center gap-2 bg-emerald-800 px-3 py-2 pt-[max(0.5rem,env(safe-area-inset-top))] text-white shadow dark:bg-emerald-950">
       {backTo && (
-        <Link
-          to={backTo}
+        <button
+          type="button"
+          onClick={goBack}
           aria-label={t('common.back')}
           className="-ml-1 flex h-10 w-10 items-center justify-center rounded-full text-2xl hover:bg-white/10"
         >
           ‹
-        </Link>
+        </button>
       )}
       <h1 className="min-w-0 flex-1 truncate text-lg font-semibold">{title}</h1>
       {actions}

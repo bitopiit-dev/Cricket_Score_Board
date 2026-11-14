@@ -161,5 +161,20 @@
     "batterNotAtCrease": "That batter cannot be out this way.",
     "batterNotAvailable": "That batter cannot come in.",
     "bowlerNotEligible": "That bowler cannot bowl now."
+  },
+  "team": {
+    "players": "Players",
+    "substitutes": "Substitutes",
+    "noPlayers": "No players added yet",
+    "notFound": "Team not found",
+    "playerCount_one": "{{n}} player",
+    "playerCount_other": "{{n}} players"
+  },
+  "role": {
+    "batter": "Batter",
+    "bowler": "Bowler",
+    "allRounder": "All-rounder",
+    "wicketKeeper": "Wicketkeeper",
+    "captain": "Captain"
   }
 }

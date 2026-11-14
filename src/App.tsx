@@ -3,6 +3,7 @@ import { useApplyTheme } from './hooks/useApplyTheme';
 import HomePage from './pages/HomePage';
 import NewMatchPage from './pages/NewMatchPage';
 import ScoringPage from './pages/ScoringPage';
+import TeamPage from './pages/TeamPage';
 
 /**
  * HashRouter so the app works from any static host (and offline) without
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/new" element={<NewMatchPage />} />
         <Route path="/match/:id" element={<ScoringPage />} />
+        <Route path="/team/:id" element={<TeamPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </HashRouter>
