@@ -14,7 +14,7 @@ describe('tournament teams', () => {
       'Rainbow Cutting',
     ]);
     expect(names('B')).toEqual([
-      'IE Warrior',
+      'Engineer Warriors',
       'HR Vikings',
       'Power Player',
       'DDC',

@@ -60,10 +60,15 @@ search. The text lives in [`src/data/rules.ts`](src/data/rules.ts) (source:
 
 ### Format and awards
 
-- League: every team plays every other team once (12 teams = 66 matches), then
-  BPL-style play-offs: Qualifier 1 (1st v 2nd), Eliminator (3rd v 4th),
-  Qualifier 2 (loser Q1 v winner Eliminator), Final. Points: win 2, tie or no
-  result 1, loss 0. See [`src/tournament/format.ts`](src/tournament/format.ts).
+- Format (official fixture, 48 matches from Monday 16 November 2026, in
+  [`src/data/fixtures.ts`](src/data/fixtures.ts), generated from
+  [`docs/fixture-bpl-2027.json`](docs/fixture-bpl-2027.json)):
+  - Group A and Group B, 6 teams each, 15 matches each. The top 3 of each group
+    go to the Super Six.
+  - Super Six: points start again, 15 matches. The top 4 go to the semi-finals.
+  - SF-1: Super Six 1st v 4th, SF-2: 2nd v 3rd. The winners meet in the final.
+  - Points: win 2, tie or no result 1, loss 0. No matches on Fridays,
+    30 November, 1 or 16 December.
 - The **Awards** tab ranks Man of the Series candidates (1 point per run, 20 per
   wicket, 10 per catch, stumping, run out or maiden) and the Best Wicket-Taker
   (most wickets, then best economy). Only completed matches between two teams
@@ -115,7 +120,7 @@ Each team has its own folder under `public/players/`, named after the team's `id
 | Rainbow Cutting            | `public/players/rainbow-cutting/`        |
 | Power House X1             | `public/players/power-house-x1/`         |
 | HR Vikings                 | `public/players/hr-vikings/`             |
-| IE Warrior                 | `public/players/ie-warrior/`             |
+| Engineer Warriors          | `public/players/engineer-warriors/`      |
 | Red Bulls Warriors         | `public/players/red-bulls-warriors/`     |
 | MCD Super Stars            | `public/players/mcd-super-stars/`        |
 | Quality Flying Fighter     | `public/players/quality-flying-fighter/` |

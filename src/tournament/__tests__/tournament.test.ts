@@ -1,95 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { TOURNAMENT_TEAMS } from '../../data/teams';
 import { Game, makeMatch } from '../../engine/__tests__/helpers';
 import type { Match, MatchSettings } from '../../engine/types';
 import { bestWicketTakers, manOfTheSeries, playerTotals } from '../awards';
-import {
-  BPL_PLAYOFFS,
-  LEAGUE_POINTS,
-  resolvePlayoffs,
-  roundRobinMatchCount,
-  roundRobinRounds,
-} from '../format';
+import { LEAGUE_POINTS, QUALIFIERS } from '../format';
 
-describe('round robin (rule 3)', () => {
-  const ids = TOURNAMENT_TEAMS.map((t) => t.id);
-  const rounds = roundRobinRounds(ids);
-  const pairs = rounds.flat();
-
-  it('12 teams play 66 matches in 11 rounds', () => {
-    expect(roundRobinMatchCount(12)).toBe(66);
-    expect(rounds).toHaveLength(11);
-    expect(pairs).toHaveLength(66);
-  });
-
-  it('every pair meets exactly once', () => {
-    const keys = pairs.map(([a, b]) => [a, b].sort().join('|'));
-    expect(new Set(keys).size).toBe(66);
-    expect(pairs.every(([a, b]) => a !== b)).toBe(true);
-  });
-
-  it('no team plays twice in a round', () => {
-    for (const r of rounds) expect(new Set(r.flat()).size).toBe(r.length * 2);
-  });
-
-  it('each team plays 11 matches, home and away roughly balanced', () => {
-    for (const id of ids) {
-      const games = pairs.filter((p) => p.includes(id));
-      expect(games).toHaveLength(11);
-      const first = games.filter((p) => p[0] === id).length;
-      expect(Math.abs(first - (11 - first))).toBeLessThanOrEqual(3);
-    }
-  });
-
-  it('handles an odd number of teams with a rest each round', () => {
-    const r = roundRobinRounds(['a', 'b', 'c', 'd', 'e']);
-    expect(r).toHaveLength(5);
-    expect(r.flat()).toHaveLength(10);
-  });
-
-  it('rejects duplicate teams', () => {
-    expect(() => roundRobinRounds(['a', 'a'])).toThrow();
-  });
-
-  it('uses 2 / 1 / 1 / 0 league points', () => {
+describe('format', () => {
+  it('uses 2 / 1 / 1 / 0 league points; 3 per group and 4 from the Super Six go through', () => {
     expect(LEAGUE_POINTS).toEqual({ win: 2, tie: 1, noResult: 1, loss: 0 });
-  });
-});
-
-describe('BPL play-offs', () => {
-  const table = ['t1', 't2', 't3', 't4', 't5'];
-
-  it('has qualifier 1, eliminator, qualifier 2 and final', () => {
-    expect(BPL_PLAYOFFS.map((p) => p.id)).toEqual([
-      'qualifier1',
-      'eliminator',
-      'qualifier2',
-      'final',
-    ]);
-  });
-
-  it('places the top four, then fills in winners and losers', () => {
-    expect(resolvePlayoffs(table, {})).toEqual([
-      { id: 'qualifier1', home: 't1', away: 't2' },
-      { id: 'eliminator', home: 't3', away: 't4' },
-      { id: 'qualifier2', home: null, away: null },
-      { id: 'final', home: null, away: null },
-    ]);
-    const after = resolvePlayoffs(table, { qualifier1: 't2', eliminator: 't3', qualifier2: 't1' });
-    expect(after[2]).toEqual({ id: 'qualifier2', home: 't1', away: 't3' });
-    expect(after[3]).toEqual({ id: 'final', home: 't2', away: 't1' });
-  });
-
-  it('ignores a winner who did not play in that match', () => {
-    expect(resolvePlayoffs(table, { qualifier1: 't9' })[3].home).toBeNull();
-  });
-
-  it('leaves slots empty until the league table has four teams', () => {
-    expect(resolvePlayoffs(['t1', 't2'], {})[1]).toEqual({
-      id: 'eliminator',
-      home: null,
-      away: null,
-    });
+    expect(QUALIFIERS).toEqual({ group: 3, superSix: 4 });
   });
 });
 

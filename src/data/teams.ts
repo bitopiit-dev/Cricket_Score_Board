@@ -71,7 +71,7 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
   },
   { id: 'rainbow-cutting', name: 'Rainbow Cutting', group: 'A', color: '#db2777', players: [] },
   // Group B
-  { id: 'ie-warrior', name: 'IE Warrior', group: 'B', color: '#0d9488', players: [] },
+  { id: 'engineer-warriors', name: 'Engineer Warriors', group: 'B', color: '#0d9488', players: [] },
   { id: 'hr-vikings', name: 'HR Vikings', group: 'B', color: '#4f46e5', players: [] },
   { id: 'power-player', name: 'Power Player', group: 'B', color: '#dc2626', players: [] },
   { id: 'ddc', name: 'DDC', group: 'B', color: '#475569', players: [] },
