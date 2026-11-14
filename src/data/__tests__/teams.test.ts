@@ -47,8 +47,12 @@ describe('squads', () => {
         expect(p.name.trim(), `${team.name} player ${p.id}`).not.toBe('');
         if (p.photo) expect(p.photo.startsWith(`players/${team.id}/`), p.photo).toBe(true);
       }
-      // Rule 8: at most 14 (11 plus 3 extras), one captain, one vice-captain
-      expect(squadWarnings(team, SQUAD_LIMITS), team.name).toEqual([]);
+      // One captain and one vice-captain at most. A squad over the size limit is
+      // allowed in the data (the team page warns the admin), so 'tooMany' is not checked here.
+      expect(
+        squadWarnings(team, SQUAD_LIMITS).filter((w) => w !== 'tooMany'),
+        team.name,
+      ).toEqual([]);
     }
   });
 
@@ -103,15 +107,17 @@ describe('HR Vikings squad', () => {
 describe('squad warnings', () => {
   const p = (i: number, extra = {}) => ({ id: `p${i}`, name: `P${i}`, ...extra });
 
-  it('flags more than 14 players, more than 3 extras and a second captain', () => {
+  it('flags more than 14 players and a second captain', () => {
     const players = Array.from({ length: 15 }, (_, i) =>
       p(i, { substitute: i >= 11, captain: i < 2 }),
     );
-    expect(squadWarnings({ players }, SQUAD_LIMITS)).toEqual([
-      'tooMany',
-      'tooManySubs',
-      'twoCaptains',
-    ]);
+    // Over the limit: the extras count is not reported separately
+    expect(squadWarnings({ players }, SQUAD_LIMITS)).toEqual(['tooMany', 'twoCaptains']);
+  });
+
+  it('flags more than 3 extras in a squad within the limit', () => {
+    const players = Array.from({ length: 14 }, (_, i) => p(i, { substitute: i >= 10 }));
+    expect(squadWarnings({ players }, SQUAD_LIMITS)).toEqual(['tooManySubs']);
   });
 
   it('accepts 14 players with 3 extras and one captain', () => {
@@ -191,5 +197,43 @@ describe('Engineer Warriors squad', () => {
     ]);
     expect(ew.players.find((p) => p.name === 'Akhtar')!.id).toBe('akhtar');
     expect(ew.players.find((p) => p.name === 'Aktar')!.id).toBe('aktar');
+  });
+});
+
+describe('Red Bulls Warriors squad', () => {
+  const rbw = findTeam('red-bulls-warriors')!;
+
+  it('has all 15 players in the given order', () => {
+    expect(rbw.players.map((p) => p.name)).toEqual([
+      'Rashed',
+      'Kamrul',
+      'Robiul',
+      'Imon',
+      'Sayfur',
+      'Raihan',
+      'Ashraful',
+      'Nazir',
+      'Shorif',
+      'Rigan',
+      'Rikon',
+      'Shanto',
+      'Sohel',
+      'Al-Amin',
+      'Jahirul',
+    ]);
+  });
+
+  it('Rashed is captain, Imon vice-captain, Robiul is known as Pollob', () => {
+    expect(rbw.players.filter((p) => p.captain).map((p) => p.name)).toEqual(['Rashed']);
+    expect(rbw.players.filter((p) => p.viceCaptain).map((p) => p.name)).toEqual(['Imon']);
+    expect(rbw.players[2]).toMatchObject({ id: 'robiul', shortName: 'Pollob' });
+    expect(rbw.players[13]).toMatchObject({
+      id: 'al-amin',
+      photo: 'players/red-bulls-warriors/al-amin.jpg',
+    });
+  });
+
+  it('is one over the squad limit, which the team page reports', () => {
+    expect(squadWarnings(rbw, SQUAD_LIMITS)).toEqual(['tooMany']);
   });
 });

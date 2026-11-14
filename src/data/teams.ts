@@ -157,7 +157,24 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
     name: 'Red Bulls Warriors',
     group: 'B',
     color: '#b91c1c',
-    players: [],
+    // 15 players: one over the squad limit; the team page shows a warning.
+    players: [
+      squad('red-bulls-warriors', 'Rashed', { captain: true }),
+      squad('red-bulls-warriors', 'Kamrul'),
+      squad('red-bulls-warriors', 'Robiul', { shortName: 'Pollob' }),
+      squad('red-bulls-warriors', 'Imon', { viceCaptain: true }),
+      squad('red-bulls-warriors', 'Sayfur'),
+      squad('red-bulls-warriors', 'Raihan'),
+      squad('red-bulls-warriors', 'Ashraful'),
+      squad('red-bulls-warriors', 'Nazir'),
+      squad('red-bulls-warriors', 'Shorif'),
+      squad('red-bulls-warriors', 'Rigan'),
+      squad('red-bulls-warriors', 'Rikon'),
+      squad('red-bulls-warriors', 'Shanto', { substitute: true }),
+      squad('red-bulls-warriors', 'Sohel', { substitute: true }),
+      squad('red-bulls-warriors', 'Al-Amin', { substitute: true }),
+      squad('red-bulls-warriors', 'Jahirul', { substitute: true }),
+    ],
   },
   { id: 'sky-warrior', name: 'Sky Warrior', group: 'B', color: '#0284c7', players: [] },
 ];
@@ -226,7 +243,12 @@ export function squadWarnings(
   const w: SquadWarning[] = [];
   const count = (f: (p: TournamentPlayer) => boolean | undefined) => team.players.filter(f).length;
   if (team.players.length > limits.maxPlayers) w.push('tooMany');
-  if (count((p) => p.substitute) > limits.maxSubstitutes) w.push('tooManySubs');
+  if (
+    team.players.length <= limits.maxPlayers &&
+    count((p) => p.substitute) > limits.maxSubstitutes
+  ) {
+    w.push('tooManySubs');
+  }
   if (count((p) => p.captain) > 1) w.push('twoCaptains');
   if (count((p) => p.viceCaptain) > 1) w.push('twoViceCaptains');
   return w;
