@@ -13,6 +13,11 @@ export interface TournamentPlayer {
   name: string;
   /** Short name / nickname for tight spaces such as the scoring screen. */
   shortName?: string;
+  /**
+   * Tells two players with the same name apart: "2" shows as "Monir Hossain (2)"
+   * and becomes part of the id and photo file name.
+   */
+  nameTag?: string;
   /** Path under public/, e.g. 'players/ddc/rahim-uddin.jpg'. Optional. */
   photo?: string;
   role?: PlayerRole;
@@ -56,7 +61,7 @@ function squad(
   name: string,
   extra: Partial<Omit<TournamentPlayer, 'id' | 'name'>> = {},
 ): TournamentPlayer {
-  const id = name
+  const id = `${name} ${extra.nameTag ?? ''}`
     .trim()
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
@@ -74,7 +79,29 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
     players: [],
   },
   { id: 'power-house-x1', name: 'Power House X1', group: 'A', color: '#ea580c', players: [] },
-  { id: 'mcd-super-stars', name: 'MCD Super Stars', group: 'A', color: '#ca8a04', players: [] },
+  {
+    id: 'mcd-super-stars',
+    name: 'MCD Super Stars',
+    group: 'A',
+    color: '#ca8a04',
+    players: [
+      squad('mcd-super-stars', 'Monir Hossain', { captain: true, role: 'bowler' }),
+      squad('mcd-super-stars', 'Shahanur'),
+      squad('mcd-super-stars', 'Nazmul Hassan'),
+      squad('mcd-super-stars', 'Robel Mia', { role: 'bowler' }),
+      // A second player called Monir Hossain
+      squad('mcd-super-stars', 'Monir Hossain', { nameTag: '2' }),
+      squad('mcd-super-stars', 'Kamrul Hasan'),
+      squad('mcd-super-stars', 'Shahin Alom', { role: 'bowler' }),
+      squad('mcd-super-stars', 'Asif Babu', { role: 'bowler' }),
+      squad('mcd-super-stars', 'Sahaj Uddin', { role: 'bowler' }),
+      squad('mcd-super-stars', 'Easin Mia Antor'),
+      squad('mcd-super-stars', 'Rabiul'),
+      squad('mcd-super-stars', 'Jamal Uddin Khan', { substitute: true }),
+      squad('mcd-super-stars', 'Nayeem Uddin', { substitute: true }),
+      squad('mcd-super-stars', 'Chahed Hosen Hridoy', { substitute: true }),
+    ],
+  },
   {
     id: 'power-printing-washing',
     name: 'Power (Printing & Washing)',
@@ -233,7 +260,24 @@ export function teamInitial(name: string): string {
   return (Array.from(name.trim())[0] ?? '?').toUpperCase();
 }
 
-export type SquadWarning = 'tooMany' | 'tooManySubs' | 'twoCaptains' | 'twoViceCaptains';
+/** The name as shown to people: "Monir Hossain (2)" when it has a tag. */
+export function playerDisplayName(p: Pick<TournamentPlayer, 'name' | 'nameTag'>): string {
+  return p.nameTag ? `${p.name} (${p.nameTag})` : p.name;
+}
+
+/** Names shown more than once in a squad, so the scorer could not tell those players apart. */
+export function duplicateNames(team: Pick<TournamentTeam, 'players'>): string[] {
+  const byKey = new Map<string, string[]>();
+  for (const p of team.players) {
+    const shown = playerDisplayName(p).trim().replace(/\s+/g, ' ');
+    const key = shown.toLowerCase();
+    byKey.set(key, [...(byKey.get(key) ?? []), shown]);
+  }
+  return [...byKey.values()].filter((names) => names.length > 1).map((names) => names[0]);
+}
+
+export type SquadWarning =
+  'tooMany' | 'tooManySubs' | 'twoCaptains' | 'twoViceCaptains' | 'duplicateName';
 
 /** Problems with a squad that the admin should fix (empty when fine). */
 export function squadWarnings(
@@ -251,5 +295,6 @@ export function squadWarnings(
   }
   if (count((p) => p.captain) > 1) w.push('twoCaptains');
   if (count((p) => p.viceCaptain) > 1) w.push('twoViceCaptains');
+  if (duplicateNames(team).length > 0) w.push('duplicateName');
   return w;
 }

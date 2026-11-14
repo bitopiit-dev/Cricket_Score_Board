@@ -6,7 +6,9 @@ import { SubPageTitle } from '../components/layout/AppShell';
 import { PlayerAvatar, TeamAvatar } from '../components/common/TeamAvatar';
 import { SQUAD_LIMITS } from '../config/tournament';
 import {
+  duplicateNames,
   findTeam,
+  playerDisplayName,
   squadWarnings,
   type PlayerRole,
   type TournamentPlayer,
@@ -72,6 +74,7 @@ export default function TeamPage() {
                     n: f.num(team.players.length),
                     max: f.num(SQUAD_LIMITS.maxPlayers),
                     subs: f.num(SQUAD_LIMITS.maxSubstitutes),
+                    names: duplicateNames(team).join(', '),
                   })}
                 </li>
               ))}
@@ -135,7 +138,7 @@ function PlayerGrid({
             >
               <PlayerAvatar name={p.name} color={team.color} photo={p.photo} size="lg" />
               <span lang="en" className="text-sm leading-tight font-semibold break-words">
-                {p.name}
+                {playerDisplayName(p)}
                 {captainMark(p)}
               </span>
               {p.shortName && (

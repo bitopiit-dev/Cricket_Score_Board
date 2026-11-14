@@ -21,7 +21,7 @@ import {
 import type { Team, TeamIndex } from '../engine/types';
 import { TeamAvatar } from '../components/common/TeamAvatar';
 import { FIXTURE_OVERS, fixturesOn, fixtureByNo, todayInDhaka } from '../data/fixtures';
-import { TOURNAMENT_TEAMS, findTeam } from '../data/teams';
+import { TOURNAMENT_TEAMS, findTeam, playerDisplayName } from '../data/teams';
 import { useTournament } from '../hooks/useTournament';
 import { usePrefs } from '../store/prefsStore';
 import { fixtureTeams } from '../tournament/standings';
@@ -154,7 +154,7 @@ export default function NewMatchPage() {
               .filter((p) => xiOf(i).includes(p.id))
               .map((p) => ({
                 id: `${teamIds[i]}/${p.id}`,
-                name: p.name,
+                name: playerDisplayName(p),
                 ...(p.shortName ? { shortName: p.shortName } : {}),
                 ...(p.captain ? { captain: true } : {}),
                 ...(p.viceCaptain ? { viceCaptain: true } : {}),
@@ -488,7 +488,7 @@ export default function NewMatchPage() {
                               onChange={() => toggleXi(ti, p.id)}
                             />
                             <span className="flex-1">
-                              {p.name}
+                              {playerDisplayName(p)}
                               {p.shortName && ` (${p.shortName})`}
                               {captainMark(p)}
                             </span>

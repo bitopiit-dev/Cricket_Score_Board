@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { SQUAD_LIMITS } from '../../config/tournament';
-import { TOURNAMENT_TEAMS, findTeam, initials, squadWarnings, teamInitial } from '../teams';
+import {
+  TOURNAMENT_TEAMS,
+  duplicateNames,
+  findTeam,
+  initials,
+  playerDisplayName,
+  squadWarnings,
+  teamInitial,
+} from '../teams';
 
 describe('tournament teams', () => {
   it('has the 12 teams, names exactly as in the fixture, six per group', () => {
@@ -235,5 +243,83 @@ describe('Red Bulls Warriors squad', () => {
 
   it('is one over the squad limit, which the team page reports', () => {
     expect(squadWarnings(rbw, SQUAD_LIMITS)).toEqual(['tooMany']);
+  });
+});
+
+describe('MCD Super Stars squad', () => {
+  const mcd = findTeam('mcd-super-stars')!;
+
+  it('has the 14 players in the given order', () => {
+    expect(mcd.players.map(playerDisplayName)).toEqual([
+      'Monir Hossain',
+      'Shahanur',
+      'Nazmul Hassan',
+      'Robel Mia',
+      'Monir Hossain (2)',
+      'Kamrul Hasan',
+      'Shahin Alom',
+      'Asif Babu',
+      'Sahaj Uddin',
+      'Easin Mia Antor',
+      'Rabiul',
+      'Jamal Uddin Khan',
+      'Nayeem Uddin',
+      'Chahed Hosen Hridoy',
+    ]);
+  });
+
+  it('keeps the two Monir Hossains apart: the captain and (2)', () => {
+    const [monir, , , , monir2] = mcd.players;
+    expect(monir).toMatchObject({
+      id: 'monir-hossain',
+      captain: true,
+      role: 'bowler',
+      photo: 'players/mcd-super-stars/monir-hossain.jpg',
+    });
+    expect(monir2).toMatchObject({
+      id: 'monir-hossain-2',
+      photo: 'players/mcd-super-stars/monir-hossain-2.jpg',
+    });
+    expect(monir2.captain).toBeUndefined();
+    expect(duplicateNames(mcd)).toEqual([]);
+  });
+
+  it('has the bowlers and the three extras', () => {
+    expect(mcd.players.filter((p) => p.role === 'bowler').map(playerDisplayName)).toEqual([
+      'Monir Hossain',
+      'Robel Mia',
+      'Shahin Alom',
+      'Asif Babu',
+      'Sahaj Uddin',
+    ]);
+    expect(mcd.players.filter((p) => p.substitute).map((p) => p.name)).toEqual([
+      'Jamal Uddin Khan',
+      'Nayeem Uddin',
+      'Chahed Hosen Hridoy',
+    ]);
+  });
+});
+
+describe('duplicate names', () => {
+  it('warns when two players show the same name (case and spaces ignored)', () => {
+    const team = {
+      players: [
+        { id: 'a', name: 'Rakib' },
+        { id: 'b', name: ' rakib ' },
+        { id: 'c', name: 'Sohel' },
+      ],
+    };
+    expect(duplicateNames(team)).toEqual(['Rakib']);
+    expect(squadWarnings(team, SQUAD_LIMITS)).toContain('duplicateName');
+  });
+
+  it('a name tag tells them apart', () => {
+    const team = {
+      players: [
+        { id: 'a', name: 'Rakib' },
+        { id: 'b', name: 'Rakib', nameTag: '2' },
+      ],
+    };
+    expect(duplicateNames(team)).toEqual([]);
   });
 });

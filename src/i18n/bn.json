@@ -211,7 +211,8 @@
     "warn_tooManySubs": "অতিরিক্ত খেলোয়াড় {{subs}} জনের বেশি।",
     "warn_twoCaptains": "একাধিক অধিনায়ক চিহ্নিত।",
     "warn_twoViceCaptains": "একাধিক সহ-অধিনায়ক চিহ্নিত।",
-    "nickname": "ডাকনাম: {{name}}"
+    "nickname": "ডাকনাম: {{name}}",
+    "warn_duplicateName": "একই নামে একাধিক খেলোয়াড়, আলাদা করা যাচ্ছে না: {{names}}"
   },
   "role": {
     "batter": "ব্যাটার",

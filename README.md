@@ -101,16 +101,17 @@ a team page shows a warning if a squad breaks it. Example:
 },
 ```
 
-| Field         | Required | Notes                                                                             |
-| ------------- | -------- | --------------------------------------------------------------------------------- |
-| `id`          | yes      | Lowercase, words joined with `-`, unique within the team. Never change it later.  |
-| `name`        | yes      | Shown exactly as written                                                          |
-| `shortName`   | no       | Nickname for the scoring screen, e.g. `Rashed`; the team page shows the full name |
-| `role`        | no       | `batter`, `bowler`, `allRounder` or `wicketKeeper`                                |
-| `captain`     | no       | `true` for the captain (one per team)                                             |
-| `viceCaptain` | no       | `true` for the vice-captain (one per team); shown as (VC)                         |
-| `substitute`  | no       | `true` for extras (max 3; squad max 14)                                           |
-| `photo`       | no       | Path to the photo (see below). Without it, the player's initials are shown.       |
+| Field         | Required | Notes                                                                                                                                                                                                                |
+| ------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`          | yes      | Lowercase, words joined with `-`, unique within the team. Never change it later.                                                                                                                                     |
+| `name`        | yes      | Shown exactly as written                                                                                                                                                                                             |
+| `shortName`   | no       | Nickname for the scoring screen, e.g. `Rashed`; the team page shows the full name                                                                                                                                    |
+| `nameTag`     | no       | Tells two players with the same name apart: `'2'` shows as "Monir Hossain (2)" and is added to the id and photo name (`monir-hossain-2.jpg`). Two players who show the same name trigger a warning on the team page. |
+| `role`        | no       | `batter`, `bowler`, `allRounder` or `wicketKeeper`                                                                                                                                                                   |
+| `captain`     | no       | `true` for the captain (one per team)                                                                                                                                                                                |
+| `viceCaptain` | no       | `true` for the vice-captain (one per team); shown as (VC)                                                                                                                                                            |
+| `substitute`  | no       | `true` for extras (max 3; squad max 14)                                                                                                                                                                              |
+| `photo`       | no       | Path to the photo (see below). Without it, the player's initials are shown.                                                                                                                                          |
 
 ### Where photos go
 

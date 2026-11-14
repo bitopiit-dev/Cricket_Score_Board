@@ -215,7 +215,8 @@
     "warn_tooManySubs": "More than {{subs}} extras.",
     "warn_twoCaptains": "More than one captain marked.",
     "warn_twoViceCaptains": "More than one vice-captain marked.",
-    "nickname": "Known as {{name}}"
+    "nickname": "Known as {{name}}",
+    "warn_duplicateName": "Players with the same name who cannot be told apart: {{names}}"
   },
   "role": {
     "batter": "Batter",
