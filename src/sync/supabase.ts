@@ -10,11 +10,15 @@ const URL = import.meta.env.VITE_SUPABASE_URL || 'https://dkdomfmhqdtlthpchrij.s
 const KEY =
   import.meta.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_ABmiVD3gBVBlN8clGbEYDg_N2MP0AcJ';
 
-/** Null in tests and anywhere without a browser, so the app runs fully offline. */
-export const supabase: SupabaseClient | null =
-  typeof window !== 'undefined' && import.meta.env.MODE !== 'test'
-    ? createClient(URL, KEY, { auth: { persistSession: true, autoRefreshToken: true } })
-    : null;
+/** Null in tests, without a browser, or where storage is blocked, so the app still runs (offline mode). */
+export const supabase: SupabaseClient | null = (() => {
+  if (typeof window === 'undefined' || import.meta.env.MODE === 'test') return null;
+  try {
+    return createClient(URL, KEY, { auth: { persistSession: true, autoRefreshToken: true } });
+  } catch {
+    return null;
+  }
+})();
 
 /** Rejects after `ms`, so a slow network never holds up the app. */
 export function withTimeout<T>(p: PromiseLike<T>, ms: number): Promise<T> {

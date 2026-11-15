@@ -18,28 +18,30 @@ export function AppShell() {
     <div className="min-h-dvh pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:pb-8">
       <header className="bg-night-950 text-white shadow-lg">
         <div className="mx-auto flex max-w-5xl flex-col gap-3 px-3 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 md:px-4">
-          <div className="flex items-center gap-3">
-            <div className="flex min-w-0 flex-1 items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-4">
               <Link to="/home" className="inline-block max-w-full shrink-0 active:scale-95">
                 <img
                   src={assetUrl(BPL_LOGO)}
                   alt={`${APP_TITLE} | ${APP_SUBTITLE}`}
-                  className="h-[56px] w-auto max-w-full object-contain md:h-16"
+                  className="h-11 w-auto max-w-full object-contain sm:h-[56px] md:h-16"
                 />
               </Link>
-              {/* The logo's alt text already names the league, so screen readers skip this. */}
+              {/* The logo's alt text already names the league, so screen readers skip this.
+                  On phones it wraps onto two lines between the two logos. */}
               <span
                 aria-hidden
-                className="hidden min-w-0 flex-1 text-center font-display text-2xl leading-tight font-extrabold tracking-wide text-white uppercase md:block lg:text-4xl"
+                className="block min-w-0 flex-1 text-center font-display text-[17px] leading-[1.05] font-extrabold tracking-wide text-balance text-white uppercase sm:text-xl md:text-2xl md:leading-tight lg:text-4xl"
               >
                 {APP_SUBTITLE}
               </span>
             </div>
             <Link to="/committee" aria-label={COMMITTEE_NAME} className="shrink-0 active:scale-95">
-              <img src={assetUrl(COMMITTEE_LOGO)} alt="" className="h-12 w-auto" />
+              <img src={assetUrl(COMMITTEE_LOGO)} alt="" className="h-10 w-auto sm:h-12" />
             </Link>
             <div className="flex shrink-0 flex-col items-end gap-1.5 sm:flex-row sm:items-center sm:gap-3">
-              <span className="flex items-center gap-1.5 text-[11px] whitespace-nowrap text-night-muted sm:text-xs">
+              {/* No room on phones; the language button stays */}
+              <span className="hidden items-center gap-1.5 text-xs whitespace-nowrap text-night-muted sm:flex">
                 <span aria-hidden className="size-2 rounded-full bg-night-muted" />
                 {t('app.savedOnDevice')}
               </span>
