@@ -6,6 +6,7 @@ import { findTeam, initials } from '../data/teams';
 import { runRate } from '../engine/rules';
 import { runsNeeded, ballsRemaining } from '../engine/stats';
 import type { BallSummary, InningsState, Match, MatchState } from '../engine/types';
+import { NextMatchCountdown } from '../components/live/NextMatchCountdown';
 import { useFormat } from '../hooks/useFormat';
 import { useNow, useTournament } from '../hooks/useTournament';
 import { usePrefs } from '../store/prefsStore';
@@ -48,7 +49,7 @@ export default function HomePage() {
   return (
     <main className="mx-auto flex w-full max-w-lg flex-col gap-4 p-4 md:max-w-2xl">
       <h1 className="sr-only">{t('homePage.title')}</h1>
-      <Hero hero={hero} ts={tour.ts} now={now} />
+      <Hero hero={hero} now={now} />
       <Progress ts={tour.ts} />
       {next3.length > 0 && <NextMatches fixtures={next3} ts={tour.ts} />}
     </main>
@@ -126,15 +127,6 @@ function SideName({ side }: { side: Side }) {
   );
 }
 
-function fixtureSides(
-  f: Fixture,
-  ts: TournamentState,
-  label: (s: Fixture['teamA'], id: string | null) => string,
-): [Side, Side] {
-  const [a, b] = fixtureTeams(f, ts);
-  return [sideOfTeam(a, label(f.teamA, a)), sideOfTeam(b, label(f.teamB, b))];
-}
-
 function matchSides(m: Match): [Side, Side] {
   return [
     sideOfTeam(m.teams[0].teamId, m.teams[0].name),
@@ -142,12 +134,11 @@ function matchSides(m: Match): [Side, Side] {
   ];
 }
 
-function Hero({ hero, ts, now }: { hero: HomeHero; ts: TournamentState; now: number }) {
+function Hero({ hero, now }: { hero: HomeHero; now: number }) {
   const { t } = useTranslation();
   const f = useFormat();
   const lang = usePrefs((s) => s.lang);
   const bengaliDigits = usePrefs((s) => s.bengaliDigits);
-  const slot = (s: Fixture['teamA'], id: string | null) => slotLabel(s, id, t, f);
   const fixtureLabel = (fx?: Fixture) =>
     fx
       ? `${t('fixtures.matchNo', { n: f.num(fx.no) })} · ${stageLabel(fx.stage, t)}`
@@ -157,15 +148,8 @@ function Hero({ hero, ts, now }: { hero: HomeHero; ts: TournamentState; now: num
 
   switch (hero.kind) {
     case 'upcoming':
-      return (
-        <HeroFrame
-          sides={fixtureSides(hero.fixture, ts, slot)}
-          label={`${t('homePage.nextMatch')} · ${fixtureLabel(hero.fixture)}`}
-        >
-          <p className="text-center text-sm text-white/90">{when(hero.fixture)}</p>
-          <Countdown target={fixtureStart(hero.fixture)} now={now} />
-        </HeroFrame>
-      );
+      // Same scoreboard clock as the Live tab, with both team logos
+      return <NextMatchCountdown />;
     case 'live':
       return (
         <HeroFrame

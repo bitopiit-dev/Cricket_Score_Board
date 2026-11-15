@@ -29,7 +29,7 @@ export default function AwardsPage() {
   return (
     <div>
       <main className="mx-auto flex w-full max-w-lg flex-col gap-4 p-4">
-        <SubPageTitle title={t('awards.title')} parent="/stats" />
+        <SubPageTitle title={t('awards.title')} parent="/more" />
         {totals && totals.length === 0 && (
           <p className="rounded-2xl bg-white py-10 text-center text-slate-500 dark:bg-slate-900">
             {t('awards.empty')}

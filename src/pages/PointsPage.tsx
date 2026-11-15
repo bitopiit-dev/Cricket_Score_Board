@@ -56,8 +56,8 @@ function Table({
   const { t } = useTranslation();
   const f = useFormat();
   const nrr = (n: number) => `${n > 0 ? '+' : n < 0 ? '−' : ''}${f.dec(Math.abs(n), 3)}`;
-  const th = 'px-1.5 py-2 text-center font-semibold';
-  const td = 'tabular px-1.5 py-2 text-center';
+  const th = 'px-1 py-2 text-center font-semibold';
+  const td = 'tabular px-1 py-2 text-center';
 
   return (
     <section className="overflow-hidden rounded-2xl bg-white shadow-sm dark:bg-slate-900">
@@ -139,7 +139,7 @@ function Table({
                       ? 'text-emerald-700 dark:text-emerald-400'
                       : r.nrr < 0
                         ? 'text-red-600'
-                        : ''
+                        : 'text-slate-400'
                   }`}
                 >
                   {nrr(r.nrr)}
@@ -149,6 +149,9 @@ function Table({
           })}
         </tbody>
       </table>
+      <p className="border-t border-slate-100 px-4 py-2 text-xs text-slate-500 dark:border-slate-800 dark:text-slate-400">
+        {t('points.key')}
+      </p>
     </section>
   );
 }

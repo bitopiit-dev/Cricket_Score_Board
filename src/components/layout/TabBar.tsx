@@ -12,6 +12,9 @@ const stroke = {
 
 /** Small line icons, 24×24. */
 const ICONS: Record<string, ReactNode> = {
+  home: (
+    <path {...stroke} d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5.5h-5V20H5a1 1 0 0 1-1-1z" />
+  ),
   live: (
     <>
       <circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none" />
@@ -26,7 +29,6 @@ const ICONS: Record<string, ReactNode> = {
     </>
   ),
   points: <path {...stroke} d="M4 6h16M4 12h16M4 18h16M9 4v16" />,
-  stats: <path {...stroke} d="M5 20V11M12 20V4M19 20v-6M3 20h18" />,
   teams: (
     <>
       <circle {...stroke} cx="9" cy="8" r="3" />
@@ -46,12 +48,12 @@ const ICONS: Record<string, ReactNode> = {
 
 /** The six sections, in order. `also` lists other paths that belong to the tab. */
 export const TABS = [
+  { id: 'home', to: '/home', also: [] },
   { id: 'live', to: '/live', also: [] },
   { id: 'fixtures', to: '/fixtures', also: [] },
   { id: 'points', to: '/points', also: [] },
-  { id: 'stats', to: '/stats', also: ['/awards'] },
   { id: 'teams', to: '/teams', also: ['/team/'] },
-  { id: 'more', to: '/more', also: ['/rules', '/committee', '/media'] },
+  { id: 'more', to: '/more', also: ['/rules', '/committee', '/media', '/awards', '/stats'] },
 ] as const;
 
 export function activeTab(pathname: string): string | undefined {

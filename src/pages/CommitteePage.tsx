@@ -14,6 +14,8 @@ const ROLE_STYLE = {
 export default function CommitteePage() {
   const { t } = useTranslation();
   const f = useFormat();
+  // Members are listed once their names are filled in; placeholders stay hidden.
+  const members = COMMITTEE_MEMBERS.filter((m) => m.name);
 
   return (
     <div>
@@ -29,32 +31,36 @@ export default function CommitteePage() {
         <h2 lang="en" className="text-xl font-bold">
           {COMMITTEE_NAME}
         </h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
-          {t('committee.subtitle', { n: f.num(COMMITTEE_MEMBERS.length) })}
-        </p>
+        {members.length > 0 && (
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            {t('committee.subtitle', { n: f.num(members.length) })}
+          </p>
+        )}
       </section>
 
-      <main className="mx-auto w-full max-w-lg p-4">
-        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {COMMITTEE_MEMBERS.map((m, i) => {
-            const name = m.name ?? t('committee.placeholder', { n: f.num(i + 1) });
-            return (
-              <li
-                key={m.id}
-                className="flex flex-col items-center gap-2 rounded-2xl bg-white p-3 text-center shadow-sm dark:bg-slate-900"
-              >
-                <PlayerAvatar name={name} color="#065f46" photo={m.photo} size="lg" />
-                <span className="text-sm leading-tight font-semibold break-words">{name}</span>
-                <span
-                  className={`rounded-full px-2 py-0.5 text-xs font-semibold ${ROLE_STYLE[m.role]}`}
+      {members.length > 0 && (
+        <main className="mx-auto w-full max-w-lg p-4">
+          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {members.map((m) => {
+              const name = m.name!;
+              return (
+                <li
+                  key={m.id}
+                  className="flex flex-col items-center gap-2 rounded-2xl bg-white p-3 text-center shadow-sm dark:bg-slate-900"
                 >
-                  {t(`committee.role.${m.role}`)}
-                </span>
-              </li>
-            );
-          })}
-        </ul>
-      </main>
+                  <PlayerAvatar name={name} color="#065f46" photo={m.photo} size="lg" />
+                  <span className="text-sm leading-tight font-semibold break-words">{name}</span>
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-xs font-semibold ${ROLE_STYLE[m.role]}`}
+                  >
+                    {t(`committee.role.${m.role}`)}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </main>
+      )}
     </div>
   );
 }

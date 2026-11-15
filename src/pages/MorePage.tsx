@@ -5,7 +5,6 @@ import { PageTitle } from '../components/layout/AppShell';
 const ITEMS = [
   { to: '/rules', icon: '📜', key: 'rules' },
   { to: '/committee', icon: '👥', key: 'committee' },
-  { to: '/media', icon: '📸', key: 'media' },
   { to: '/awards', icon: '🏆', key: 'awards' },
   { to: '/admin', icon: '🔐', key: 'admin' },
 ] as const;
