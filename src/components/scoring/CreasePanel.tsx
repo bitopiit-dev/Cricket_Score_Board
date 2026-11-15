@@ -24,12 +24,12 @@ export function CreasePanel({ match, inn }: { match: Match; inn: InningsState })
       <table className="w-full">
         <thead>
           <tr>
-            <th className={`${th} text-left`}>{t('scoring.batter')}</th>
-            <th className={th}>R</th>
-            <th className={th}>B</th>
-            <th className={th}>4s</th>
-            <th className={th}>6s</th>
-            <th className={th}>SR</th>
+            <th className={`${th} w-[42%] text-left`}>{t('scoring.batter')}</th>
+            <th className={th}>{t('col.runs')}</th>
+            <th className={th}>{t('col.balls')}</th>
+            <th className={th}>{t('col.fours')}</th>
+            <th className={th}>{t('col.sixes')}</th>
+            <th className={th}>{t('col.sr')}</th>
           </tr>
         </thead>
         <tbody>
@@ -65,11 +65,11 @@ export function CreasePanel({ match, inn }: { match: Match; inn: InningsState })
         <thead>
           <tr>
             <th className={`${th} text-left`}>{t('scoring.bowler')}</th>
-            <th className={th}>O</th>
-            <th className={th}>M</th>
-            <th className={th}>R</th>
-            <th className={th}>W</th>
-            <th className={th}>Econ</th>
+            <th className={th}>{t('col.overs')}</th>
+            <th className={th}>{t('col.maidens')}</th>
+            <th className={th}>{t('col.conceded')}</th>
+            <th className={th}>{t('col.wickets')}</th>
+            <th className={th}>{t('col.econ')}</th>
           </tr>
         </thead>
         <tbody>

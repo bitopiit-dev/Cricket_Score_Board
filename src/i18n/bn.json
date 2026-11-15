@@ -395,5 +395,48 @@
   "conflict": {
     "title": "এই ম্যাচ অন্য একটা ফোন থেকে বদলানো হয়েছে",
     "body": "সার্ভারে অন্য ফোনের নতুন স্কোর আগেই ছিল, তাই সেটাই দেখানো হচ্ছে। এই ফোনের কপি ব্যাকআপ হিসেবে রাখা আছে। প্রতিটা ম্যাচ একটা ফোন থেকেই স্কোর করুন।"
+  },
+  "matchCenter": {
+    "sections": "ম্যাচের অংশ",
+    "summary": "সারাংশ",
+    "scorecard": "স্কোরকার্ড",
+    "overs": "ওভার",
+    "inPlay": "খেলা চলছে",
+    "yetToBat": "ব্যাটিং বাকি",
+    "oversShort": "{{overs}} ওভার",
+    "recentOvers": "সাম্প্রতিক ওভার",
+    "overN": "ওভার {{n}}",
+    "topPerformers": "সেরা পারফরম্যান্স",
+    "extrasDetail": "ওয়াইড {{w}}, নো-বল {{nb}}, বাই {{b}}, লেগ-বাই {{lb}}",
+    "didNotBat": "ব্যাট করেননি",
+    "fallOfWickets": "উইকেট পতন",
+    "batting": "ব্যাট করছেন",
+    "bowledBy": "বোলার {{name}}",
+    "runsInOver": "{{n}} রান",
+    "bowlerToBatter": "{{bowler}} থেকে {{batter}},",
+    "outcome": {
+      "out": "আউট! {{name}}, {{how}}",
+      "wide": "ওয়াইড, {{n}} রান",
+      "noBall": "নো-বল, {{n}} রান",
+      "bye": "{{n}} বাই",
+      "legBye": "{{n}} লেগ-বাই",
+      "six": "ছক্কা!",
+      "four": "চার!",
+      "dot": "কোনো রান নয়",
+      "runs_one": "{{n}} রান",
+      "runs_other": "{{n}} রান"
+    }
+  },
+  "col": {
+    "runs": "রান",
+    "balls": "বল",
+    "fours": "৪",
+    "sixes": "৬",
+    "sr": "SR",
+    "overs": "ওভার",
+    "maidens": "মেডেন",
+    "conceded": "রান",
+    "wickets": "উই.",
+    "econ": "ইকো."
   }
 }

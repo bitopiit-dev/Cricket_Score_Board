@@ -400,5 +400,48 @@
   "conflict": {
     "title": "Another phone changed this match",
     "body": "The server already had newer scoring for this match from another phone, so its score is shown. This phone’s copy is kept as a backup. Please score each match from one phone only."
+  },
+  "matchCenter": {
+    "sections": "Match sections",
+    "summary": "Summary",
+    "scorecard": "Scorecard",
+    "overs": "Overs",
+    "inPlay": "In progress",
+    "yetToBat": "Yet to bat",
+    "oversShort": "{{overs}} ov",
+    "recentOvers": "Recent overs",
+    "overN": "Over {{n}}",
+    "topPerformers": "Top performers",
+    "extrasDetail": "w {{w}}, nb {{nb}}, b {{b}}, lb {{lb}}",
+    "didNotBat": "Did not bat",
+    "fallOfWickets": "Fall of wickets",
+    "batting": "batting",
+    "bowledBy": "b {{name}}",
+    "runsInOver": "{{n}} runs",
+    "bowlerToBatter": "{{bowler}} to {{batter}},",
+    "outcome": {
+      "out": "OUT! {{name}}, {{how}}",
+      "wide": "wide, {{n}} run",
+      "noBall": "no-ball, {{n}} runs",
+      "bye": "{{n}} bye",
+      "legBye": "{{n}} leg bye",
+      "six": "SIX!",
+      "four": "FOUR!",
+      "dot": "no run",
+      "runs_one": "{{n}} run",
+      "runs_other": "{{n}} runs"
+    }
+  },
+  "col": {
+    "runs": "R",
+    "balls": "B",
+    "fours": "4s",
+    "sixes": "6s",
+    "sr": "SR",
+    "overs": "O",
+    "maidens": "M",
+    "conceded": "R",
+    "wickets": "W",
+    "econ": "Econ"
   }
 }

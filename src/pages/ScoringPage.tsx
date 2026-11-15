@@ -28,6 +28,7 @@ import { useMatchStore } from '../store/matchStore';
 import { useCanScore } from '../sync/auth';
 import { Icon } from '../components/common/icons';
 import { matchShareText, shareText } from '../utils/share';
+import { MatchCenter } from '../components/match/MatchCenter';
 
 type Open =
   null | 'wicket' | 'other' | 'more' | 'retire' | 'changeBowler' | 'openers' | 'review' | ExtraType;
@@ -76,6 +77,11 @@ export default function ScoringPage() {
     return ok;
   };
   const canUndo = match.events.length > 0;
+
+  // People following the match get the Match Center; only scorers get the scoring screen
+  if (!canScore) {
+    return <MatchCenter match={match} state={state} title={title} onShare={() => void onShare()} />;
+  }
 
   const duringInnings = phase === 'inPlay' || phase === 'needBowler' || phase === 'needBatter';
   const moreEnabled: Record<MoreAction, boolean> = {
