@@ -64,10 +64,13 @@ def header(c, doc):
     c.setFillColor(SUB); c.setFont('R', 7.5)
     c.drawString(12 * mm, 9 * mm, 'BGL Sports Committee  \u2022  Times are Bangladesh time (BST). '
                  'Fixture may change; check the app for the latest.')
-    c.drawRightString(W - 12 * mm, 9 * mm, f'Page {doc.page}')
+    c.drawRightString(W - 12 * mm, 9 * mm, f'Updated {UPDATED.day} {UPDATED:%b %Y}  \u2022  Page {doc.page}')
+    c.setFillColor(colors.HexColor('#c9cfe6')); c.setFont('R', 8)
+    c.drawCentredString(W / 2 + 12 * mm, H - 30 * mm, f'Updated {UPDATED.day} {UPDATED:%B %Y}')
     c.restoreState()
 
-OUT = P('public', 'downloads', 'bpl-2027-fixture.pdf')
+OUT = P('src', 'assets', 'bpl-2027-fixture.pdf')
+UPDATED = datetime.date.today()
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 doc = BaseDocTemplate(OUT, pagesize=A4, leftMargin=12 * mm, rightMargin=12 * mm, topMargin=42 * mm,
                       bottomMargin=16 * mm, title='BPL-2027 Official Fixture',
@@ -131,4 +134,11 @@ for title, pred, note in STAGES:
     extra = f'  <font name="R" size="8" color="#5b6478">{note}</font>' if note else ''
     story += [Paragraph(title.upper() + extra, sec_st), t, Spacer(1, 3 * mm)]
 doc.build(story)
-print('Wrote', OUT, os.path.getsize(OUT) // 1024, 'KB')
+# Also at the old address (public/downloads/), so links shared before the switch still get the new file.
+import shutil
+os.makedirs(P('public', 'downloads'), exist_ok=True)
+shutil.copyfile(OUT, P('public', 'downloads', 'bpl-2027-fixture.pdf'))
+# The Fixtures page names the download after this date, so a new PDF never looks like the old one.
+json.dump({'updated': UPDATED.isoformat()},
+          open(P('src', 'assets', 'bpl-2027-fixture.json'), 'w', encoding='utf-8'))
+print('Wrote', OUT, os.path.getsize(OUT) // 1024, 'KB, updated', UPDATED)

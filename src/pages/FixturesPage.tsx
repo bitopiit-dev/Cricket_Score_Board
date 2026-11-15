@@ -19,10 +19,14 @@ import { fixtureTeams, type FixtureOutcome, type TournamentState } from '../tour
 import { formatDate, formatTime, slotLabel, stageLabel } from '../utils/fixtureText';
 import { teamFixtures, teamRecord } from '../tournament/teamView';
 import { resultText } from '../utils/matchText';
-import { assetUrl } from '../utils/asset';
+// Imported through Vite, the PDF is published under a name with a content fingerprint
+// (bpl-2027-fixture-AbC123.pdf), so phones and the host's cache never serve an old copy.
+// Rebuild both files with: python scripts/build-fixture-pdf.py
+import fixturePdfUrl from '../assets/bpl-2027-fixture.pdf?url';
+import fixturePdfInfo from '../assets/bpl-2027-fixture.json';
 
-/** Printable fixture, made from docs/fixture-bpl-2027.json. Rebuild it when the fixture changes. */
-const FIXTURE_PDF = 'downloads/bpl-2027-fixture.pdf';
+/** Download name carries the update date, so a new copy never overwrites or hides behind the old one. */
+const FIXTURE_PDF_NAME = `BPL-2027-Fixture-${fixturePdfInfo.updated}.pdf`;
 
 type Filter = 'all' | 'groupA' | 'groupB' | 'superSix' | 'knockout';
 const FILTERS: Filter[] = ['all', 'groupA', 'groupB', 'superSix', 'knockout'];
@@ -71,8 +75,8 @@ export default function FixturesPage() {
       <div className="flex items-center justify-between gap-3">
         <PageTitle>{t('tabs.fixtures')}</PageTitle>
         <a
-          href={assetUrl(FIXTURE_PDF)}
-          download="BPL-2027-Fixture.pdf"
+          href={fixturePdfUrl}
+          download={FIXTURE_PDF_NAME}
           className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-bpl-red px-3.5 py-2 text-sm font-semibold text-white shadow-sm active:scale-95"
         >
           <svg
