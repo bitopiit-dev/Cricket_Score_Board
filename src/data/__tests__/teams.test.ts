@@ -22,7 +22,7 @@ describe('tournament teams', () => {
       'Rainbow Cutting',
     ]);
     expect(names('B')).toEqual([
-      'Engineer Warriors',
+      'Engineer Warrior',
       'HR Vikings',
       'Power Player',
       'DDC',
@@ -173,7 +173,7 @@ describe('Quality Flying Fighter squad', () => {
   });
 });
 
-describe('Engineer Warriors squad', () => {
+describe('Engineer Warrior squad', () => {
   const ew = findTeam('engineer-warriors')!;
 
   it('has the 14 players in the given order with their roles', () => {

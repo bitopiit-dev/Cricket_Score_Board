@@ -47,7 +47,7 @@ describe('upgrade to v2: renamed teams', () => {
 
     const db2 = new ScoreBoardDB(name);
     const m = await createLocalRepository(db2).get(old.id);
-    expect(m?.teams[0]).toMatchObject({ teamId: 'engineer-warriors', name: 'Engineer Warriors' });
+    expect(m?.teams[0]).toMatchObject({ teamId: 'engineer-warriors', name: 'Engineer Warrior' });
     expect(m?.teams[1]).toMatchObject({ teamId: 'ddc', name: 'DDC' });
     expect(m?.teams[0].players).toEqual(old.teams[0].players);
     await db2.delete();

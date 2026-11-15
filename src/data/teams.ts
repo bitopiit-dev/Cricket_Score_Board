@@ -209,7 +209,7 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
   // Group B
   {
     id: 'engineer-warriors',
-    name: 'Engineer Warriors',
+    name: 'Engineer Warrior',
     short: 'EW',
     group: 'B',
     color: '#0d9488',
