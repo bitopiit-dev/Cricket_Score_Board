@@ -75,38 +75,34 @@ describe('squads', () => {
 describe('HR Vikings squad', () => {
   const hr = findTeam('hr-vikings')!;
 
-  it('has the 14 players in the given order', () => {
+  it('has the 14 players of the updated list', () => {
     expect(hr.players.map((p) => p.name)).toEqual([
       'Jakir',
-      'Atiq',
-      'Hasnat',
-      'Ashik',
-      'Hasib',
+      'Atique',
       'Arman',
+      'Ashique',
       'Habib',
+      'Hasib',
+      'Hasnat',
       'Kader',
-      'Salauddin',
+      'Kamrul',
       'Rakib',
-      'Sulove',
+      'Salauddin',
+      'Shakil',
       'Nayeem',
-      'Salmon',
-      'Mamun',
+      'Saimon',
     ]);
   });
 
-  it('Jakir is captain, Atiq vice-captain; the last three are the extras', () => {
+  it('Jakir is captain, Atique vice-captain; Nayeem and Saimon are the extras', () => {
     expect(hr.players.filter((p) => p.captain).map((p) => p.name)).toEqual(['Jakir']);
-    expect(hr.players.filter((p) => p.viceCaptain).map((p) => p.name)).toEqual(['Atiq']);
-    expect(hr.players.filter((p) => p.substitute).map((p) => p.name)).toEqual([
-      'Nayeem',
-      'Salmon',
-      'Mamun',
-    ]);
+    expect(hr.players.filter((p) => p.viceCaptain).map((p) => p.name)).toEqual(['Atique']);
+    expect(hr.players.filter((p) => p.substitute).map((p) => p.name)).toEqual(['Nayeem', 'Saimon']);
   });
 
   it('photo files are named after the player', () => {
     expect(hr.players[0]).toMatchObject({ id: 'jakir', photo: 'players/hr-vikings/jakir.jpg' });
-    expect(hr.players[8]).toMatchObject({
+    expect(hr.players[10]).toMatchObject({
       id: 'salauddin',
       photo: 'players/hr-vikings/salauddin.jpg',
     });
