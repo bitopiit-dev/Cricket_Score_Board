@@ -182,7 +182,24 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
     short: 'RC',
     group: 'A',
     color: '#db2777',
-    players: [],
+    logo: 'icons/teams/rainbow-cutting.png',
+    // Captain not decided yet: the team page shows a warning until one is set.
+    players: [
+      squad('rainbow-cutting', 'Kazi Pholash'),
+      squad('rainbow-cutting', 'Sagor'),
+      squad('rainbow-cutting', 'Md. Faysal'),
+      squad('rainbow-cutting', 'Iqbal'),
+      squad('rainbow-cutting', 'Probash'),
+      squad('rainbow-cutting', 'Nasir'),
+      squad('rainbow-cutting', 'Sumon'),
+      squad('rainbow-cutting', 'Abu Saeed'),
+      squad('rainbow-cutting', 'Md. Naieem Khan'),
+      squad('rainbow-cutting', 'Arif'),
+      squad('rainbow-cutting', 'Monir'),
+      squad('rainbow-cutting', 'Rifat', { substitute: true }),
+      squad('rainbow-cutting', 'Biplob', { substitute: true }),
+      squad('rainbow-cutting', 'Kawser', { substitute: true }),
+    ],
   },
   // Group B
   {

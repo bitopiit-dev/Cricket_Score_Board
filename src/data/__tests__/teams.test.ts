@@ -469,3 +469,57 @@ describe('short team codes', () => {
     expect(findTeam('rainbow-cutting')!.short).toBe('RC');
   });
 });
+
+describe('Rainbow Cutting squad', () => {
+  const rc = findTeam('rainbow-cutting')!;
+
+  it('has the 14 players in the given order', () => {
+    expect(rc.players.map((p) => p.name)).toEqual([
+      'Kazi Pholash',
+      'Sagor',
+      'Md. Faysal',
+      'Iqbal',
+      'Probash',
+      'Nasir',
+      'Sumon',
+      'Abu Saeed',
+      'Md. Naieem Khan',
+      'Arif',
+      'Monir',
+      'Rifat',
+      'Biplob',
+      'Kawser',
+    ]);
+  });
+
+  it('has no captain yet and Rifat, Biplob and Kawser as the extras', () => {
+    expect(rc.players.some((p) => p.captain || p.viceCaptain)).toBe(false);
+    expect(squadWarnings(rc, SQUAD_LIMITS)).toEqual(['noCaptain']);
+    expect(rc.players.filter((p) => p.substitute).map((p) => p.name)).toEqual([
+      'Rifat',
+      'Biplob',
+      'Kawser',
+    ]);
+  });
+
+  it('ids and photo paths follow the names', () => {
+    expect(rc.players[2]).toMatchObject({
+      id: 'md-faysal',
+      photo: 'players/rainbow-cutting/md-faysal.jpg',
+    });
+    expect(rc.players[8]).toMatchObject({ id: 'md-naieem-khan' });
+  });
+
+  it('has its team logo', () => {
+    expect(rc.logo).toBe('icons/teams/rainbow-cutting.png');
+  });
+});
+
+describe('team logos', () => {
+  it('logo paths sit in icons/teams/ and are named after the team id', () => {
+    for (const t of TOURNAMENT_TEAMS) {
+      if (t.logo)
+        expect(t.logo, t.name).toMatch(new RegExp(`^icons/teams/${t.id}\\.(png|jpe?g|webp|svg)$`));
+    }
+  });
+});
