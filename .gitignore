@@ -9,3 +9,6 @@ dev-dist
 .DS_Store
 Thumbs.db
 coverage
+
+# Original player photos (cropped copies live in public/players/)
+Pictures/

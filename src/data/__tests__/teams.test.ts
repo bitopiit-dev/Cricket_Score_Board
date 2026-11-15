@@ -610,3 +610,15 @@ describe('Sky Warrior squad', () => {
     expect(sw.players.some((p) => p.name.startsWith('Mr.'))).toBe(false);
   });
 });
+
+describe('player photo files', () => {
+  it('every photo in public/players/ belongs to a squad player', () => {
+    const files = Object.keys(import.meta.glob('/public/players/**/*.{jpg,jpeg,png,webp}'));
+    const known = new Set(TOURNAMENT_TEAMS.flatMap((t) => t.players.map((p) => p.photo)));
+    expect(files.length).toBeGreaterThan(0);
+    for (const f of files) {
+      const rel = f.replace('/public/', '');
+      expect(known.has(rel), rel).toBe(true);
+    }
+  });
+});
