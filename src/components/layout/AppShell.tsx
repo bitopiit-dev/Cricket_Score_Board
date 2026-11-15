@@ -18,14 +18,21 @@ export function AppShell() {
       <header className="bg-night-950 text-white shadow-lg">
         <div className="mx-auto flex max-w-5xl flex-col gap-3 px-3 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 md:px-4">
           <div className="flex items-center gap-3">
-            <div className="min-w-0 flex-1">
-              <Link to="/home" className="inline-block max-w-full active:scale-95">
+            <div className="flex min-w-0 flex-1 items-center gap-4">
+              <Link to="/home" className="inline-block max-w-full shrink-0 active:scale-95">
                 <img
                   src={assetUrl(BPL_LOGO)}
                   alt={`${APP_TITLE} | ${APP_SUBTITLE}`}
                   className="h-[56px] w-auto max-w-full object-contain md:h-16"
                 />
               </Link>
+              {/* The logo's alt text already names the league, so screen readers skip this. */}
+              <span
+                aria-hidden
+                className="hidden min-w-0 flex-1 text-center font-display text-2xl leading-tight font-extrabold tracking-wide text-white uppercase md:block lg:text-4xl"
+              >
+                {APP_SUBTITLE}
+              </span>
             </div>
             <Link to="/committee" aria-label={COMMITTEE_NAME} className="shrink-0 active:scale-95">
               <img src={assetUrl(COMMITTEE_LOGO)} alt="" className="h-12 w-auto" />
