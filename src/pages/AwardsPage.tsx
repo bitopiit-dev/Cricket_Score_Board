@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Card, SectionTitle } from '../components/common/controls';
 import { TeamAvatar } from '../components/common/TeamAvatar';
 import { SubPageTitle } from '../components/layout/AppShell';
+import { PageSkeleton } from '../components/common/Skeleton';
 import { findTeam } from '../data/teams';
 import { matchRepository } from '../db/repository';
 import { useFormat } from '../hooks/useFormat';
@@ -30,6 +31,7 @@ export default function AwardsPage() {
     <div>
       <main className="mx-auto flex w-full max-w-lg flex-col gap-4 p-4">
         <SubPageTitle title={t('awards.title')} parent="/more" />
+        {!totals && <PageSkeleton inline />}
         {totals && totals.length === 0 && (
           <p className="rounded-2xl bg-white py-10 text-center text-slate-500 dark:bg-slate-900">
             {t('awards.empty')}

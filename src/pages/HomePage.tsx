@@ -24,6 +24,7 @@ import {
 import { fixtureTeams, type TournamentState } from '../tournament/standings';
 import { formatDate, formatTime, slotLabel, stageLabel } from '../utils/fixtureText';
 import { playerName, resultText } from '../utils/matchText';
+import { PageSkeleton } from '../components/common/Skeleton';
 
 /** A side in the hero: short code, full name and team colour. */
 interface Side {
@@ -42,7 +43,7 @@ export default function HomePage() {
   const { t } = useTranslation();
   const tour = useTournament(5000);
   const now = useNow(1000);
-  if (!tour) return null;
+  if (!tour) return <PageSkeleton variant="hero" />;
 
   const hero = pickHero(tour.matches, tour.ts, now);
   const heroFixtureId =

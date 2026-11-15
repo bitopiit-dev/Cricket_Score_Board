@@ -24,6 +24,7 @@ import { resultText } from '../utils/matchText';
 // Rebuild both files with: python scripts/build-fixture-pdf.py
 import fixturePdfUrl from '../assets/bpl-2027-fixture.pdf?url';
 import fixturePdfInfo from '../assets/bpl-2027-fixture.json';
+import { PageSkeleton } from '../components/common/Skeleton';
 
 /** Download name carries the update date, so a new copy never overwrites or hides behind the old one. */
 const FIXTURE_PDF_NAME = `BPL-2027-Fixture-${fixturePdfInfo.updated}.pdf`;
@@ -57,7 +58,7 @@ export default function FixturesPage() {
     document.getElementById(`day-${target}`)?.scrollIntoView({ block: 'start' });
   }, [loaded, teamId]);
 
-  if (!tour) return null;
+  if (!tour) return <PageSkeleton />;
 
   const today = todayInDhaka();
   const todays = FIXTURES.filter((fx) => fx.date === today);

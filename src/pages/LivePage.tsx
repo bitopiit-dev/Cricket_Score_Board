@@ -14,6 +14,7 @@ import { useFormat } from '../hooks/useFormat';
 import { useCanScore } from '../sync/auth';
 import { MATCHES_CHANGED } from '../sync/matchSync';
 import { stageLabel } from '../utils/fixtureText';
+import { PageSkeleton } from '../components/common/Skeleton';
 
 /** Live tab: matches being scored on this device, newest first; tap to open the scoring screen. */
 export default function LivePage() {
@@ -58,6 +59,7 @@ export default function LivePage() {
         <LiveMatchCard key={row.m.id} {...row} />
       ))}
       {live.length === 0 && <NextMatchCountdown />}
+      {matches === null && <PageSkeleton variant="hero" inline />}
       {matches?.length === 0 && (
         <p className="rounded-2xl bg-white py-10 text-center text-slate-500 dark:bg-slate-900">
           {canScore ? t('home.noMatches') : t('home.noMatchesViewer')}

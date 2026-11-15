@@ -31,6 +31,7 @@ import { matchShareText, shareText } from '../utils/share';
 import { MatchCenter } from '../components/match/MatchCenter';
 import { SyncStatus } from '../components/scoring/SyncStatus';
 import { ballOutcome } from '../utils/ballText';
+import { PageSkeleton } from '../components/common/Skeleton';
 
 type Open =
   null | 'wicket' | 'other' | 'more' | 'retire' | 'changeBowler' | 'openers' | 'review' | ExtraType;
@@ -74,7 +75,7 @@ export default function ScoringPage() {
       </div>
     );
   }
-  if (!match || !state || match.id !== id) return null;
+  if (!match || !state || match.id !== id) return <PageSkeleton variant="hero" />;
 
   const { phase } = state;
   const inn = state.current;

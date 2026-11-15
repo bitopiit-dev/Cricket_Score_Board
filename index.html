@@ -11,7 +11,53 @@
     <meta name="apple-mobile-web-app-title" content="BPL-2027" />
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Start-up splash: visible before the app's script has loaded; React replaces it -->
+      <div
+        style="
+          position: fixed;
+          inset: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 20px;
+          background: #05060f;
+        "
+      >
+        <img
+          src="/images/bpl-2027-logo.png"
+          alt="BPL-2027"
+          width="200"
+          style="
+            width: 200px;
+            height: auto;
+            animation: bpl-splash 1.4s ease-in-out infinite alternate;
+          "
+        />
+        <span
+          style="
+            width: 120px;
+            height: 4px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #e10a14, #f5e400);
+          "
+        ></span>
+      </div>
+      <style>
+        @keyframes bpl-splash {
+          to {
+            transform: scale(1.04);
+            opacity: 0.85;
+          }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          #root img {
+            animation: none !important;
+          }
+        }
+      </style>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

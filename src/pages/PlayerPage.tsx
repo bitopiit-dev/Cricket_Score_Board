@@ -10,6 +10,7 @@ import { useTournament } from '../hooks/useTournament';
 import { playerKey, playerTotals } from '../tournament/awards';
 import { economyOf, playerMatchLines, strikeRateOf } from '../tournament/leaders';
 import { captainMark } from '../utils/matchText';
+import { PageSkeleton } from '../components/common/Skeleton';
 
 const FORM = {
   W: 'bg-emerald-600 text-white',
@@ -137,7 +138,9 @@ export default function PlayerPage() {
       </section>
 
       <main className="mx-auto flex w-full max-w-lg flex-col gap-3 p-4">
-        {!r || r.matches === 0 ? (
+        {!tour ? (
+          <PageSkeleton inline />
+        ) : !r || r.matches === 0 ? (
           <p className="rounded-2xl bg-white p-8 text-center text-slate-600 shadow-sm dark:bg-slate-900 dark:text-slate-400">
             {t('player.noMatches')}
           </p>

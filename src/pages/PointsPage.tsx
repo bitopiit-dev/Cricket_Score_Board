@@ -7,13 +7,14 @@ import { useTournament } from '../hooks/useTournament';
 import { LEAGUE_POINTS, QUALIFIERS } from '../tournament/format';
 import type { LeagueStage, TableRow } from '../tournament/standings';
 import { stageLabel } from '../utils/fixtureText';
+import { PageSkeleton } from '../components/common/Skeleton';
 
 /** Points tab: Group A, Group B and Super Six tables from the matches scored in the app. */
 export default function PointsPage() {
   const { t } = useTranslation();
   const f = useFormat();
   const tour = useTournament();
-  if (!tour) return null;
+  if (!tour) return <PageSkeleton variant="table" />;
   const { tables } = tour.ts;
 
   return (

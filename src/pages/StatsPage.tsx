@@ -18,6 +18,7 @@ import {
   type BoardId,
 } from '../tournament/leaders';
 import { playerPath, squadPlayer } from '../tournament/playerLink';
+import { PageSkeleton } from '../components/common/Skeleton';
 
 const BOARDS: BoardId[] = ['runs', 'wickets', 'sixes', 'strikeRate', 'economy', 'fielding'];
 
@@ -34,7 +35,7 @@ export default function StatsPage() {
         .length ?? 0,
     [tour],
   );
-  if (!tour || !totals) return null;
+  if (!tour || !totals) return <PageSkeleton variant="hero" />;
   const rows = leaderboard(totals, board, 10);
 
   return (

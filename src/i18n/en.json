@@ -1,5 +1,6 @@
 {
   "common": {
+    "loading": "Loading",
     "share": "Share",
     "back": "Back",
     "cancel": "Cancel",
