@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { assetUrl } from '../../utils/asset';
 import { Link, Outlet } from 'react-router-dom';
 import { APP_SUBTITLE, APP_TITLE } from '../../config/app';
-import { COMMITTEE_LOGO, COMMITTEE_NAME } from '../../data/committee';
+import { BPL_LOGO, COMMITTEE_LOGO, COMMITTEE_NAME } from '../../data/committee';
 import { LanguageToggle, useGoBack } from '../common/Header';
 import { TabBar } from './TabBar';
 
@@ -21,16 +21,22 @@ export function AppShell() {
             <Link
               to="/committee"
               aria-label={COMMITTEE_NAME}
-              className="shrink-0 rounded-lg bg-white p-0.5 shadow-[0_0_12px_rgba(34,240,255,0.35)] active:scale-95"
+              className="shrink-0 rounded-lg bg-white p-0.5 active:scale-95"
             >
               <img src={assetUrl(COMMITTEE_LOGO)} alt="" className="h-12 w-auto" />
             </Link>
-            <Link to="/home" aria-label={t('homePage.title')} className="min-w-0 flex-1">
-              <div className="font-display text-3xl leading-none font-bold tracking-wide md:text-4xl">
-                {APP_TITLE}
-              </div>
-              <div className="truncate text-xs text-night-muted md:text-sm">{APP_SUBTITLE}</div>
-            </Link>
+            <div className="min-w-0 flex-1">
+              <Link
+                to="/home"
+                className="inline-block max-w-full rounded-lg bg-white px-1.5 py-0.5 active:scale-95"
+              >
+                <img
+                  src={assetUrl(BPL_LOGO)}
+                  alt={`${APP_TITLE} | ${APP_SUBTITLE}`}
+                  className="h-[56px] w-auto max-w-full object-contain md:h-16"
+                />
+              </Link>
+            </div>
             <div className="flex shrink-0 flex-col items-end gap-1.5 sm:flex-row sm:items-center sm:gap-3">
               <span className="flex items-center gap-1.5 text-[11px] whitespace-nowrap text-night-muted sm:text-xs">
                 <span aria-hidden className="size-2 rounded-full bg-night-muted" />

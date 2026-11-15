@@ -20,8 +20,8 @@ export function ScorePanel({
   const rrr = requiredRunRate(inn);
 
   return (
-    <section className="bg-emerald-800 px-4 pt-2 pb-4 text-white dark:bg-emerald-950">
-      <div className="flex items-center justify-between text-sm text-emerald-100">
+    <section className="bg-night-950 px-4 pt-2 pb-4 text-white">
+      <div className="flex items-center justify-between text-sm text-white/80">
         <span className="truncate font-semibold">{match.teams[inn.battingTeam].name}</span>
         <span className={inn.superOver ? 'rounded bg-amber-400 px-2 font-bold text-amber-950' : ''}>
           {inningsLabel(inn, t, f)}
@@ -31,7 +31,7 @@ export function ScorePanel({
         <span className="tabular text-5xl leading-tight font-bold">
           {f.num(inn.runs)}/{f.num(inn.wickets)}
         </span>
-        <span className="tabular pb-2 text-lg text-emerald-100">
+        <span className="tabular pb-2 text-lg text-white/80">
           {t('scoring.oversOf', {
             overs: f.overs(inn.legalBalls),
             total: f.num(inn.oversLimit),
@@ -43,7 +43,7 @@ export function ScorePanel({
           </span>
         )}
       </div>
-      <div className="tabular flex flex-wrap gap-x-4 text-sm text-emerald-100">
+      <div className="tabular flex flex-wrap gap-x-4 text-sm text-white/80">
         <span>
           {t('scoring.crr')} {f.dec(runRate(inn.runs, inn.legalBalls))}
         </span>
@@ -67,7 +67,7 @@ export function ScorePanel({
         )}
       </div>
       {state.reviewsLeft && (
-        <div className="mt-1 flex flex-wrap gap-x-4 text-xs text-emerald-100">
+        <div className="mt-1 flex flex-wrap gap-x-4 text-xs text-white/80">
           <span>{t('scoring.reviewsLeft')}:</span>
           {([0, 1] as const).map((team) => (
             <span key={team}>

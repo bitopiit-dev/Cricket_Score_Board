@@ -62,7 +62,7 @@ function MatchCard({ m, s }: { m: Match; s: MatchState }) {
     <Link
       to={`/match/${m.id}`}
       className={`rounded-2xl bg-white p-4 shadow-sm active:bg-slate-50 dark:bg-slate-900 dark:active:bg-slate-800 ${
-        live ? 'ring-2 ring-lime-400/70' : ''
+        live ? 'ring-2 ring-bpl-red/70' : ''
       }`}
     >
       <div className="flex items-center justify-between text-xs text-slate-500">
@@ -71,13 +71,11 @@ function MatchCard({ m, s }: { m: Match; s: MatchState }) {
             ? `${t('fixtures.matchNo', { n: f.num(fx.no) })} · ${stageLabel(fx.stage, t)}`
             : t('home.oversFormat', { overs: f.num(m.settings.overs), count: m.settings.overs })}
         </span>
-        <span
-          className={`flex items-center gap-1.5 ${live ? 'font-bold text-lime-700 dark:text-lime-400' : ''}`}
-        >
+        <span className={`flex items-center gap-1.5 ${live ? 'font-bold text-bpl-red' : ''}`}>
           {live && (
             <span
               aria-hidden
-              className="size-2 animate-pulse rounded-full bg-lime-500 motion-reduce:animate-none"
+              className="size-2 animate-pulse rounded-full bg-bpl-red motion-reduce:animate-none"
             />
           )}
           {status}

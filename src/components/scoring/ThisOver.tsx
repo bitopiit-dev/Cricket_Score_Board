@@ -40,13 +40,13 @@ export function BallChip({ ball }: { ball: BallSummary }) {
       ball.extra === null && ball.runs === 0 ? t('ball.wicket') : `${label} ${t('ball.wicket')}`;
 
   const color = ball.wicket
-    ? 'bg-red-600 text-white'
+    ? 'bg-bpl-red text-white'
     : ball.extra === 'wide' || ball.extra === 'noBall'
       ? 'bg-amber-200 text-amber-950 dark:bg-amber-500/30 dark:text-amber-200'
       : ball.boundary && ball.runs === 6
-        ? 'bg-violet-600 text-white'
+        ? 'bg-bpl-yellow text-night-950'
         : ball.boundary && ball.runs === 4
-          ? 'bg-sky-600 text-white'
+          ? 'bg-bpl-green text-white'
           : 'bg-white text-slate-800 ring-1 ring-slate-300 dark:bg-slate-800 dark:text-slate-100 dark:ring-slate-700';
 
   return (

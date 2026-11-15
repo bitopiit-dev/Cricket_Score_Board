@@ -58,12 +58,9 @@ export default function FixturesPage() {
     <main className="mx-auto flex max-w-lg flex-col gap-4 p-4 md:max-w-3xl">
       <PageTitle>{t('tabs.fixtures')}</PageTitle>
 
-      <section
-        aria-label={t('fixtures.today')}
-        className="rounded-2xl bg-night-950 p-4 text-white shadow-[0_0_18px_rgba(34,240,255,0.15)]"
-      >
-        <h2 className="flex items-center gap-2 font-display text-xl font-bold tracking-wide text-neon-cyan">
-          <span aria-hidden className="size-2 rounded-full bg-neon-cyan" />
+      <section aria-label={t('fixtures.today')} className="rounded-2xl bg-night-950 p-4 text-white">
+        <h2 className="flex items-center gap-2 font-display text-xl font-bold tracking-wide text-bpl-yellow">
+          <span aria-hidden className="size-2 rounded-full bg-bpl-yellow" />
           {t('fixtures.today')} · {day(today)}
         </h2>
         {todays.length > 0 ? (
@@ -95,7 +92,7 @@ export default function FixturesPage() {
             onClick={() => setFilter(fl)}
             className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-semibold whitespace-nowrap ${
               filter === fl
-                ? 'bg-gradient-to-r from-neon-cyan to-neon-violet text-night-950'
+                ? 'bg-bpl-yellow text-night-950'
                 : 'bg-white text-slate-600 shadow-sm dark:bg-slate-900 dark:text-slate-300'
             }`}
           >
@@ -124,7 +121,7 @@ export default function FixturesPage() {
           <section key={date} id={`day-${date}`} aria-label={day(date)} className="scroll-mt-4">
             <h2
               className={`mb-2 font-display text-lg font-bold tracking-wide ${
-                date === today ? 'text-sky-600 dark:text-neon-cyan' : 'text-slate-500'
+                date === today ? 'text-bpl-red' : 'text-slate-500'
               }`}
             >
               {day(date)}
@@ -197,10 +194,10 @@ function FixtureCard({
 
   const status =
     outcome.status === 'live' ? (
-      <span className="flex items-center gap-1.5 font-bold text-lime-600 dark:text-lime-400">
+      <span className="flex items-center gap-1.5 font-bold text-bpl-red">
         <span
           aria-hidden
-          className="size-2 animate-pulse rounded-full bg-lime-500 motion-reduce:animate-none"
+          className="size-2 animate-pulse rounded-full bg-bpl-red motion-reduce:animate-none"
         />
         {t('fixtures.live')}
       </span>
@@ -229,7 +226,7 @@ function FixtureCard({
       </div>
       {outcome.status === 'completed' && outcome.result && match && (
         <p
-          className={`mt-2 text-sm font-semibold ${dark ? 'text-lime-300' : 'text-emerald-700 dark:text-emerald-400'}`}
+          className={`mt-2 text-sm font-semibold ${dark ? 'text-bpl-yellow' : 'text-emerald-700 dark:text-emerald-400'}`}
         >
           {resultText(outcome.result, match, t, f)}
         </p>
@@ -241,7 +238,7 @@ function FixtureCard({
     dark
       ? 'border border-night-line bg-night-900'
       : `bg-white shadow-sm dark:bg-slate-900 ${highlight ? 'ring-2 ring-sky-400' : ''}`
-  } ${outcome.status === 'live' ? 'ring-2 ring-lime-400/70' : ''}`;
+  } ${outcome.status === 'live' ? 'ring-2 ring-bpl-red/70' : ''}`;
 
   return match ? (
     <Link to={`/match/${match.id}`} className={`${cls} active:opacity-80`}>

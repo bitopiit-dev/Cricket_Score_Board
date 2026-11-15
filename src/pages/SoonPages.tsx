@@ -21,7 +21,7 @@ export function StatsPage() {
       >
         <Link
           to="/awards"
-          className="mt-2 rounded-xl border border-dashed border-neon-cyan/50 px-4 py-2 font-semibold text-neon-cyan"
+          className="mt-2 rounded-xl border border-dashed border-bpl-yellow/60 px-4 py-2 font-semibold text-bpl-yellow"
         >
           🏆 {t('comingSoon.seeAwards')} →
         </Link>

@@ -3,7 +3,7 @@ import { useFormat } from '../../hooks/useFormat';
 
 export const btn = {
   primary:
-    'rounded-xl bg-emerald-700 px-4 py-3 font-semibold text-white shadow-sm active:bg-emerald-800 disabled:opacity-40 dark:bg-emerald-600',
+    'rounded-xl bg-bpl-red px-4 py-3 font-semibold text-white shadow-sm active:brightness-90 disabled:opacity-40',
   secondary:
     'rounded-xl border border-slate-300 bg-white px-4 py-3 font-semibold active:bg-slate-100 disabled:opacity-40 dark:border-slate-700 dark:bg-slate-800 dark:active:bg-slate-700',
   danger:
@@ -147,7 +147,7 @@ export function Toggle({
         onChange={(e) => onChange(e.target.checked)}
         className="peer sr-only"
       />
-      <span className="relative h-7 w-12 shrink-0 rounded-full bg-slate-300 transition peer-checked:bg-emerald-600 peer-focus-visible:ring-2 peer-focus-visible:ring-emerald-600/50 after:absolute after:top-1 after:left-1 after:h-5 after:w-5 after:rounded-full after:bg-white after:transition peer-checked:after:translate-x-5 dark:bg-slate-700" />
+      <span className="relative h-7 w-12 shrink-0 rounded-full bg-slate-300 transition peer-checked:bg-bpl-green peer-focus-visible:ring-2 peer-focus-visible:ring-bpl-green/50 after:absolute after:top-1 after:left-1 after:h-5 after:w-5 after:rounded-full after:bg-white after:transition peer-checked:after:translate-x-5 dark:bg-slate-700" />
     </label>
   );
 }

@@ -100,7 +100,7 @@ function HeroFrame({
     </>
   );
   const cls =
-    'relative block overflow-hidden rounded-3xl border border-night-line text-white shadow-[0_0_24px_rgba(34,240,255,0.15)]';
+    'relative block overflow-hidden rounded-3xl border border-night-line text-white shadow-lg';
   return to ? (
     <Link to={to} className={`${cls} active:opacity-90`}>
       {body}
@@ -173,10 +173,10 @@ function Hero({ hero, ts, now }: { hero: HomeHero; ts: TournamentState; now: num
           to={`/match/${hero.match.id}`}
           label={
             <span className="flex items-center gap-2">
-              <span className="flex items-center gap-1.5 rounded-full bg-night-950/70 px-2 py-0.5 text-neon-cyan">
+              <span className="flex items-center gap-1.5 rounded-full bg-bpl-red px-2 py-0.5 text-white">
                 <span
                   aria-hidden
-                  className="size-2 animate-pulse rounded-full bg-neon-cyan motion-reduce:animate-none"
+                  className="size-2 animate-pulse rounded-full bg-white motion-reduce:animate-none"
                 />
                 {t('homePage.live')}
               </span>
@@ -195,7 +195,7 @@ function Hero({ hero, ts, now }: { hero: HomeHero; ts: TournamentState; now: num
           label={`${t('homePage.result')} · ${fixtureLabel(hero.fixture)}`}
         >
           {hero.state.result && (
-            <p className="text-center font-display text-2xl leading-tight font-bold text-neon-cyan">
+            <p className="text-center font-display text-2xl leading-tight font-bold text-bpl-yellow">
               {resultText(hero.state.result, hero.match, t, f)}
             </p>
           )}
@@ -214,7 +214,7 @@ function Hero({ hero, ts, now }: { hero: HomeHero; ts: TournamentState; now: num
       return (
         <section className="rounded-3xl border border-night-line bg-night-950 p-6 text-center text-white">
           <p className="font-display text-3xl font-bold">{t('homePage.over')}</p>
-          <Link to="/points" className="mt-2 inline-block text-neon-cyan">
+          <Link to="/points" className="mt-2 inline-block text-bpl-yellow">
             {t('tabs.points')} →
           </Link>
         </section>
@@ -228,7 +228,7 @@ function Countdown({ target, now, small }: { target: number; now: number; small?
   const c = countdown(target, now);
   if (c.due) {
     return (
-      <p className="text-center font-display text-2xl font-bold text-neon-cyan">
+      <p className="text-center font-display text-2xl font-bold text-bpl-yellow">
         {t('homePage.startingSoon')}
       </p>
     );
@@ -244,7 +244,7 @@ function Countdown({ target, now, small }: { target: number; now: number; small?
       {units.map(([n, label]) => (
         <div key={label} className="flex flex-col items-center rounded-xl bg-night-950/70 py-2">
           <span
-            className={`tabular font-display leading-none font-bold ${small ? 'text-2xl' : 'text-4xl'}`}
+            className={`tabular font-display text-bpl-yellow leading-none font-bold ${small ? 'text-2xl' : 'text-4xl'}`}
           >
             {f.num(String(n).padStart(2, '0'))}
           </span>
@@ -286,7 +286,7 @@ function LiveScore({ match, state }: { match: Match; state: MatchState }) {
             ` · ${t('homePage.projected', { n: f.num(projected) })}`}
         </div>
         {need !== null && need > 0 && !inn.ended && (
-          <div className="mt-1 text-sm font-semibold text-neon-cyan">
+          <div className="mt-1 text-sm font-semibold text-bpl-yellow">
             {t('scoring.need', { runs: f.num(need), balls: f.num(ballsRemaining(inn)) })}
           </div>
         )}
@@ -302,7 +302,7 @@ function LiveScore({ match, state }: { match: Match; state: MatchState }) {
                 <span className={`flex min-w-0 items-center gap-2 ${striker ? 'font-bold' : ''}`}>
                   <span
                     aria-hidden
-                    className={`size-2 shrink-0 rounded-full ${striker ? 'bg-neon-cyan' : 'bg-transparent'}`}
+                    className={`size-2 shrink-0 rounded-full ${striker ? 'bg-bpl-yellow' : 'bg-transparent'}`}
                   />
                   <span className="truncate">{playerName(match, id)}</span>
                   {striker && <span className="sr-only">{t('scoring.onStrike')}</span>}
@@ -350,11 +350,11 @@ function HeroBall({ ball }: { ball: BallSummary }) {
               : f.num(ball.runs);
   if (ball.wicket) label = t('ball.wicket');
   const style = ball.wicket
-    ? 'bg-red-500 text-white'
+    ? 'bg-bpl-red text-white'
     : ball.boundary && ball.runs === 4
-      ? 'bg-neon-cyan text-night-950'
+      ? 'bg-bpl-green text-white'
       : ball.boundary && ball.runs === 6
-        ? 'bg-neon-violet text-white'
+        ? 'bg-bpl-yellow text-night-950'
         : 'border border-night-line bg-night-900 text-white';
   return (
     <span
@@ -415,7 +415,7 @@ function Progress({ ts }: { ts: TournamentState }) {
               className="h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-night-800"
             >
               <span
-                className="block h-full rounded-full bg-gradient-to-r from-neon-cyan to-neon-violet"
+                className="block h-full rounded-full bg-bpl-green"
                 style={{ width: `${(ph.done / ph.total) * 100}%` }}
               />
             </span>
@@ -438,7 +438,7 @@ function NextMatches({ fixtures, ts }: { fixtures: Fixture[]; ts: TournamentStat
     <section className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
       <div className="flex items-baseline justify-between gap-2">
         <h2 className="font-display text-xl font-bold tracking-wide">{t('homePage.upcoming')}</h2>
-        <Link to="/fixtures" className="text-sm font-semibold text-sky-700 dark:text-neon-cyan">
+        <Link to="/fixtures" className="text-sm font-semibold text-bpl-red">
           {t('homePage.allFixtures')} →
         </Link>
       </div>

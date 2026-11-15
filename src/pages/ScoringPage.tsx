@@ -134,7 +134,7 @@ export default function ScoringPage() {
       />
 
       {(match.settings.shortPitch || match.settings.sixOut) && (
-        <div className="bg-emerald-900 px-4 py-0.5 text-center text-xs text-emerald-200 dark:bg-black/40">
+        <div className="bg-night-900 px-4 py-0.5 text-center text-xs text-night-muted">
           {[
             match.settings.shortPitch && t('scoring.shortPitch'),
             match.settings.sixOut && t('scoring.sixOut'),

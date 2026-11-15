@@ -84,16 +84,20 @@ export function TabBar({ variant }: { variant: 'bottom' | 'top' }) {
             <Link
               to={tab.to}
               aria-current={on ? 'page' : undefined}
-              className={`flex items-center justify-center rounded-xl font-semibold transition ${
+              className={`relative flex items-center justify-center rounded-xl font-semibold transition ${
                 variant === 'top'
                   ? 'min-h-11 gap-2 px-2 text-base'
                   : 'min-h-14 flex-col gap-0.5 px-0.5 text-[11px] leading-tight'
-              } ${
-                on
-                  ? 'bg-gradient-to-r from-neon-cyan to-neon-violet text-night-950 shadow-[0_0_16px_rgba(34,240,255,0.4)]'
-                  : 'text-night-muted hover:text-white'
-              }`}
+              } ${on ? 'bg-night-800 text-white' : 'text-night-muted hover:text-white'}`}
             >
+              {on && (
+                <span
+                  aria-hidden
+                  className={`absolute left-1/2 h-1 w-8 -translate-x-1/2 rounded-full bg-bpl-yellow ${
+                    variant === 'top' ? 'bottom-1' : 'top-0'
+                  }`}
+                />
+              )}
               <svg viewBox="0 0 24 24" aria-hidden className="size-5 shrink-0">
                 {ICONS[tab.id]}
               </svg>

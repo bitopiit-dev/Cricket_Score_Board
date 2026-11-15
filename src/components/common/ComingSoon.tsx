@@ -21,13 +21,13 @@ export function ComingSoon({
     <section className="relative overflow-hidden rounded-3xl border border-night-line bg-night-950 p-6 text-center text-white">
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-16 left-1/2 size-48 -translate-x-1/2 rounded-full bg-neon-violet/30 blur-3xl"
+        className="pointer-events-none absolute -top-16 left-1/2 size-48 -translate-x-1/2 rounded-full bg-bpl-red/25 blur-3xl"
       />
       <div className="relative flex flex-col items-center gap-3">
         <span aria-hidden className="text-5xl">
           {icon}
         </span>
-        <span className="rounded-full bg-gradient-to-r from-neon-cyan to-neon-violet px-3 py-0.5 text-xs font-bold tracking-wide text-night-950 uppercase">
+        <span className="rounded-full bg-bpl-yellow px-3 py-0.5 text-xs font-bold tracking-wide text-night-950 uppercase">
           {t('comingSoon.badge')}
         </span>
         <h2 className="font-display text-3xl font-bold tracking-wide">{title}</h2>
@@ -37,7 +37,7 @@ export function ComingSoon({
             {items.map((i) => (
               <li
                 key={i}
-                className="rounded-full border border-neon-cyan/40 px-3 py-1 text-sm text-neon-cyan"
+                className="rounded-full border border-bpl-yellow/50 px-3 py-1 text-sm text-bpl-yellow"
               >
                 {i}
               </li>

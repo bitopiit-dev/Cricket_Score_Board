@@ -28,7 +28,7 @@ export function Header({ title, backTo, actions }: Props) {
   const { t } = useTranslation();
   const goBack = useGoBack(backTo);
   return (
-    <header className="sticky top-0 z-[55] flex items-center gap-2 bg-emerald-800 px-3 py-2 pt-[max(0.5rem,env(safe-area-inset-top))] text-white shadow dark:bg-emerald-950">
+    <header className="sticky top-0 z-[55] flex items-center gap-2 bg-night-950 px-3 py-2 pt-[max(0.5rem,env(safe-area-inset-top))] text-white shadow">
       {backTo && (
         <button
           type="button"

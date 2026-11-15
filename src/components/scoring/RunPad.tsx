@@ -50,7 +50,7 @@ export function RunPad({
       <button
         type="button"
         disabled={disabled}
-        className={`${base} bg-sky-600 text-white`}
+        className={`${base} bg-bpl-green text-white`}
         onClick={() => onRuns(4, true)}
       >
         {f.num(4)}
@@ -59,7 +59,7 @@ export function RunPad({
         <button
           type="button"
           disabled={disabled}
-          className={`${base} bg-rose-700 px-1 text-sm leading-tight text-white`}
+          className={`${base} bg-bpl-red px-1 text-sm leading-tight text-white`}
           onClick={onSixOut}
         >
           {t('scoring.sixOut')}
@@ -68,7 +68,7 @@ export function RunPad({
         <button
           type="button"
           disabled={disabled}
-          className={`${base} bg-violet-600 text-white`}
+          className={`${base} bg-bpl-yellow text-night-950`}
           onClick={() => onRuns(6, true)}
         >
           {f.num(6)}
@@ -101,7 +101,7 @@ export function RunPad({
       <button
         type="button"
         disabled={disabled}
-        className={`${base} col-span-4 bg-red-600 text-white`}
+        className={`${base} col-span-4 bg-bpl-red text-white`}
         onClick={onWicket}
       >
         {t('scoring.wicket')}
