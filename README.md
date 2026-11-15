@@ -11,22 +11,30 @@ npm run dev        # http://localhost:5173
 
 To test on a phone, connect it to the same Wi-Fi and open `http://<your-PC-IP>:5173`.
 
-## Deploy (Vercel)
+## Deploy (GitHub Pages)
 
-The app is a static site (`npm run build` → `dist/`); [`vercel.json`](vercel.json) holds
-the settings. Routing uses `#/…` links, so no server rewrites are needed.
+Live site: **https://bitopiit-dev.github.io/Cricket_Score_Board/**
 
-1. On vercel.com: **Add New → Project → Import** the GitHub repository.
-2. Vercel reads `vercel.json` (Vite, `npm run build`, output `dist`). Press **Deploy**.
-3. Every push to `main` deploys again automatically.
+Every push to `main` runs [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml):
+lint, tests, build, then publish `dist/` to GitHub Pages. If a test fails, nothing is
+deployed and the site keeps the previous version. It can also be run by hand from the
+**Actions** tab (_Deploy to GitHub Pages → Run workflow_).
 
-`index.html` is never cached and the built files have hashed names, so phones get a
-new version on the next page load.
+- Production builds use the base path `/Cricket_Score_Board/` (see `vite.config.ts`);
+  `npm run dev` stays at `/`. Files from `public/` are referenced through
+  `assetUrl()` (`src/utils/asset.ts`), so photos and logos work under the sub-folder.
+- Routing uses `#/…` links, so no 404 fallback page is needed.
+- To check a production build locally: `npm run build && npm run preview`, then open
+  `http://localhost:4173/Cricket_Score_Board/`.
 
-Environment variables are not needed yet. From the Supabase step on, set
-`VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` (publishable key) in the Vercel
-project settings; see [`.env.example`](.env.example). Never add a service_role or
-secret key.
+### Supabase keys (from step B)
+
+Add two **variables** (not secrets) under _Settings → Secrets and variables → Actions →
+Variables_: `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` (the publishable key).
+The workflow passes them to the build. These two values end up in the published site
+anyway, so they are not secret; the data is protected by Row Level Security. Never add a
+service_role or secret key, here or anywhere else. Locally, put them in `.env.local`
+(ignored by git); see [`.env.example`](.env.example).
 
 ## Scripts
 

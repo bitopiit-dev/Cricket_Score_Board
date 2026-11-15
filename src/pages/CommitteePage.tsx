@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { assetUrl } from '../utils/asset';
 import { PlayerAvatar } from '../components/common/TeamAvatar';
 import { SubPageTitle } from '../components/layout/AppShell';
 import { COMMITTEE_LOGO, COMMITTEE_MEMBERS, COMMITTEE_NAME } from '../data/committee';
@@ -21,7 +22,7 @@ export default function CommitteePage() {
       </div>
       <section className="mx-4 mt-3 flex flex-col items-center gap-2 rounded-2xl bg-white px-4 py-6 text-center shadow-sm sm:mx-auto sm:max-w-lg dark:bg-slate-900">
         <img
-          src={COMMITTEE_LOGO}
+          src={assetUrl(COMMITTEE_LOGO)}
           alt={COMMITTEE_NAME}
           className="h-44 w-auto rounded-xl bg-white p-1"
         />

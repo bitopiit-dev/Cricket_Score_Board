@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { assetUrl } from '../../utils/asset';
 import { Link, Outlet } from 'react-router-dom';
 import { APP_SUBTITLE, APP_TITLE } from '../../config/app';
 import { COMMITTEE_LOGO, COMMITTEE_NAME } from '../../data/committee';
@@ -22,7 +23,7 @@ export function AppShell() {
               aria-label={COMMITTEE_NAME}
               className="shrink-0 rounded-lg bg-white p-0.5 shadow-[0_0_12px_rgba(34,240,255,0.35)] active:scale-95"
             >
-              <img src={COMMITTEE_LOGO} alt="" className="h-12 w-auto" />
+              <img src={assetUrl(COMMITTEE_LOGO)} alt="" className="h-12 w-auto" />
             </Link>
             <div className="min-w-0 flex-1">
               <div className="font-display text-3xl leading-none font-bold tracking-wide md:text-4xl">

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { assetUrl } from '../../utils/asset';
 import { initials, teamInitial } from '../../data/teams';
 
 const SIZES = {
@@ -28,7 +29,7 @@ export function Avatar({
   if (src && src !== failedSrc) {
     return (
       <img
-        src={src}
+        src={assetUrl(src)}
         alt=""
         loading="lazy"
         onError={() => setFailedSrc(src)}

@@ -3,10 +3,18 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
-export default defineConfig({
+/**
+ * GitHub Pages serves the site from https://bitopiit-dev.github.io/Cricket_Score_Board/,
+ * so production builds use that sub-folder as the base. Local development stays at /.
+ */
+const PAGES_BASE = '/Cricket_Score_Board/';
+
+export default defineConfig(({ command, isPreview }) => ({
+  // `vite preview` serves the built files, so it needs the same base.
+  base: command === 'build' || isPreview ? PAGES_BASE : '/',
   plugins: [react(), tailwindcss()],
   server: { host: true },
   test: {
     environment: 'node',
   },
-});
+}));
