@@ -27,11 +27,7 @@ export function AppShell() {
                 />
               </Link>
             </div>
-            <Link
-              to="/committee"
-              aria-label={COMMITTEE_NAME}
-              className="shrink-0 rounded-lg bg-white p-0.5 active:scale-95"
-            >
+            <Link to="/committee" aria-label={COMMITTEE_NAME} className="shrink-0 active:scale-95">
               <img src={assetUrl(COMMITTEE_LOGO)} alt="" className="h-12 w-auto" />
             </Link>
             <div className="flex shrink-0 flex-col items-end gap-1.5 sm:flex-row sm:items-center sm:gap-3">
