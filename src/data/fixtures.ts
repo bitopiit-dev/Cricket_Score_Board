@@ -57,8 +57,8 @@ export const FIXTURES: readonly Fixture[] = [
     date: '2026-11-16',
     time: '13:00',
     stage: 'groupA',
-    teamA: team('finishing-victorians'),
-    teamB: team('rainbow-cutting'),
+    teamA: team('mcd-super-stars'),
+    teamB: team('quality-flying-fighter'),
   },
   {
     id: 'f2',
@@ -183,8 +183,8 @@ export const FIXTURES: readonly Fixture[] = [
     date: '2026-11-24',
     time: '13:00',
     stage: 'groupA',
-    teamA: team('mcd-super-stars'),
-    teamB: team('quality-flying-fighter'),
+    teamA: team('finishing-victorians'),
+    teamB: team('rainbow-cutting'),
   },
   {
     id: 'f16',

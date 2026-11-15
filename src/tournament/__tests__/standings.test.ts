@@ -51,12 +51,12 @@ describe('standings', () => {
   });
 
   it('gives 2 points for a win and works out net run rate', () => {
-    // Match 1: Finishing Victorians 6/0 (1 ov) beat Rainbow Cutting 3/0 (1 ov)
+    // Match 1: MCD Super Stars 6/0 (1 ov) beat Quality Flying Fighter 3/0 (1 ov)
     const ts = tournamentState([play(1, 6, 3)]);
     const fv = ts.tables.groupA[0];
-    expect(fv).toMatchObject({ teamId: 'finishing-victorians', played: 1, won: 1, points: 2 });
+    expect(fv).toMatchObject({ teamId: 'mcd-super-stars', played: 1, won: 1, points: 2 });
     expect(fv.nrr).toBeCloseTo(3);
-    const rc = ts.tables.groupA.find((r) => r.teamId === 'rainbow-cutting')!;
+    const rc = ts.tables.groupA.find((r) => r.teamId === 'quality-flying-fighter')!;
     expect(rc).toMatchObject({ lost: 1, points: 0 });
     expect(rc.nrr).toBeCloseTo(-3);
     expect(ts.outcomes.get('f1')!.status).toBe('completed');
@@ -140,6 +140,6 @@ describe('fixture ids', () => {
     const edited = FIXTURES.map((f) => (f.id === 'f1' ? { ...f, no: 99 } : f));
     const ts = tournamentState([m], edited);
     expect(ts.outcomes.get('f1')!.status).toBe('completed');
-    expect(ts.tables.groupA[0]).toMatchObject({ teamId: 'finishing-victorians', points: 2 });
+    expect(ts.tables.groupA[0]).toMatchObject({ teamId: 'mcd-super-stars', points: 2 });
   });
 });

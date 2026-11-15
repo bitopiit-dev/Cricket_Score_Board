@@ -1,5 +1,5 @@
 [
-  {"match": 1, "date": "2026-11-16", "time": "13:00", "teamA": "Finishing Victorians", "teamB": "Rainbow Cutting", "stage": "Group A"},
+  {"match": 1, "date": "2026-11-16", "time": "13:00", "teamA": "MCD Super Stars", "teamB": "Quality Flying Fighter", "stage": "Group A"},
   {"match": 2, "date": "2026-11-17", "time": "12:00", "teamA": "Engineer Warriors", "teamB": "Sky Warrior", "stage": "Group B"},
   {"match": 3, "date": "2026-11-17", "time": "13:00", "teamA": "Quality Flying Fighter", "teamB": "Power House X1", "stage": "Group A"},
   {"match": 4, "date": "2026-11-18", "time": "12:00", "teamA": "Red Bulls Warriors", "teamB": "HR Vikings", "stage": "Group B"},
@@ -13,7 +13,7 @@
   {"match": 12, "date": "2026-11-23", "time": "12:00", "teamA": "Power Player", "teamB": "HR Vikings", "stage": "Group B"},
   {"match": 13, "date": "2026-11-23", "time": "13:00", "teamA": "Finishing Victorians", "teamB": "Power (Printing & Washing)", "stage": "Group A"},
   {"match": 14, "date": "2026-11-24", "time": "12:00", "teamA": "Engineer Warriors", "teamB": "DDC", "stage": "Group B"},
-  {"match": 15, "date": "2026-11-24", "time": "13:00", "teamA": "MCD Super Stars", "teamB": "Quality Flying Fighter", "stage": "Group A"},
+  {"match": 15, "date": "2026-11-24", "time": "13:00", "teamA": "Finishing Victorians", "teamB": "Rainbow Cutting", "stage": "Group A"},
   {"match": 16, "date": "2026-11-25", "time": "12:00", "teamA": "Power Player", "teamB": "Red Bulls Warriors", "stage": "Group B"},
   {"match": 17, "date": "2026-11-25", "time": "13:00", "teamA": "Rainbow Cutting", "teamB": "Power House X1", "stage": "Group A"},
   {"match": 18, "date": "2026-11-26", "time": "12:00", "teamA": "Sky Warrior", "teamB": "HR Vikings", "stage": "Group B"},

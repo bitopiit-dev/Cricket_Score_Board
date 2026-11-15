@@ -132,7 +132,7 @@ describe('editing the list', () => {
 });
 
 describe('checks before saving', () => {
-  const f1 = FIXTURES[0]; // Mon 16 Nov, Finishing Victorians v Rainbow Cutting
+  const f1 = FIXTURES[0]; // Mon 16 Nov, MCD Super Stars v Quality Flying Fighter
 
   it('the official fixture has nothing to flag', () => {
     for (const f of FIXTURES) expect(validateFixture(f, FIXTURES), `match ${f.no}`).toEqual([]);
@@ -140,8 +140,8 @@ describe('checks before saving', () => {
 
   it('flags the same team on both sides and a team playing twice on one day', () => {
     expect(validateFixture({ ...f1, teamB: f1.teamA }, FIXTURES)).toContain('sameTeam');
-    // Match 2 is on 17 Nov; moving it to 16 Nov with Finishing Victorians clashes with match 1
-    const f2 = { ...FIXTURES[1], date: '2026-11-16', teamA: team('finishing-victorians') };
+    // Match 2 is on 17 Nov; moving it to 16 Nov with MCD Super Stars clashes with match 1
+    const f2 = { ...FIXTURES[1], date: '2026-11-16', teamA: team('mcd-super-stars') };
     expect(validateFixture(f2, FIXTURES)).toContain('teamTwiceOnDay');
   });
 
@@ -167,8 +167,8 @@ describe('edits and the tournament tables', () => {
   it('a scored match stays linked after the list is reordered and edited', () => {
     const m = makeMatch(11, { overs: 1 });
     m.fixtureId = 'f1';
-    m.teams[0].teamId = 'finishing-victorians';
-    m.teams[1].teamId = 'rainbow-cutting';
+    m.teams[0].teamId = 'mcd-super-stars';
+    m.teams[1].teamId = 'quality-flying-fighter';
     const edited = moveFixture(updateFixture(FIXTURES, 'f1', { time: '14:00' }), 'f1', 1);
     expect(tournamentState([m], edited).outcomes.get('f1')!.status).toBe('live');
   });
