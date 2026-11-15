@@ -20,7 +20,7 @@ import {
 } from '../engine/rules';
 import type { Team, TeamIndex } from '../engine/types';
 import { TeamAvatar } from '../components/common/TeamAvatar';
-import { FIXTURE_OVERS, fixturesOn, fixtureByNo, todayInDhaka } from '../data/fixtures';
+import { FIXTURE_OVERS, fixturesOn, fixtureById, todayInDhaka } from '../data/fixtures';
 import { TOURNAMENT_TEAMS, findTeam, playerDisplayName } from '../data/teams';
 import { useTournament } from '../hooks/useTournament';
 import { usePrefs } from '../store/prefsStore';
@@ -47,15 +47,15 @@ export default function NewMatchPage() {
 
   // Fixture link: pick a date, then one of that day's matches.
   const [date, setDate] = useState(todayInDhaka);
-  /** Fixture number, or null for a match outside the fixture (friendly / practice). */
-  const [fixtureNo, setFixtureNo] = useState<number | null>(null);
+  /** Fixture id, or null for a match outside the fixture (friendly / practice). */
+  const [fixtureId, setFixtureId] = useState<string | null>(null);
   /** Fields filled from the fixture are locked until the scorer chooses to edit. */
   const [manualEdit, setManualEdit] = useState(false);
-  const fixture = fixtureByNo(fixtureNo ?? undefined);
+  const fixture = fixtureById(fixtureId ?? undefined);
   const dayFixtures = fixturesOn(date);
-  const sidesOf = (no: number): [string | null, string | null] =>
-    tour ? fixtureTeams(fixtureByNo(no)!, tour.ts) : [null, null];
-  const existing = fixture && tour?.ts.outcomes.get(fixture.no);
+  const sidesOf = (id: string): [string | null, string | null] =>
+    tour ? fixtureTeams(fixtureById(id)!, tour.ts) : [null, null];
+  const existing = fixture && tour?.ts.outcomes.get(fixture.id);
   const alreadyStarted = existing && existing.status !== 'scheduled' ? existing : undefined;
 
   /** Tournament team id per side; '' = other team with a typed name. */
@@ -94,11 +94,11 @@ export default function NewMatchPage() {
       : null;
   const ruleHint = t('newMatch.fixedByRule');
 
-  function pickFixture(no: number | null) {
-    setFixtureNo(no);
+  function pickFixture(id: string | null) {
+    setFixtureId(id);
     setManualEdit(false);
-    if (no === null) return;
-    const [a, b] = sidesOf(no);
+    if (id === null) return;
+    const [a, b] = sidesOf(id);
     setTeamIds([a ?? '', b ?? '']);
     setTeamNames(['', '']);
     setXi([null, null]);
@@ -106,7 +106,7 @@ export default function NewMatchPage() {
     setRules(allRules(true));
   }
   /** A side is locked when the fixture already names its team. */
-  const sideLocked = (i: TeamIndex) => !!fixture && !manualEdit && sidesOf(fixture.no)[i] !== null;
+  const sideLocked = (i: TeamIndex) => !!fixture && !manualEdit && sidesOf(fixture.id)[i] !== null;
 
   // Playing XI from the squad: chosen player ids per side (null = default selection).
   const [xi, setXi] = useState<[string[] | null, string[] | null]>([null, null]);
@@ -170,7 +170,7 @@ export default function NewMatchPage() {
       };
     }) as [Team, Team];
     const id = await createMatch({
-      ...(fixture ? { fixtureNo: fixture.no } : {}),
+      ...(fixture ? { fixtureId: fixture.id } : {}),
       teams,
       toss: { winner: tossWinner, decision },
       settings: {
@@ -222,13 +222,13 @@ export default function NewMatchPage() {
                 </span>
                 <select
                   className={inputClass}
-                  value={fixtureNo ?? ''}
-                  onChange={(e) => pickFixture(e.target.value ? Number(e.target.value) : null)}
+                  value={fixtureId ?? ''}
+                  onChange={(e) => pickFixture(e.target.value || null)}
                 >
                   <option value="">{t('newMatch.outsideFixture')}</option>
                   {dayFixtures.map((fx) => (
-                    <option key={fx.no} value={fx.no}>
-                      {fixtureLabel(fx, sidesOf(fx.no), lang, t, f)}
+                    <option key={fx.id} value={fx.id}>
+                      {fixtureLabel(fx, sidesOf(fx.id), lang, t, f)}
                     </option>
                   ))}
                 </select>

@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 import {
   FIXTURES,
   HOLIDAYS,
+  fixtureById,
   isRestDay,
+  migrateFixtureLink,
   todayInDhaka,
   tournamentDays,
   type Fixture,
@@ -150,5 +152,21 @@ describe('todayInDhaka', () => {
   it('uses Bangladesh time (UTC+6)', () => {
     expect(todayInDhaka(new Date('2026-11-15T18:30:00Z'))).toBe('2026-11-16');
     expect(todayInDhaka(new Date('2026-11-16T17:59:00Z'))).toBe('2026-11-16');
+  });
+});
+
+describe('fixture ids', () => {
+  it('every fixture has a unique stable id f<number> from the official list', () => {
+    expect(FIXTURES.map((f) => f.id)).toEqual(FIXTURES.map((f) => `f${f.no}`));
+    expect(new Set(FIXTURES.map((f) => f.id)).size).toBe(48);
+    expect(fixtureById('f31')?.no).toBe(31);
+    expect(fixtureById('nope')).toBeUndefined();
+  });
+
+  it('moves an old match link from the match number to the id', () => {
+    const m: { fixtureId?: string; fixtureNo?: number } = { fixtureNo: 7 };
+    expect(migrateFixtureLink(m)).toBe(true);
+    expect(m).toEqual({ fixtureId: 'f7' });
+    expect(migrateFixtureLink(m)).toBe(false);
   });
 });

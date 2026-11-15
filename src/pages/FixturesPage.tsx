@@ -69,7 +69,7 @@ export default function FixturesPage() {
         {todays.length > 0 ? (
           <ul className="mt-3 flex flex-col gap-2">
             {todays.map((fx) => (
-              <li key={fx.no}>
+              <li key={fx.id}>
                 <FixtureCard fx={fx} ts={tour.ts} dark />
               </li>
             ))}
@@ -132,7 +132,7 @@ export default function FixturesPage() {
             </h2>
             <ul className="flex flex-col gap-2">
               {fxs.map((fx) => (
-                <li key={fx.no}>
+                <li key={fx.id}>
                   <FixtureCard fx={fx} ts={tour.ts} highlight={date === today} />
                 </li>
               ))}
@@ -158,7 +158,7 @@ function FixtureCard({
   const { t } = useTranslation();
   const f = useFormat();
   const lang = usePrefs((s) => s.lang);
-  const outcome: FixtureOutcome = ts.outcomes.get(fx.no) ?? { status: 'scheduled' };
+  const outcome: FixtureOutcome = ts.outcomes.get(fx.id) ?? { status: 'scheduled' };
   const sides = fixtureTeams(fx, ts);
   const match = outcome.match;
 

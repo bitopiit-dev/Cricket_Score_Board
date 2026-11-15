@@ -41,7 +41,8 @@ export interface TableRow {
 export type LeagueStage = 'groupA' | 'groupB' | 'superSix';
 
 export interface TournamentState {
-  outcomes: Map<number, FixtureOutcome>;
+  /** Keyed by fixture id. */
+  outcomes: Map<string, FixtureOutcome>;
   tables: Record<LeagueStage, TableRow[]>;
   /** True when every fixture of the stage is completed. */
   complete: Record<StageId, boolean>;
@@ -50,12 +51,12 @@ export interface TournamentState {
 }
 
 /** The app match that belongs to each fixture (a completed one wins, then the newest). */
-export function matchesByFixture(matches: Match[]): Map<number, Match> {
-  const map = new Map<number, Match>();
+export function matchesByFixture(matches: Match[]): Map<string, Match> {
+  const map = new Map<string, Match>();
   for (const m of matches) {
-    if (m.fixtureNo === undefined) continue;
-    const prev = map.get(m.fixtureNo);
-    if (!prev || rank(m) > rank(prev)) map.set(m.fixtureNo, m);
+    if (m.fixtureId === undefined) continue;
+    const prev = map.get(m.fixtureId);
+    if (!prev || rank(m) > rank(prev)) map.set(m.fixtureId, m);
   }
   return map;
 }
@@ -109,7 +110,8 @@ function emptyRow(teamId: string): TableRow {
 export function leagueTable(
   stage: LeagueStage,
   teamIds: string[],
-  byFixture: Map<number, Match>,
+  byFixture: Map<string, Match>,
+  fixtures: readonly Fixture[] = FIXTURES,
 ): TableRow[] {
   const rows = new Map(teamIds.map((id) => [id, emptyRow(id)]));
   const row = (id: string) => {
@@ -117,9 +119,9 @@ export function leagueTable(
     return rows.get(id)!;
   };
 
-  for (const f of FIXTURES) {
+  for (const f of fixtures) {
     if (f.stage !== stage) continue;
-    const m = byFixture.get(f.no);
+    const m = byFixture.get(f.id);
     if (!m) continue;
     const state = deriveMatchState(m);
     if (state.phase !== 'completed' || !state.result) continue;
@@ -172,15 +174,18 @@ export function leagueTable(
   );
 }
 
-export function tournamentState(matches: Match[]): TournamentState {
+export function tournamentState(
+  matches: Match[],
+  fixtures: readonly Fixture[] = FIXTURES,
+): TournamentState {
   const byFixture = matchesByFixture(matches);
-  const outcomes = new Map<number, FixtureOutcome>(
-    FIXTURES.map((f) => [f.no, outcomeOf(byFixture.get(f.no))]),
+  const outcomes = new Map<string, FixtureOutcome>(
+    fixtures.map((f) => [f.id, outcomeOf(byFixture.get(f.id))]),
   );
   const stageDone = (stage: StageId) =>
-    FIXTURES.filter((f) => f.stage === stage).every(
-      (f) => outcomes.get(f.no)!.status === 'completed',
-    );
+    fixtures
+      .filter((f) => f.stage === stage)
+      .every((f) => outcomes.get(f.id)!.status === 'completed');
   const complete = {
     groupA: stageDone('groupA'),
     groupB: stageDone('groupB'),
@@ -191,8 +196,8 @@ export function tournamentState(matches: Match[]): TournamentState {
   };
 
   const group = (g: 'A' | 'B') => TOURNAMENT_TEAMS.filter((t) => t.group === g).map((t) => t.id);
-  const groupA = leagueTable('groupA', group('A'), byFixture);
-  const groupB = leagueTable('groupB', group('B'), byFixture);
+  const groupA = leagueTable('groupA', group('A'), byFixture, fixtures);
+  const groupB = leagueTable('groupB', group('B'), byFixture, fixtures);
 
   const resolveGroupPos = (g: 'A' | 'B', pos: number) => {
     const done = g === 'A' ? complete.groupA : complete.groupB;
@@ -206,11 +211,12 @@ export function tournamentState(matches: Match[]): TournamentState {
     'superSix',
     superSixTeams.filter((x): x is string => x !== null),
     byFixture,
+    fixtures,
   );
 
   const winnerOf = (stage: StageId): string | null => {
-    const f = FIXTURES.find((x) => x.stage === stage);
-    const o = f && outcomes.get(f.no);
+    const f = fixtures.find((x) => x.stage === stage);
+    const o = f && outcomes.get(f.id);
     if (o?.status !== 'completed' || o.result?.kind !== 'won') return null;
     return o.match!.teams[o.result.winner].teamId ?? null;
   };

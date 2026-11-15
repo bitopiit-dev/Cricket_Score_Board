@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { btn } from '../components/common/controls';
 import { PageTitle } from '../components/layout/AppShell';
-import { fixtureByNo } from '../data/fixtures';
+import { fixtureById } from '../data/fixtures';
 import { matchRepository } from '../db/repository';
 import { deriveMatchState } from '../engine/scoring';
 import type { Match, MatchState } from '../engine/types';
@@ -51,7 +51,7 @@ function MatchCard({ m, s }: { m: Match; s: MatchState }) {
   const { t } = useTranslation();
   const f = useFormat();
   const live = isLive({ m, s });
-  const fx = fixtureByNo(m.fixtureNo);
+  const fx = fixtureById(m.fixtureId);
   const status =
     s.phase === 'completed'
       ? t('home.completed')

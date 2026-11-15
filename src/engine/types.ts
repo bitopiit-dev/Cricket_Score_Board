@@ -172,8 +172,8 @@ export interface Match {
   settings: MatchSettings;
   toss: Toss;
   events: MatchEvent[];
-  /** Fixture number (src/data/fixtures.ts) when the match was started from the fixture. */
-  fixtureNo?: number;
+  /** Fixture id (src/data/fixtures.ts) when the match was started from the fixture. */
+  fixtureId?: string;
 }
 
 /* ------------------------------- Derived state ------------------------------ */

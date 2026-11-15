@@ -53,3 +53,22 @@ describe('upgrade to v2: renamed teams', () => {
     await db2.delete();
   });
 });
+
+describe('upgrade to v3: fixture links', () => {
+  it('turns a saved fixture number into the fixture id', async () => {
+    const name = `test-upgrade-${++n}`;
+    const v1 = new Dexie(name);
+    v1.version(1).stores({ matches: 'id, updatedAt' });
+    await v1.table('matches').put({ ...makeMatch(), id: 'm1', fixtureNo: 12 });
+    await v1.table('matches').put({ ...makeMatch(), id: 'm2' });
+    v1.close();
+
+    const db3 = new ScoreBoardDB(name);
+    const repo = createLocalRepository(db3);
+    const m1 = (await repo.get('m1')) as unknown as Record<string, unknown>;
+    expect(m1.fixtureId).toBe('f12');
+    expect('fixtureNo' in m1).toBe(false);
+    expect((await repo.get('m2'))?.fixtureId).toBeUndefined();
+    await db3.delete();
+  });
+});

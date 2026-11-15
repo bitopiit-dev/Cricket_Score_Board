@@ -1,4 +1,5 @@
 import Dexie, { type EntityTable } from 'dexie';
+import { migrateFixtureLink } from '../data/fixtures';
 import { migrateTeamIds } from '../data/teams';
 import type { Match } from '../engine/types';
 
@@ -24,6 +25,17 @@ export class ScoreBoardDB extends Dexie {
           .toCollection()
           .modify((m) => {
             migrateTeamIds(m);
+          }),
+      );
+    // v3: matches link to their fixture by a stable id instead of the match number.
+    this.version(3)
+      .stores({ matches: 'id, updatedAt' })
+      .upgrade((tx) =>
+        tx
+          .table<Match, string>('matches')
+          .toCollection()
+          .modify((m) => {
+            migrateFixtureLink(m as Match & { fixtureNo?: number });
           }),
       );
   }

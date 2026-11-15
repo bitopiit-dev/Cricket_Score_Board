@@ -16,7 +16,7 @@ function play(no: number, a: number, b: number, sides?: [string, string]): Match
   const m = makeMatch(11, { overs: 1 });
   m.id = `m${++seq}`;
   m.updatedAt = seq;
-  m.fixtureNo = no;
+  m.fixtureId = f.id;
   ids.forEach((id, i) => {
     m.teams[i].teamId = id;
     m.teams[i].name = findTeam(id)!.name;
@@ -47,7 +47,7 @@ describe('standings', () => {
     expect(ts.tables.groupA.map((r) => r.teamId).sort()).toEqual(groupIds('A').sort());
     expect(ts.tables.groupA.every((r) => r.played === 0 && r.points === 0)).toBe(true);
     expect(ts.tables.superSix).toEqual([]);
-    expect(ts.outcomes.get(1)).toEqual({ status: 'scheduled' });
+    expect(ts.outcomes.get('f1')).toEqual({ status: 'scheduled' });
   });
 
   it('gives 2 points for a win and works out net run rate', () => {
@@ -59,7 +59,7 @@ describe('standings', () => {
     const rc = ts.tables.groupA.find((r) => r.teamId === 'rainbow-cutting')!;
     expect(rc).toMatchObject({ lost: 1, points: 0 });
     expect(rc.nrr).toBeCloseTo(-3);
-    expect(ts.outcomes.get(1)!.status).toBe('completed');
+    expect(ts.outcomes.get('f1')!.status).toBe('completed');
   });
 
   it('a tie is 1 point each', () => {
@@ -73,16 +73,16 @@ describe('standings', () => {
 
   it('a started but unfinished match is live and not counted', () => {
     const m = makeMatch(11, { overs: 1 });
-    m.fixtureNo = 1;
+    m.fixtureId = 'f1';
     const ts = tournamentState([m]);
-    expect(ts.outcomes.get(1)!.status).toBe('live');
+    expect(ts.outcomes.get('f1')!.status).toBe('live');
     expect(ts.tables.groupA.every((r) => r.played === 0)).toBe(true);
   });
 
   it('a completed match wins over an unfinished duplicate of the same fixture', () => {
     const done = play(1, 6, 3);
-    const later = { ...makeMatch(11, { overs: 1 }), id: 'dup', fixtureNo: 1, updatedAt: 1e12 };
-    expect(tournamentState([later, done]).outcomes.get(1)!.status).toBe('completed');
+    const later = { ...makeMatch(11, { overs: 1 }), id: 'dup', fixtureId: 'f1', updatedAt: 1e12 };
+    expect(tournamentState([later, done]).outcomes.get('f1')!.status).toBe('completed');
   });
 
   it('fills "Group A – 1st" places only when the whole group is done', () => {
@@ -131,5 +131,15 @@ describe('standings', () => {
   it('charges an all-out side its full overs for net run rate', () => {
     expect(nrrBalls({ legalBalls: 40, endReason: 'allOut', oversLimit: 12 })).toBe(72);
     expect(nrrBalls({ legalBalls: 40, endReason: 'targetReached', oversLimit: 12 })).toBe(40);
+  });
+});
+
+describe('fixture ids', () => {
+  it('a match keeps its fixture when the match number is edited', () => {
+    const m = play(1, 6, 3);
+    const edited = FIXTURES.map((f) => (f.id === 'f1' ? { ...f, no: 99 } : f));
+    const ts = tournamentState([m], edited);
+    expect(ts.outcomes.get('f1')!.status).toBe('completed');
+    expect(ts.tables.groupA[0]).toMatchObject({ teamId: 'finishing-victorians', points: 2 });
   });
 });
