@@ -6,7 +6,7 @@ import { SubPageTitle } from '../components/layout/AppShell';
 /** Fixtures, Points, Stats and Media: placeholders until their data exists. */
 
 const Page = ({ children }: { children: React.ReactNode }) => (
-  <main className="mx-auto flex max-w-lg flex-col gap-4 p-4 md:max-w-2xl">{children}</main>
+  <main className="mx-auto flex w-full max-w-lg flex-col gap-4 p-4 md:max-w-2xl">{children}</main>
 );
 
 export function StatsPage() {

@@ -30,7 +30,7 @@ export default function TeamPage() {
 
   if (!team) {
     return (
-      <main className="mx-auto max-w-lg p-4">
+      <main className="mx-auto w-full max-w-lg p-4">
         <SubPageTitle title={t('tabs.teams')} parent="/teams" />
         <p className="p-10 text-center text-slate-500">{t('team.notFound')}</p>
       </main>
@@ -60,7 +60,7 @@ export default function TeamPage() {
         )}
       </section>
 
-      <main className="mx-auto flex max-w-lg flex-col gap-5 p-4">
+      <main className="mx-auto flex w-full max-w-lg flex-col gap-5 p-4">
         {squadWarnings(team, SQUAD_LIMITS).length > 0 && (
           <div
             role="alert"

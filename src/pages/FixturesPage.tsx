@@ -71,7 +71,7 @@ export default function FixturesPage() {
   const showRestDays = filter === 'all' && !team;
 
   return (
-    <main className="mx-auto flex max-w-lg flex-col gap-4 p-4 md:max-w-3xl">
+    <main className="mx-auto flex w-full max-w-lg flex-col gap-4 p-4 md:max-w-3xl">
       <div className="flex items-center justify-between gap-3">
         <PageTitle>{t('tabs.fixtures')}</PageTitle>
         <a

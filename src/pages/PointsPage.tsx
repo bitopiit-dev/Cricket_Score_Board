@@ -17,7 +17,7 @@ export default function PointsPage() {
   const { tables } = tour.ts;
 
   return (
-    <main className="mx-auto flex max-w-lg flex-col gap-4 p-4 md:max-w-3xl">
+    <main className="mx-auto flex w-full max-w-lg flex-col gap-4 p-4 md:max-w-3xl">
       <PageTitle>{t('tabs.points')}</PageTitle>
       <Table stage="groupA" rows={tables.groupA} qualify={QUALIFIERS.group} />
       <Table stage="groupB" rows={tables.groupB} qualify={QUALIFIERS.group} />

@@ -10,7 +10,7 @@ export default function TeamsPage() {
   const { t } = useTranslation();
   const f = useFormat();
   return (
-    <main className="mx-auto flex max-w-lg flex-col gap-3 p-4 md:max-w-3xl">
+    <main className="mx-auto flex w-full max-w-lg flex-col gap-3 p-4 md:max-w-3xl">
       <PageTitle>
         {t('tabs.teams')} <span className="text-slate-400">({f.num(TOURNAMENT_TEAMS.length)})</span>
       </PageTitle>

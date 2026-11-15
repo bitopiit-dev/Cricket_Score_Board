@@ -14,7 +14,7 @@ const ITEMS = [
 export default function MorePage() {
   const { t } = useTranslation();
   return (
-    <main className="mx-auto flex max-w-lg flex-col gap-3 p-4">
+    <main className="mx-auto flex w-full max-w-lg flex-col gap-3 p-4">
       <PageTitle>{t('tabs.more')}</PageTitle>
       <ul className="flex flex-col gap-2">
         {ITEMS.map((i) => (

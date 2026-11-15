@@ -46,7 +46,7 @@ export default function HomePage() {
   const next3 = upcomingFixtures(tour.ts, now, 3, heroFixtureId);
 
   return (
-    <main className="mx-auto flex max-w-lg flex-col gap-4 p-4 md:max-w-2xl">
+    <main className="mx-auto flex w-full max-w-lg flex-col gap-4 p-4 md:max-w-2xl">
       <h1 className="sr-only">{t('homePage.title')}</h1>
       <Hero hero={hero} ts={tour.ts} now={now} />
       <Progress ts={tour.ts} />

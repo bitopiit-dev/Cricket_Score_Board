@@ -92,7 +92,7 @@ export default function AdminPage() {
 
 function Wrap({ children }: { children: ReactNode }) {
   return (
-    <main className="mx-auto flex max-w-lg flex-col gap-4 p-4 md:max-w-3xl">
+    <main className="mx-auto flex w-full max-w-lg flex-col gap-4 p-4 md:max-w-3xl">
       <PageTitle>অ্যাডমিন</PageTitle>
       {children}
     </main>

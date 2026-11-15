@@ -17,7 +17,7 @@ export default function RulesPage() {
 
   return (
     <div>
-      <main className="mx-auto flex max-w-lg flex-col gap-3 p-4">
+      <main className="mx-auto flex w-full max-w-lg flex-col gap-3 p-4">
         <SubPageTitle title={t('rules.title')} parent="/more" />
         <p className="text-sm text-slate-500 dark:text-slate-400">
           {t('rules.subtitle', { n: f.num(total) })}

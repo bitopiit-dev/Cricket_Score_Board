@@ -35,7 +35,7 @@ export default function LivePage() {
   }, []);
 
   return (
-    <main className="mx-auto flex max-w-lg flex-col gap-3 p-4">
+    <main className="mx-auto flex w-full max-w-lg flex-col gap-3 p-4">
       <div className="flex items-center justify-between gap-3">
         <PageTitle>{t('tabs.live')}</PageTitle>
         <Link to="/new" className={`${btn.primary} px-4 py-2`}>

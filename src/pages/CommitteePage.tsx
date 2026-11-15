@@ -34,7 +34,7 @@ export default function CommitteePage() {
         </p>
       </section>
 
-      <main className="mx-auto max-w-lg p-4">
+      <main className="mx-auto w-full max-w-lg p-4">
         <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {COMMITTEE_MEMBERS.map((m, i) => {
             const name = m.name ?? t('committee.placeholder', { n: f.num(i + 1) });
