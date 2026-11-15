@@ -11,6 +11,23 @@ npm run dev        # http://localhost:5173
 
 To test on a phone, connect it to the same Wi-Fi and open `http://<your-PC-IP>:5173`.
 
+## Deploy (Vercel)
+
+The app is a static site (`npm run build` → `dist/`); [`vercel.json`](vercel.json) holds
+the settings. Routing uses `#/…` links, so no server rewrites are needed.
+
+1. On vercel.com: **Add New → Project → Import** the GitHub repository.
+2. Vercel reads `vercel.json` (Vite, `npm run build`, output `dist`). Press **Deploy**.
+3. Every push to `main` deploys again automatically.
+
+`index.html` is never cached and the built files have hashed names, so phones get a
+new version on the next page load.
+
+Environment variables are not needed yet. From the Supabase step on, set
+`VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` (publishable key) in the Vercel
+project settings; see [`.env.example`](.env.example). Never add a service_role or
+secret key.
+
 ## Scripts
 
 | Command             | What it does                    |
