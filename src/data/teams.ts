@@ -310,6 +310,7 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
     short: 'RBW',
     group: 'B',
     color: '#b91c1c',
+    logo: 'icons/teams/red-bulls-warriors.png',
     // 15 players: one over the squad limit; the team page shows a warning.
     players: [
       squad('red-bulls-warriors', 'Rashed', { captain: true }),
