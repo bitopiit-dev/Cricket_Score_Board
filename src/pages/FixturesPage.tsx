@@ -18,6 +18,10 @@ import { usePrefs } from '../store/prefsStore';
 import { fixtureTeams, type FixtureOutcome, type TournamentState } from '../tournament/standings';
 import { formatDate, formatTime, slotLabel, stageLabel } from '../utils/fixtureText';
 import { resultText } from '../utils/matchText';
+import { assetUrl } from '../utils/asset';
+
+/** Printable fixture, made from docs/fixture-bpl-2027.json. Rebuild it when the fixture changes. */
+const FIXTURE_PDF = 'downloads/bpl-2027-fixture.pdf';
 
 type Filter = 'all' | 'groupA' | 'groupB' | 'superSix' | 'knockout';
 const FILTERS: Filter[] = ['all', 'groupA', 'groupB', 'superSix', 'knockout'];
@@ -56,7 +60,28 @@ export default function FixturesPage() {
 
   return (
     <main className="mx-auto flex max-w-lg flex-col gap-4 p-4 md:max-w-3xl">
-      <PageTitle>{t('tabs.fixtures')}</PageTitle>
+      <div className="flex items-center justify-between gap-3">
+        <PageTitle>{t('tabs.fixtures')}</PageTitle>
+        <a
+          href={assetUrl(FIXTURE_PDF)}
+          download="BPL-2027-Fixture.pdf"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-bpl-red px-3.5 py-2 text-sm font-semibold text-white shadow-sm active:scale-95"
+        >
+          <svg
+            aria-hidden
+            viewBox="0 0 24 24"
+            className="size-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14" />
+          </svg>
+          {t('fixtures.downloadPdf')}
+        </a>
+      </div>
 
       <section aria-label={t('fixtures.today')} className="rounded-2xl bg-night-950 p-4 text-white">
         <h2 className="flex items-center gap-2 font-display text-xl font-bold tracking-wide text-bpl-yellow">

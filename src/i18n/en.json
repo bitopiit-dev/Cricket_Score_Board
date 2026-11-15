@@ -308,6 +308,7 @@
     "legend": "P = played, W = won, L = lost, T/NR = tied or no result. Win {{win}}, tie/no result {{tie}}, loss {{loss}} points. Teams level on points are split by net run rate (NRR). Worked out from the fixture matches scored in the app."
   },
   "fixtures": {
+    "downloadPdf": "Download PDF",
     "matchNo": "Match {{n}}",
     "today": "Today",
     "noneToday": "No match today.",
