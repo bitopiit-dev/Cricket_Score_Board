@@ -221,7 +221,7 @@ function TeamHero({
         </h1>
         <p className="flex flex-wrap justify-center gap-x-3 text-[13px] text-white/80">
           <span>
-            {standing
+            {standing && standing.row.played > 0
               ? `${stageLabel(standing.stage, t)} · ${t('team.position', { pos: t(`slot.ord${standing.position}`) })}`
               : t('points.group', { g: team.group })}
           </span>
@@ -290,8 +290,20 @@ function TeamMatches({ team, ts }: { team: TournamentTeam; ts: TournamentState }
                 />
                 {t('homePage.live')}
               </span>
-              <span className="min-w-0 flex-1 truncate font-semibold">
-                {t('common.vs')} <span lang="en">{opp.name}</span>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate font-semibold">
+                  {t('common.vs')} <span lang="en">{opp.name}</span>
+                </span>
+                {o?.innings && o.innings.length > 0 && (
+                  <span className="tabular block text-[13px] text-slate-600 dark:text-slate-400">
+                    {o.innings
+                      .map(
+                        (i) =>
+                          `${findTeam(i.teamId)?.short ?? ''} ${f.num(i.runs)}/${f.num(i.wickets)} (${f.overs(i.legalBalls)})`,
+                      )
+                      .join(' · ')}
+                  </span>
+                )}
               </span>
               <span className="text-sm font-semibold text-bpl-red">{t('live.details')} ›</span>
             </Link>
