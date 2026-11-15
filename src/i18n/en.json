@@ -443,5 +443,8 @@
     "conceded": "R",
     "wickets": "W",
     "econ": "Econ"
+  },
+  "moment": {
+    "wicket": "WICKET!"
   }
 }

@@ -4,6 +4,7 @@ import { Header } from '../common/Header';
 import { Icon } from '../common/icons';
 import { TeamAvatar } from '../common/TeamAvatar';
 import { CreasePanel } from '../scoring/CreasePanel';
+import { MomentBurst } from './MomentBurst';
 import { BallChip, ThisOver } from '../scoring/ThisOver';
 import { findTeam } from '../../data/teams';
 import { buildCommentary, type CommentaryBall } from '../../engine/commentary';
@@ -59,6 +60,7 @@ export function MatchCenter({
         }
       />
       <Hero match={match} state={state} />
+      <MomentBurst match={match} />
 
       <div
         role="tablist"

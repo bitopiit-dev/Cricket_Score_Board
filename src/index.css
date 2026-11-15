@@ -105,3 +105,125 @@ body {
     animation: none;
   }
 }
+
+/* ---- Match Center: four / six / wicket burst ---- */
+.moment-four {
+  --moment: #00914a;
+  --moment-ink: #ffffff;
+}
+.moment-six {
+  --moment: #f5e400;
+  --moment-ink: #05060f;
+}
+.moment-wicket {
+  --moment: #e10a14;
+  --moment-ink: #ffffff;
+}
+.moment {
+  animation: moment-out 1.9s ease-in forwards;
+}
+.moment-flash {
+  background: radial-gradient(circle at 50% 50%, var(--moment) 0%, transparent 60%);
+  opacity: 0;
+  animation: moment-flash 900ms ease-out;
+}
+.moment-ring {
+  border: 6px solid var(--moment);
+  animation: moment-ring 900ms cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+}
+.moment-spark {
+  position: absolute;
+  left: -5px;
+  top: -5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: var(--moment);
+  animation: moment-spark 950ms cubic-bezier(0.15, 0.8, 0.3, 1) forwards;
+}
+.moment-word {
+  color: var(--moment);
+  -webkit-text-stroke: 3px var(--moment-ink);
+  paint-order: stroke fill;
+  text-shadow:
+    0 6px 0 rgb(0 0 0 / 0.35),
+    0 0 40px var(--moment);
+  animation: moment-pop 650ms cubic-bezier(0.2, 1.6, 0.4, 1);
+}
+.moment-six .moment-word {
+  -webkit-text-stroke: 3px #05060f;
+}
+.moment-line {
+  animation: moment-rise 500ms 200ms ease-out both;
+}
+@keyframes moment-pop {
+  from {
+    transform: scale(0.2) rotate(-8deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.15) rotate(2deg);
+    opacity: 1;
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes moment-flash {
+  20% {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes moment-ring {
+  from {
+    transform: scale(0.2);
+    opacity: 1;
+  }
+  to {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+@keyframes moment-spark {
+  from {
+    transform: rotate(var(--a)) translateY(0) scale(1.4);
+    opacity: 1;
+  }
+  to {
+    transform: rotate(var(--a)) translateY(-170px) scale(0.4);
+    opacity: 0;
+  }
+}
+@keyframes moment-rise {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+}
+@keyframes moment-out {
+  0%,
+  80% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+/* Reduced motion: the word appears and fades, nothing flies */
+@media (prefers-reduced-motion: reduce) {
+  .moment-word,
+  .moment-ring,
+  .moment-spark,
+  .moment-flash,
+  .moment-line {
+    animation: none;
+  }
+  .moment-ring,
+  .moment-spark,
+  .moment-flash {
+    display: none;
+  }
+}

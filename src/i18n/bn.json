@@ -438,5 +438,8 @@
     "conceded": "রান",
     "wickets": "উই.",
     "econ": "ইকো."
+  },
+  "moment": {
+    "wicket": "উইকেট!"
   }
 }
