@@ -14,6 +14,7 @@ import {
   type FixtureWarning,
 } from '../../tournament/fixtureEdit';
 import { dataSource, resetData, saveData } from '../../sync/remoteData';
+import { parseFixtureRows } from '../../tournament/fixtureImport';
 import { small, StatusLine, useStatus } from './shared';
 
 const STAGES: [StageId, string][] = [
@@ -78,13 +79,63 @@ export function FixturesAdmin({ email }: { email: string }) {
   const tour = useTournament();
   const [list, setList] = useState<Fixture[]>(() => structuredClone([...FIXTURES]));
   const [dirty, setDirty] = useState(false);
+  const [importErrors, setImportErrors] = useState<string[]>([]);
+  const [importNote, setImportNote] = useState('');
   const status = useStatus();
   const change = (next: Fixture[]) => {
     setList(next);
     setDirty(true);
     status.clear();
+    setImportNote('');
   };
   const outcome = (id: string) => tour?.ts.outcomes.get(id);
+
+  /** Excel or CSV in the committee's layout -> the list below, ready to check and save. */
+  const importFile = async (file: File | undefined) => {
+    if (!file) return;
+    if (/\.pdf$/i.test(file.name)) {
+      setImportErrors([
+        'PDF থেকে সূচি নির্ভুলভাবে পড়া যায় না (টেবিলের ঘর হারিয়ে যায়)। একই সূচির Excel (.xlsx) ফাইল দিন।',
+      ]);
+      return;
+    }
+    setImportErrors([]);
+    status.clear();
+    try {
+      const XLSX = await import('xlsx');
+      const wb = XLSX.read(await file.arrayBuffer());
+      let best: ReturnType<typeof parseFixtureRows> | null = null;
+      for (const name of wb.SheetNames) {
+        const rows = XLSX.utils.sheet_to_json(wb.Sheets[name], {
+          header: 1,
+          raw: true,
+          defval: '',
+        });
+        const r = parseFixtureRows(
+          rows as Parameters<typeof parseFixtureRows>[0],
+          list,
+          tour?.ts.outcomes,
+        );
+        if (r.fixtures.length) {
+          best = r;
+          break;
+        }
+        // Keep the errors of a sheet that had the right columns but wrong rows
+        if (!best || (r.errors.length && !/শিরোনামের সারি/.test(r.errors[0]))) best = r;
+      }
+      if (!best || best.fixtures.length === 0) {
+        setImportErrors(best?.errors.length ? best.errors : ['ফাইলে কোনো ম্যাচ পাওয়া যায়নি।']);
+        return;
+      }
+      change(best.fixtures);
+      setImportNote(
+        `ফাইল থেকে ${best.fixtures.length}টা ম্যাচ পড়া হয়েছে: ${best.changed}টা বদল, ${best.added}টা নতুন, ${best.removed}টা বাদ। ` +
+          'নিচে মিলিয়ে দেখে "সেভ করুন" চাপলে সবার জন্য চালু হবে।',
+      );
+    } catch (e) {
+      setImportErrors([`ফাইল পড়া যায়নি: ${(e as Error).message}`]);
+    }
+  };
 
   const add = () => {
     const last = list[list.length - 1];
@@ -119,6 +170,38 @@ export function FixturesAdmin({ email }: { email: string }) {
           : `আপনার সেভ করা (${new Date(dataSource('fixtures')).toLocaleString()})`}
         । সেভ না করা পর্যন্ত কেউ বদল দেখবে না। স্কোর আছে এমন ম্যাচের দল বদলানো যায় না।
       </p>
+      <div className="rounded-xl border border-dashed border-slate-300 p-3 dark:border-slate-700">
+        <p className="text-sm font-semibold">Excel ফাইল থেকে পুরো ফিক্সচার</p>
+        <p className="mb-2 text-xs text-slate-500">
+          কমিটির Excel (Match No, Date, Time, Team A, Team B, Stage কলামসহ) দিন। আগে নিচে দেখাবে,
+          সেভ চাপলে তবেই সবার জন্য চালু হবে। ম্যাচ নম্বর একই থাকলে আগের স্কোর সেই ম্যাচেই থাকবে।
+        </p>
+        <label className={`${btn.secondary} inline-block cursor-pointer py-2 text-sm`}>
+          ফাইল বাছুন (.xlsx)
+          <input
+            type="file"
+            accept=".xlsx,.xls,.csv,.pdf"
+            className="sr-only"
+            onChange={(e) => {
+              void importFile(e.target.files?.[0]);
+              e.target.value = '';
+            }}
+          />
+        </label>
+        {importNote && (
+          <p className="mt-2 text-sm font-semibold text-emerald-700 dark:text-emerald-400">
+            {importNote}
+          </p>
+        )}
+        {importErrors.length > 0 && (
+          <ul className="mt-2 list-disc pl-5 text-sm text-red-600">
+            {importErrors.slice(0, 12).map((e) => (
+              <li key={e}>{e}</li>
+            ))}
+            {importErrors.length > 12 && <li>আরও {importErrors.length - 12}টা সমস্যা…</li>}
+          </ul>
+        )}
+      </div>
       <ul className="flex flex-col gap-2">
         {list.map((fx, i) => {
           const o = outcome(fx.id);
