@@ -18,13 +18,6 @@ export function AppShell() {
       <header className="bg-night-950 text-white shadow-lg">
         <div className="mx-auto flex max-w-5xl flex-col gap-3 px-3 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 md:px-4">
           <div className="flex items-center gap-3">
-            <Link
-              to="/committee"
-              aria-label={COMMITTEE_NAME}
-              className="shrink-0 rounded-lg bg-white p-0.5 active:scale-95"
-            >
-              <img src={assetUrl(COMMITTEE_LOGO)} alt="" className="h-12 w-auto" />
-            </Link>
             <div className="min-w-0 flex-1">
               <Link
                 to="/home"
@@ -37,6 +30,13 @@ export function AppShell() {
                 />
               </Link>
             </div>
+            <Link
+              to="/committee"
+              aria-label={COMMITTEE_NAME}
+              className="shrink-0 rounded-lg bg-white p-0.5 active:scale-95"
+            >
+              <img src={assetUrl(COMMITTEE_LOGO)} alt="" className="h-12 w-auto" />
+            </Link>
             <div className="flex shrink-0 flex-col items-end gap-1.5 sm:flex-row sm:items-center sm:gap-3">
               <span className="flex items-center gap-1.5 text-[11px] whitespace-nowrap text-night-muted sm:text-xs">
                 <span aria-hidden className="size-2 rounded-full bg-night-muted" />
