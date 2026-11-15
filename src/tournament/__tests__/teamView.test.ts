@@ -4,7 +4,7 @@ import { TOURNAMENT_TEAMS, findTeam } from '../../data/teams';
 import { Game, makeMatch } from '../../engine/__tests__/helpers';
 import type { Match } from '../../engine/types';
 import { tournamentState } from '../standings';
-import { teamFixtures, teamRecord } from '../teamView';
+import { teamFixtures, teamLiveFixture, teamRecord, teamResults, teamStanding } from '../teamView';
 
 let seq = 0;
 
@@ -134,5 +134,36 @@ describe('team view on the Fixtures page', () => {
       onlyGroupSoFar: true,
       next: undefined,
     });
+  });
+});
+
+describe('team page: results, form and standing', () => {
+  it('lists results newest first with W / L / T for this team', () => {
+    const ts = tournamentState([play(1, 6, 3), play(5, 3, 6)]);
+    const r = teamResults(MCD, ts);
+    expect(r.map((x) => [x.fixture.no, x.outcome])).toEqual([
+      [5, 'L'],
+      [1, 'W'],
+    ]);
+    expect(r[1].opponentId).toBe(QFF);
+    expect(teamResults(QFF, ts).map((x) => x.outcome)).toEqual(['L']);
+  });
+
+  it('a tie is T for both sides', () => {
+    const ts = tournamentState([play(1, 3, 3)]);
+    expect(teamResults(MCD, ts)[0].outcome).toBe('T');
+    expect(teamResults(QFF, ts)[0].outcome).toBe('T');
+  });
+
+  it('finds the live fixture and the group position', () => {
+    const live = makeMatch(11, { overs: 1 });
+    live.fixtureId = 'f1';
+    const g = new Game(live).start('a1', 'a2', 'b1').ball(1);
+    const ts = tournamentState([g.match, play(5, 3, 6)]);
+    expect(teamLiveFixture(MCD, ts)?.no).toBe(1);
+    const s = teamStanding(MCD, ts);
+    expect(s?.stage).toBe('groupA');
+    expect(s?.row.lost).toBe(1);
+    expect(s?.position).toBeGreaterThan(1);
   });
 });

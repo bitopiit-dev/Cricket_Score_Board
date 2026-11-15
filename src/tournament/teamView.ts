@@ -1,5 +1,11 @@
 import { FIXTURES, type Fixture } from '../data/fixtures';
-import { fixtureTeams, type TournamentState } from './standings';
+import {
+  fixtureTeams,
+  type FixtureOutcome,
+  type LeagueStage,
+  type TableRow,
+  type TournamentState,
+} from './standings';
 
 /**
  * The fixtures a team plays in. Knockout slots ("Group A – 1st") count once the
@@ -53,4 +59,59 @@ export function teamRecord(
     next: mine.find((fx) => fx.date >= today && ts.outcomes.get(fx.id)?.status !== 'completed'),
     onlyGroupSoFar: mine.every((fx) => fx.stage === 'groupA' || fx.stage === 'groupB'),
   };
+}
+
+export type FormLetter = 'W' | 'L' | 'T';
+
+export interface TeamResult {
+  fixture: Fixture;
+  opponentId: string | null;
+  outcome: FormLetter;
+  outcomeDetail: FixtureOutcome;
+}
+
+/** The team's completed fixtures, newest first, each with W / L / T for this team. */
+export function teamResults(
+  teamId: string,
+  ts: TournamentState,
+  fixtures: readonly Fixture[] = FIXTURES,
+): TeamResult[] {
+  const out: TeamResult[] = [];
+  for (const fx of teamFixtures(teamId, ts, fixtures)) {
+    const o = ts.outcomes.get(fx.id);
+    if (o?.status !== 'completed') continue;
+    const [a, b] = fixtureTeams(fx, ts);
+    const r = o.result;
+    const outcome: FormLetter =
+      !r || r.kind === 'tie' || !o.match
+        ? 'T'
+        : o.match.teams[r.winner]?.teamId === teamId
+          ? 'W'
+          : 'L';
+    out.push({ fixture: fx, opponentId: a === teamId ? b : a, outcome, outcomeDetail: o });
+  }
+  return out.sort((x, y) => fixtureKey(y.fixture).localeCompare(fixtureKey(x.fixture)));
+}
+
+const fixtureKey = (f: Fixture) => `${f.date} ${f.time}`;
+
+/** The team's fixture being played right now, if any. */
+export function teamLiveFixture(
+  teamId: string,
+  ts: TournamentState,
+  fixtures: readonly Fixture[] = FIXTURES,
+): Fixture | undefined {
+  return teamFixtures(teamId, ts, fixtures).find((fx) => ts.outcomes.get(fx.id)?.status === 'live');
+}
+
+/** Where the team stands: its league table (Super Six once it's there) and its place. */
+export function teamStanding(
+  teamId: string,
+  ts: TournamentState,
+): { stage: LeagueStage; position: number; row: TableRow } | null {
+  for (const stage of ['superSix', 'groupA', 'groupB'] as const) {
+    const i = ts.tables[stage].findIndex((r) => r.teamId === teamId);
+    if (i >= 0) return { stage, position: i + 1, row: ts.tables[stage][i] };
+  }
+  return null;
 }

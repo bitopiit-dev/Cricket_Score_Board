@@ -209,6 +209,12 @@
     "noReviewLeft": "This team has no review left"
   },
   "team": {
+    "position": "{{pos}} place",
+    "results": "Results",
+    "form": "Recent form",
+    "form_W": "W",
+    "form_L": "L",
+    "form_T": "T",
     "players": "Players",
     "substitutes": "Substitutes",
     "noPlayers": "No players added yet",
@@ -351,6 +357,8 @@
     "final": "Final"
   },
   "slot": {
+    "ord5": "5th",
+    "ord6": "6th",
     "groupPos": "Group {{g}} – {{pos}}",
     "superSixPos": "Super Six – {{pos}}",
     "winnerOf": "Winner SF-{{n}}",
