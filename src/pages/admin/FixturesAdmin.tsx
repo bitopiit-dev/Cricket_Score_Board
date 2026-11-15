@@ -205,7 +205,10 @@ export function FixturesAdmin({ email }: { email: string }) {
       <ul className="flex flex-col gap-2">
         {list.map((fx, i) => {
           const o = outcome(fx.id);
-          const lockTeams = editLevel(o, 'teams') === 'blocked';
+          // A match with a score keeps its teams; a started one asks first.
+          const lockTeams = hasScore(o);
+          const askTeams = () =>
+            editLevel(o, 'teams') === 'ok' || confirm(`ম্যাচ ${fx.no} শুরু হয়ে গেছে। তবুও দল বদলাবেন?`);
           const warnings = validateFixture(fx, list);
           const set = (patch: Partial<Fixture>) => change(updateFixture(list, fx.id, patch));
           return (
@@ -285,13 +288,13 @@ export function FixturesAdmin({ email }: { email: string }) {
                 <SlotPicker
                   value={fx.teamA}
                   disabled={lockTeams}
-                  onChange={(s) => set({ teamA: s })}
+                  onChange={(s) => askTeams() && set({ teamA: s })}
                 />
                 <span className="text-xs text-slate-500">বনাম</span>
                 <SlotPicker
                   value={fx.teamB}
                   disabled={lockTeams}
-                  onChange={(s) => set({ teamB: s })}
+                  onChange={(s) => askTeams() && set({ teamB: s })}
                 />
               </div>
               {warnings.length > 0 && (

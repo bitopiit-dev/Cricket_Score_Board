@@ -17,7 +17,7 @@ export const MATCHES_CHANGED = 'bpl:matches';
 const QUEUE = 'bpl:upload-queue';
 const notify = () => window.dispatchEvent(new Event(MATCHES_CHANGED));
 
-interface Row {
+export interface Row {
   id: string;
   data: Match;
   deleted: boolean;
@@ -39,22 +39,34 @@ const writeQueue = (ids: string[]) => {
   }
 };
 
-/** Copies a downloaded row onto this phone if it is newer. True when something changed. */
-async function merge(row: Row): Promise<boolean> {
-  const local = await db.matches.get(row.id);
+export interface MergeDeps {
+  db: Pick<typeof db, 'matches'>;
+  /** Matches on this phone still waiting to upload. */
+  queued: () => string[];
+  isScorer: () => boolean;
+}
+const defaultDeps: MergeDeps = { db, queued: () => readQueue(), isScorer: () => canScore() };
+
+/**
+ * Copies a downloaded row onto this phone if it should win. True when something changed.
+ *
+ * A match still waiting to upload from this phone is never replaced: those are
+ * balls the server has not seen yet (scored with no signal, or just before the
+ * app was closed). Only the super admin's delete still removes it.
+ */
+export async function mergeRow(row: Row, deps: MergeDeps = defaultDeps): Promise<boolean> {
+  const local = await deps.db.matches.get(row.id);
   if (row.deleted) {
     if (!local) return false;
-    await db.matches.delete(row.id);
+    await deps.db.matches.delete(row.id);
     return true;
   }
   if (local && (local.updatedAt ?? 0) === row.updated_at) return false;
-  if (canScore()) {
-    // On a scorer's phone, its own newer copy (or one waiting to upload) wins
-    if (local && (local.updatedAt ?? 0) > row.updated_at) return false;
-    if (local && readQueue().includes(row.id)) return false;
-  }
+  if (local && deps.queued().includes(row.id)) return false;
+  // On a scorer's phone, its own newer copy wins
+  if (deps.isScorer() && local && (local.updatedAt ?? 0) > row.updated_at) return false;
   // Everyone else always shows the uploaded score, even over a stray tap on their phone
-  await db.matches.put(row.data);
+  await deps.db.matches.put(row.data);
   return true;
 }
 
@@ -85,7 +97,9 @@ export async function flushUploads(): Promise<void> {
 }
 
 function queue(id: string) {
-  if (!canScore()) return;
+  // Anyone signed in queues, even before Supabase has confirmed the role (or with
+  // no signal); the upload itself waits for the role, and the server checks it too.
+  if (!canScore() && !authState().email) return;
   writeQueue([...readQueue(), id]);
   void flushUploads();
 }
@@ -112,7 +126,7 @@ export function startMatchSync(): void {
         10000,
       );
       let changed = false;
-      for (const row of (data ?? []) as Row[]) changed = (await merge(row)) || changed;
+      for (const row of (data ?? []) as Row[]) changed = (await mergeRow(row)) || changed;
       if (changed) notify();
     } catch {
       /* offline: try again later */
@@ -123,7 +137,7 @@ export function startMatchSync(): void {
     .channel('matches')
     .on('postgres_changes', { event: '*', schema: 'public', table: 'matches' }, (p) => {
       const row = p.new as Row | undefined;
-      if (row?.id) void merge(row).then((changed) => changed && notify());
+      if (row?.id) void mergeRow(row).then((changed) => changed && notify());
     })
     .subscribe((status) => {
       // After a dropped connection, catch up on anything missed
