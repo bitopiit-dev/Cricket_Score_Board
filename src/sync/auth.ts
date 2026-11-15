@@ -113,7 +113,17 @@ export function useAuth(): AuthState {
 }
 
 export const authState = () => state;
-export const canScore = () => state.role === 'super' || state.role === 'scorer';
+export const roleCanScore = (role: Role | null) => role === 'super' || role === 'scorer';
+export const canScore = () => roleCanScore(state.role);
+
+/**
+ * Whether this person may start and score matches: a super admin or a scorer.
+ * Without Supabase (tests, offline-only builds) there are no logins, so everyone may.
+ */
+export function useCanScore(): boolean {
+  const { role } = useAuth();
+  return !supabase || roleCanScore(role);
+}
 
 export async function signIn(email: string, password: string): Promise<void> {
   if (!supabase) throw new Error('Not connected');

@@ -1,5 +1,5 @@
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, type ReactNode } from 'react';
 import { AppShell } from './components/layout/AppShell';
 import { useApplyTheme } from './hooks/useApplyTheme';
 import AwardsPage from './pages/AwardsPage';
@@ -15,6 +15,7 @@ import FixturesPage from './pages/FixturesPage';
 import { MediaPage, StatsPage } from './pages/SoonPages';
 import TeamPage from './pages/TeamPage';
 import TeamsPage from './pages/TeamsPage';
+import { useCanScore } from './sync/auth';
 
 // Only the admin downloads the admin screens
 const AdminPage = lazy(() => import('./pages/admin/AdminPage'));
@@ -51,10 +52,22 @@ export default function App() {
           <Route path="/media" element={<MediaPage />} />
         </Route>
         {/* Full-screen pages without the tab bar */}
-        <Route path="/new" element={<NewMatchPage />} />
+        <Route
+          path="/new"
+          element={
+            <ScorerOnly>
+              <NewMatchPage />
+            </ScorerOnly>
+          }
+        />
         <Route path="/match/:id" element={<ScoringPage />} />
         <Route path="*" element={<Navigate to="/home" replace />} />
       </Routes>
     </HashRouter>
   );
+}
+
+/** Pages only scorers and super admins may open; anyone else (e.g. an old link) goes to Live. */
+function ScorerOnly({ children }: { children: ReactNode }) {
+  return useCanScore() ? children : <Navigate to="/live" replace />;
 }

@@ -8,12 +8,14 @@ import { matchRepository } from '../db/repository';
 import { deriveMatchState } from '../engine/scoring';
 import type { Match, MatchState } from '../engine/types';
 import { useFormat } from '../hooks/useFormat';
+import { useCanScore } from '../sync/auth';
 import { MATCHES_CHANGED } from '../sync/matchSync';
 import { stageLabel } from '../utils/fixtureText';
 
 /** Live tab: matches being scored on this device, newest first; tap to open the scoring screen. */
 export default function LivePage() {
   const { t } = useTranslation();
+  const canScore = useCanScore();
   const [matches, setMatches] = useState<{ m: Match; s: MatchState }[] | null>(null);
 
   useEffect(() => {
@@ -38,9 +40,12 @@ export default function LivePage() {
     <main className="mx-auto flex w-full max-w-lg flex-col gap-3 p-4">
       <div className="flex items-center justify-between gap-3">
         <PageTitle>{t('tabs.live')}</PageTitle>
-        <Link to="/new" className={`${btn.primary} px-4 py-2`}>
-          + {t('home.newMatch')}
-        </Link>
+        {/* Only scorers and super admins start matches; viewers just follow them */}
+        {canScore && (
+          <Link to="/new" className={`${btn.primary} px-4 py-2`}>
+            + {t('home.newMatch')}
+          </Link>
+        )}
       </div>
       {matches?.length === 0 && (
         <p className="rounded-2xl bg-white py-10 text-center text-slate-500 dark:bg-slate-900">
