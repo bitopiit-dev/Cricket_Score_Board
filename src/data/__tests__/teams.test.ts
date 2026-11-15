@@ -523,3 +523,42 @@ describe('team logos', () => {
     }
   });
 });
+
+describe('DDC squad', () => {
+  const ddc = findTeam('ddc')!;
+
+  it('has the 14 players in the given order', () => {
+    expect(ddc.players.map((p) => p.name)).toEqual([
+      'A. Karim',
+      'Ratul',
+      'Sajib',
+      'Shoikat',
+      'K. Rana',
+      'Siam',
+      'Imran',
+      'Topayel',
+      'Sabbir',
+      'Khayer',
+      'Sanaullah',
+      'Z.I. Limon',
+      'Sazzad',
+      'Mamun',
+    ]);
+  });
+
+  it('A. Karim is captain; Z.I. Limon, Sazzad and Mamun are the extras', () => {
+    expect(ddc.players.filter((p) => p.captain).map((p) => p.name)).toEqual(['A. Karim']);
+    expect(ddc.players.filter((p) => p.substitute).map((p) => p.name)).toEqual([
+      'Z.I. Limon',
+      'Sazzad',
+      'Mamun',
+    ]);
+    expect(squadWarnings(ddc, SQUAD_LIMITS)).toEqual([]);
+  });
+
+  it('initials in names become simple ids and photo names', () => {
+    expect(ddc.players[0]).toMatchObject({ id: 'a-karim', photo: 'players/ddc/a-karim.jpg' });
+    expect(ddc.players[4]).toMatchObject({ id: 'k-rana' });
+    expect(ddc.players[11]).toMatchObject({ id: 'z-i-limon', photo: 'players/ddc/z-i-limon.jpg' });
+  });
+});
