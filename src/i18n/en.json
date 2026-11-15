@@ -17,6 +17,7 @@
   "home": {
     "newMatch": "New match",
     "noMatches": "No matches yet. Tap \"New match\" to start scoring.",
+    "noMatchesViewer": "No matches being scored yet.",
     "inProgress": "In progress",
     "completed": "Completed",
     "notStarted": "Not started",

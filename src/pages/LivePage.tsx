@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { btn } from '../components/common/controls';
 import { PageTitle } from '../components/layout/AppShell';
+import { NextMatchCountdown } from '../components/live/NextMatchCountdown';
 import { fixtureById } from '../data/fixtures';
 import { matchRepository } from '../db/repository';
 import { deriveMatchState } from '../engine/scoring';
@@ -47,9 +48,10 @@ export default function LivePage() {
           </Link>
         )}
       </div>
+      <NextMatchCountdown />
       {matches?.length === 0 && (
         <p className="rounded-2xl bg-white py-10 text-center text-slate-500 dark:bg-slate-900">
-          {t('home.noMatches')}
+          {canScore ? t('home.noMatches') : t('home.noMatchesViewer')}
         </p>
       )}
       {matches?.map((row) => (
