@@ -4,6 +4,7 @@ import { Icon, type IconName } from '../components/common/icons';
 import { PageTitle } from '../components/layout/AppShell';
 
 const ITEMS: { to: string; icon: IconName; key: string }[] = [
+  { to: '/stats', icon: 'stats', key: 'stats' },
   { to: '/rules', icon: 'rules', key: 'rules' },
   { to: '/committee', icon: 'committee', key: 'committee' },
   { to: '/awards', icon: 'awards', key: 'awards' },

@@ -286,6 +286,8 @@
     "more": "More"
   },
   "more": {
+    "stats": "Stats",
+    "statsHint": "Leading run-scorers, wicket-takers and fielders",
     "adminLink": "Scorer / admin sign-in",
     "rules": "Rules",
     "rulesHint": "The 34 rules of BPL-2027",
@@ -473,5 +475,47 @@
     "syncedLong": "Everyone following can see the latest ball.",
     "pendingLong": "Saved on this phone, uploading when the signal allows.",
     "offlineLong": "No signal. Balls are safe on this phone and upload when it’s back."
+  },
+  "stats": {
+    "fromMatches_one": "From {{n}} completed match",
+    "fromMatches_other": "From {{n}} completed matches",
+    "empty": "The tournament’s leaders appear here once the first match is finished.",
+    "noneYet": "Nobody qualifies for this list yet.",
+    "minBalls": "Batters who have faced at least {{n}} balls.",
+    "minOvers": "Bowlers who have bowled at least {{n}} overs.",
+    "board": {
+      "runs": "Most runs",
+      "wickets": "Most wickets",
+      "sixes": "Most sixes",
+      "strikeRate": "Strike rate",
+      "economy": "Economy",
+      "fielding": "Fielding"
+    },
+    "detail": {
+      "runs": "{{balls}} balls · SR {{sr}}",
+      "wickets": "{{overs}} overs · econ {{econ}}",
+      "sixes": "{{fours}} fours",
+      "sr": "{{runs}} runs off {{balls}} balls",
+      "econ": "{{runs}} runs in {{overs}} overs",
+      "fielding": "{{c}} ct · {{st}} st · {{ro}} run out"
+    }
+  },
+  "player": {
+    "notFound": "Player not found",
+    "batting": "Batting",
+    "bowling": "Bowling",
+    "fielding": "Fielding",
+    "matches": "Matches",
+    "highest": "Highest",
+    "average": "Average",
+    "foursSixes": "4s/6s",
+    "best": "Best",
+    "catches": "Catches",
+    "stumpings": "Stumpings",
+    "runOuts": "Run outs",
+    "matchByMatch": "Match by match",
+    "noMatches": "No completed match yet. Numbers appear here after the player’s first match.",
+    "didNotFeature": "Did not bat or bowl",
+    "fieldingShort": "{{n}} fielding"
   }
 }

@@ -24,10 +24,14 @@ export interface PlayerTotals {
   sixes: number;
   notOuts: number;
   highScore: number;
+  /** The high score was not out. */
+  highScoreNotOut: boolean;
   legalBalls: number;
   runsConceded: number;
   wickets: number;
   maidens: number;
+  /** Best figures in one innings (most wickets, then fewest runs). */
+  bestBowling: { wickets: number; runs: number } | null;
   catches: number;
   stumpings: number;
   runOuts: number;
@@ -78,10 +82,12 @@ export function playerTotals(matches: Match[]): PlayerTotals[] {
             sixes: 0,
             notOuts: 0,
             highScore: 0,
+            highScoreNotOut: false,
             legalBalls: 0,
             runsConceded: 0,
             wickets: 0,
             maidens: 0,
+            bestBowling: null,
             catches: 0,
             stumpings: 0,
             runOuts: 0,
@@ -104,7 +110,10 @@ export function playerTotals(matches: Match[]): PlayerTotals[] {
         row.balls += b.balls;
         row.fours += b.fours;
         row.sixes += b.sixes;
-        row.highScore = Math.max(row.highScore, b.runs);
+        if (b.runs > row.highScore || (b.runs === row.highScore && !b.dismissal)) {
+          row.highScore = b.runs;
+          row.highScoreNotOut = !b.dismissal;
+        }
         if (!b.dismissal) row.notOuts += 1;
         const d = b.dismissal;
         const fielder = d?.fielderId ? rows.get(d.fielderId) : undefined;
@@ -121,6 +130,15 @@ export function playerTotals(matches: Match[]): PlayerTotals[] {
         row.runsConceded += bw.runsConceded;
         row.wickets += bw.wickets;
         row.maidens += bw.maidens;
+        const best = row.bestBowling;
+        if (
+          bw.legalBalls > 0 &&
+          (!best ||
+            bw.wickets > best.wickets ||
+            (bw.wickets === best.wickets && bw.runsConceded < best.runs))
+        ) {
+          row.bestBowling = { wickets: bw.wickets, runs: bw.runsConceded };
+        }
       }
     }
   }

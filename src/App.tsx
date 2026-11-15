@@ -14,7 +14,9 @@ import RulesPage from './pages/RulesPage';
 import ScoringPage from './pages/ScoringPage';
 import PointsPage from './pages/PointsPage';
 import FixturesPage from './pages/FixturesPage';
-import { MediaPage, StatsPage } from './pages/SoonPages';
+import { MediaPage } from './pages/SoonPages';
+import StatsPage from './pages/StatsPage';
+import PlayerPage from './pages/PlayerPage';
 import TeamPage from './pages/TeamPage';
 import TeamsPage from './pages/TeamsPage';
 import { useCanScore } from './sync/auth';
@@ -42,6 +44,7 @@ export default function App() {
             <Route path="/awards" element={<AwardsPage />} />
             <Route path="/teams" element={<TeamsPage />} />
             <Route path="/team/:id" element={<TeamPage />} />
+            <Route path="/player/:teamId/:playerId" element={<PlayerPage />} />
             <Route path="/more" element={<MorePage />} />
             <Route
               path="/admin"

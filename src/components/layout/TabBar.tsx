@@ -52,7 +52,7 @@ export const TABS = [
   { id: 'live', to: '/live', also: [] },
   { id: 'fixtures', to: '/fixtures', also: [] },
   { id: 'points', to: '/points', also: [] },
-  { id: 'teams', to: '/teams', also: ['/team/'] },
+  { id: 'teams', to: '/teams', also: ['/team/', '/player/'] },
   { id: 'more', to: '/more', also: ['/rules', '/committee', '/media', '/awards', '/stats'] },
 ] as const;
 

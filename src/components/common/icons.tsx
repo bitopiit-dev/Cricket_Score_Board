@@ -38,6 +38,14 @@ const PATHS = {
       <path {...stroke} d="M8 10.5V7.5a4 4 0 0 1 8 0v3" />
     </>
   ),
+  stats: (
+    <>
+      <path {...stroke} d="M4 20h16" />
+      <rect {...stroke} x="5.5" y="11" width="3" height="6" rx="0.5" />
+      <rect {...stroke} x="10.5" y="6" width="3" height="11" rx="0.5" />
+      <rect {...stroke} x="15.5" y="13" width="3" height="4" rx="0.5" />
+    </>
+  ),
   share: (
     <>
       <circle {...stroke} cx="18" cy="5.5" r="2.5" />

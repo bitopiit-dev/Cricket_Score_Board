@@ -31,6 +31,7 @@ import {
 } from '../data/teams';
 import { captainMark } from '../utils/matchText';
 import { useFormat } from '../hooks/useFormat';
+import { playerPath } from '../tournament/playerLink';
 
 export default function TeamPage() {
   const { t } = useTranslation();
@@ -131,33 +132,35 @@ function PlayerGrid({
       <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {players.map((p) => {
           return (
-            <li
-              key={p.id}
-              className="flex flex-col items-center gap-2 rounded-2xl bg-white p-3 text-center shadow-sm dark:bg-slate-900"
-            >
-              <PlayerAvatar name={p.name} color={team.color} photo={p.photo} size="lg" />
-              <span lang="en" className="text-sm leading-tight font-semibold break-words">
-                {playerDisplayName(p)}
-                {captainMark(p)}
-              </span>
-              {p.shortName && (
-                <span className="-mt-1 text-[13px] text-slate-600 dark:text-slate-400">
-                  {t('team.nickname', { name: p.shortName })}
+            <li key={p.id}>
+              <Link
+                to={playerPath(team.id, p.id)}
+                className="flex h-full flex-col items-center gap-2 rounded-2xl bg-white p-3 text-center shadow-sm active:bg-slate-50 dark:bg-slate-900 dark:active:bg-slate-800"
+              >
+                <PlayerAvatar name={p.name} color={team.color} photo={p.photo} size="lg" />
+                <span lang="en" className="text-sm leading-tight font-semibold break-words">
+                  {playerDisplayName(p)}
+                  {captainMark(p)}
                 </span>
-              )}
-              {(p.captain || p.viceCaptain || p.role) && (
-                <span className="flex flex-wrap justify-center gap-1">
-                  {p.captain && (
-                    <Badge className="bg-amber-400 text-amber-950">{t('role.captain')}</Badge>
-                  )}
-                  {p.viceCaptain && (
-                    <Badge className="bg-amber-100 text-amber-900 dark:bg-amber-900/50 dark:text-amber-200">
-                      {t('role.viceCaptain')}
-                    </Badge>
-                  )}
-                  {p.role && <Badge className={ROLE_BADGE[p.role]}>{t(`role.${p.role}`)}</Badge>}
-                </span>
-              )}
+                {p.shortName && (
+                  <span className="-mt-1 text-[13px] text-slate-600 dark:text-slate-400">
+                    {t('team.nickname', { name: p.shortName })}
+                  </span>
+                )}
+                {(p.captain || p.viceCaptain || p.role) && (
+                  <span className="flex flex-wrap justify-center gap-1">
+                    {p.captain && (
+                      <Badge className="bg-amber-400 text-amber-950">{t('role.captain')}</Badge>
+                    )}
+                    {p.viceCaptain && (
+                      <Badge className="bg-amber-100 text-amber-900 dark:bg-amber-900/50 dark:text-amber-200">
+                        {t('role.viceCaptain')}
+                      </Badge>
+                    )}
+                    {p.role && <Badge className={ROLE_BADGE[p.role]}>{t(`role.${p.role}`)}</Badge>}
+                  </span>
+                )}
+              </Link>
             </li>
           );
         })}
