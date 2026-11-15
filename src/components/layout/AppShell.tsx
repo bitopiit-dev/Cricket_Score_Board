@@ -21,7 +21,7 @@ export function AppShell() {
             <div className="min-w-0 flex-1">
               <Link
                 to="/home"
-                className="inline-block max-w-full rounded-lg bg-white px-1.5 py-0.5 active:scale-95"
+                className="inline-block max-w-full active:scale-95"
               >
                 <img
                   src={assetUrl(BPL_LOGO)}
