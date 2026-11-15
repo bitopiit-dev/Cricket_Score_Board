@@ -6,6 +6,8 @@ import { findTeam, initials } from '../data/teams';
 import { runRate } from '../engine/rules';
 import { runsNeeded, ballsRemaining } from '../engine/stats';
 import type { BallSummary, InningsState, Match, MatchState } from '../engine/types';
+import { TeamAvatar } from '../components/common/TeamAvatar';
+import { InstallHint } from '../components/layout/InstallHint';
 import { NextMatchCountdown } from '../components/live/NextMatchCountdown';
 import { useFormat } from '../hooks/useFormat';
 import { useNow, useTournament } from '../hooks/useTournament';
@@ -50,6 +52,7 @@ export default function HomePage() {
     <main className="mx-auto flex w-full max-w-lg flex-col gap-4 p-4 md:max-w-2xl">
       <h1 className="sr-only">{t('homePage.title')}</h1>
       <Hero hero={hero} now={now} />
+      <InstallHint />
       <Progress ts={tour.ts} />
       {next3.length > 0 && <NextMatches fixtures={next3} ts={tour.ts} />}
     </main>
@@ -79,16 +82,17 @@ function HeroFrame({
   const { t } = useTranslation();
   const [a, b] = sides;
   // Night colours stand in for a side whose team is not decided yet
-  const ca = a.color ?? 'var(--color-night-800)';
-  const cb = b.color ?? 'var(--color-night-900)';
+  const ca = a.color ?? 'var(--color-night-line)';
+  const cb = b.color ?? 'var(--color-night-line)';
   const body = (
     <>
       <div
         aria-hidden
-        className="absolute inset-0"
-        style={{ background: `linear-gradient(115deg, ${ca} 0 50%, ${cb} 50% 100%)` }}
+        className="countdown-glow absolute inset-0 opacity-60"
+        style={{
+          background: `radial-gradient(60% 55% at 12% 30%, ${ca}, transparent 70%), radial-gradient(60% 55% at 88% 30%, ${cb}, transparent 70%)`,
+        }}
       />
-      <div aria-hidden className="absolute inset-0 bg-night-950/60" />
       <div className="relative flex flex-col gap-4 p-5">
         <div className="text-xs font-semibold tracking-wide text-white/80 uppercase">{label}</div>
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-center">
@@ -101,7 +105,7 @@ function HeroFrame({
     </>
   );
   const cls =
-    'relative block overflow-hidden rounded-3xl border border-night-line text-white shadow-lg';
+    'relative block overflow-hidden rounded-3xl bg-night-950 text-white shadow-lg ring-1 ring-night-line';
   return to ? (
     <Link to={to} className={`${cls} active:opacity-90`}>
       {body}
@@ -232,7 +236,7 @@ function Countdown({ target, now, small }: { target: number; now: number; small?
           >
             {f.num(String(n).padStart(2, '0'))}
           </span>
-          <span className="mt-1 text-[11px] text-white/70">{label}</span>
+          <span className="mt-1 text-xs text-white/75">{label}</span>
         </div>
       ))}
     </div>
@@ -431,7 +435,7 @@ function NextMatches({ fixtures, ts }: { fixtures: Fixture[]; ts: TournamentStat
           const ids = fixtureTeams(fx, ts);
           return (
             <li key={fx.id} className="py-2">
-              <div className="text-xs text-slate-500 dark:text-slate-400">
+              <div className="text-[13px] text-slate-600 dark:text-slate-400">
                 {t('fixtures.matchNo', { n: f.num(fx.no) })} ·{' '}
                 {formatDate(fx.date, lang, bengaliDigits, {
                   weekday: 'short',
@@ -440,16 +444,24 @@ function NextMatches({ fixtures, ts }: { fixtures: Fixture[]; ts: TournamentStat
                 })}{' '}
                 · {formatTime(fx.time, lang, f)}
               </div>
-              <div className="mt-1 flex flex-col gap-0.5">
+              <div className="mt-1.5 flex flex-col gap-1.5">
                 {([0, 1] as const).map((i) => {
                   const team = findTeam(ids[i] ?? undefined);
                   return (
                     <span key={i} className="flex items-center gap-2 font-semibold">
-                      <span
-                        aria-hidden
-                        className="size-3 shrink-0 rounded-full border border-night-line"
-                        style={{ backgroundColor: team?.color ?? 'transparent' }}
-                      />
+                      {team ? (
+                        <TeamAvatar
+                          name={team.name}
+                          color={team.color}
+                          logo={team.logo}
+                          size="sm"
+                        />
+                      ) : (
+                        <span
+                          aria-hidden
+                          className="size-8 shrink-0 rounded-full border border-dashed border-slate-400"
+                        />
+                      )}
                       <span
                         lang={team ? 'en' : undefined}
                         className={team ? '' : 'italic opacity-70'}

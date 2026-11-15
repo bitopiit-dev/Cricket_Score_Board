@@ -33,7 +33,7 @@ export default function PointsPage() {
           </p>
         </section>
       )}
-      <p className="text-xs text-slate-500 dark:text-slate-400">
+      <p className="text-[13px] text-slate-600 dark:text-slate-400">
         {t('points.legend', {
           win: f.num(LEAGUE_POINTS.win),
           tie: f.num(LEAGUE_POINTS.tie),
@@ -64,7 +64,7 @@ function Table({
       <h2 className="px-4 pt-3 font-display text-2xl font-bold tracking-wide">
         {stageLabel(stage, t)}
       </h2>
-      <p className="px-4 text-xs text-slate-500 dark:text-slate-400">
+      <p className="px-4 text-[13px] text-slate-600 dark:text-slate-400">
         {t(stage === 'superSix' ? 'points.qualifySemis' : 'points.qualifySuperSix', {
           n: f.num(qualify),
         })}

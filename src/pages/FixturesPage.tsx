@@ -169,10 +169,7 @@ export default function FixturesPage() {
         if (!fxs) {
           // A day off inside the tournament
           return (
-            <p
-              key={date}
-              className="flex items-center gap-2 px-1 text-xs text-slate-400 dark:text-slate-500"
-            >
+            <p key={date} className="flex items-center gap-2 px-1 text-xs text-slate-500">
               <span aria-hidden className="h-px flex-1 bg-slate-200 dark:bg-slate-800" />
               {day(date)} · {t('fixtures.restDay')}
               {HOLIDAYS.includes(date) && ` (${t('fixtures.holiday')})`}
@@ -246,7 +243,7 @@ function TeamRecord({
           <h2 lang="en" className="font-display text-xl leading-tight font-bold">
             {team.name}
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-[13px] text-slate-600 dark:text-slate-400">
             {t(`fixtures.filter_group${team.group}`)} ·{' '}
             {t('fixtures.teamMatches', { n: f.num(mine.length) })}
           </p>
@@ -265,7 +262,7 @@ function TeamRecord({
             key={label}
             className="flex flex-col-reverse rounded-xl bg-slate-50 px-1 py-2 dark:bg-slate-800"
           >
-            <dt className="mt-1 text-[11px] leading-tight text-slate-500 dark:text-slate-400">
+            <dt className="mt-1 text-xs leading-tight text-slate-500 dark:text-slate-400">
               {label}
             </dt>
             <dd className="tabular font-display text-2xl leading-none font-bold">{f.num(n)}</dd>
@@ -280,7 +277,9 @@ function TeamRecord({
         </p>
       )}
       {onlyGroupSoFar && (
-        <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">{t('fixtures.teamLater')}</p>
+        <p className="mt-2 text-[13px] text-slate-600 dark:text-slate-400">
+          {t('fixtures.teamLater')}
+        </p>
       )}
     </section>
   );

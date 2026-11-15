@@ -5,9 +5,11 @@ import { SubPageTitle } from '../components/layout/AppShell';
 import { RULES_ORGANISER, RULE_SECTIONS, searchRules } from '../data/rules';
 import { useFormat } from '../hooks/useFormat';
 import { usePrefs } from '../store/prefsStore';
+import { useCanScore } from '../sync/auth';
 
 export default function RulesPage() {
   const { t } = useTranslation();
+  const canScore = useCanScore();
   const f = useFormat();
   const lang = usePrefs((s) => s.lang);
   const [query, setQuery] = useState('');
@@ -63,7 +65,7 @@ export default function RulesPage() {
                   </span>
                   <div className="flex flex-col gap-1">
                     <p className="leading-relaxed">{r.text[lang]}</p>
-                    {r.inApp && (
+                    {r.inApp && canScore && (
                       <span className="w-fit rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300">
                         {t('rules.inApp')}
                       </span>

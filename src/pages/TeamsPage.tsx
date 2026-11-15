@@ -12,7 +12,7 @@ export default function TeamsPage() {
   return (
     <main className="mx-auto flex w-full max-w-lg flex-col gap-3 p-4 md:max-w-3xl">
       <PageTitle>
-        {t('tabs.teams')} <span className="text-slate-400">({f.num(TOURNAMENT_TEAMS.length)})</span>
+        {t('tabs.teams')} <span className="text-slate-500">({f.num(TOURNAMENT_TEAMS.length)})</span>
       </PageTitle>
       {(['A', 'B'] as GroupId[]).map((g) => (
         <section key={g} aria-label={t('points.group', { g })}>

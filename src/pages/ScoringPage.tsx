@@ -26,6 +26,8 @@ import type { ExtraType } from '../engine/types';
 import { useFormat } from '../hooks/useFormat';
 import { useMatchStore } from '../store/matchStore';
 import { useCanScore } from '../sync/auth';
+import { Icon } from '../components/common/icons';
+import { matchShareText, shareText } from '../utils/share';
 
 type Open =
   null | 'wicket' | 'other' | 'more' | 'retire' | 'changeBowler' | 'openers' | 'review' | ExtraType;
@@ -86,6 +88,13 @@ export default function ScoringPage() {
   };
   const between = phase === 'inningsBreak' || phase === 'superOverBreak';
 
+  /** Score message + a link straight to this match, for WhatsApp and friends. */
+  async function onShare() {
+    const url = window.location.href.split('#')[0] + `#/match/${match!.id}`;
+    const ok = await shareText(title, matchShareText(match!, state!, t, f), url);
+    if (!ok) window.alert(t('share.failed'));
+  }
+
   function onMore(action: MoreAction) {
     switch (action) {
       case 'swapStrike':
@@ -125,16 +134,26 @@ export default function ScoringPage() {
         title={title}
         backTo="/home"
         actions={
-          canScore && (
+          <>
             <button
               type="button"
-              onClick={() => setOpen('more')}
-              aria-label={t('scoring.more')}
-              className="flex h-10 w-10 items-center justify-center rounded-full text-2xl hover:bg-white/10"
+              onClick={() => void onShare()}
+              aria-label={t('common.share')}
+              className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-white/10"
             >
-              ⋮
+              <Icon name="share" className="size-5" />
             </button>
-          )
+            {canScore && (
+              <button
+                type="button"
+                onClick={() => setOpen('more')}
+                aria-label={t('scoring.more')}
+                className="flex h-10 w-10 items-center justify-center rounded-full text-2xl hover:bg-white/10"
+              >
+                ⋮
+              </button>
+            )}
+          </>
         }
       />
 

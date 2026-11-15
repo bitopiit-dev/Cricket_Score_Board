@@ -76,7 +76,7 @@ export function NextMatchCountdown() {
                         <Digit key={j} value={f.num(d)} />
                       ))}
                   </div>
-                  <span className="text-[11px] text-night-muted">{label}</span>
+                  <span className="text-xs text-night-muted">{label}</span>
                 </div>
               </div>
             ))}

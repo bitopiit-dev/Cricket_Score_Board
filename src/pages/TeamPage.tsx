@@ -107,9 +107,7 @@ const ROLE_BADGE: Record<PlayerRole, string> = {
 
 function Badge({ className, children }: { className: string; children: React.ReactNode }) {
   return (
-    <span
-      className={`rounded-full px-2 py-0.5 text-[11px] leading-tight font-semibold ${className}`}
-    >
+    <span className={`rounded-full px-2 py-0.5 text-xs leading-tight font-semibold ${className}`}>
       {children}
     </span>
   );
@@ -142,7 +140,7 @@ function PlayerGrid({
                 {captainMark(p)}
               </span>
               {p.shortName && (
-                <span className="-mt-1 text-xs text-slate-500 dark:text-slate-400">
+                <span className="-mt-1 text-[13px] text-slate-600 dark:text-slate-400">
                   {t('team.nickname', { name: p.shortName })}
                 </span>
               )}

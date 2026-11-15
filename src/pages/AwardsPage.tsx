@@ -50,7 +50,7 @@ export default function AwardsPage() {
                   })
                 }
               />
-              <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
+              <p className="mt-3 text-[13px] text-slate-600 dark:text-slate-400">
                 {t('awards.formula', {
                   run: f.num(MOS_POINTS.run),
                   wicket: f.num(MOS_POINTS.wicket),
@@ -73,7 +73,7 @@ export default function AwardsPage() {
                 }
               />
             </Card>
-            <p className="text-center text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-center text-[13px] text-slate-600 dark:text-slate-400">
               {t('awards.note')}
             </p>
           </>
@@ -110,7 +110,7 @@ function Ranking({
             <TeamAvatar name={r.teamName} color={team?.color} logo={team?.logo} size="sm" />
             <div className="min-w-0 flex-1">
               <div className="truncate font-semibold">{r.name}</div>
-              <div className="truncate text-xs text-slate-500 dark:text-slate-400">
+              <div className="truncate text-[13px] text-slate-600 dark:text-slate-400">
                 {r.teamName} · {detail(r)}
               </div>
             </div>

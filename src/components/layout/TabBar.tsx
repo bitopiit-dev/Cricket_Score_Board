@@ -89,7 +89,7 @@ export function TabBar({ variant }: { variant: 'bottom' | 'top' }) {
               className={`relative flex items-center justify-center rounded-xl font-semibold transition ${
                 variant === 'top'
                   ? 'min-h-11 gap-2 px-2 text-base'
-                  : 'min-h-14 flex-col gap-0.5 px-0.5 text-[11px] leading-tight'
+                  : 'min-h-14 flex-col gap-0.5 px-0.5 text-xs leading-tight'
               } ${on ? 'bg-night-800 text-white' : 'text-night-muted hover:text-white'}`}
             >
               {on && (

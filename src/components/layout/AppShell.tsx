@@ -55,8 +55,11 @@ export function AppShell() {
       </header>
       <Outlet />
       {/* Credit line, bottom right; the page padding keeps it above the phone tab bar */}
-      <footer className="mx-auto mt-auto w-full max-w-5xl px-4 pt-6 pb-2 text-right text-xs font-bold text-slate-500 md:text-sm dark:text-slate-400">
-        Copyright Protected By K A Rahman
+      <footer
+        lang="en"
+        className="mx-auto mt-auto w-full max-w-5xl px-4 pt-6 pb-2 text-right text-xs text-slate-500 dark:text-slate-500"
+      >
+        © 2026 K A Rahman
       </footer>
       <DataUpdatedBar />
       <TabBar variant="bottom" />

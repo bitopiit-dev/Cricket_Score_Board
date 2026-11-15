@@ -1,13 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { Icon, type IconName } from '../components/common/icons';
 import { PageTitle } from '../components/layout/AppShell';
 
-const ITEMS = [
-  { to: '/rules', icon: '📜', key: 'rules' },
-  { to: '/committee', icon: '👥', key: 'committee' },
-  { to: '/awards', icon: '🏆', key: 'awards' },
-  { to: '/admin', icon: '🔐', key: 'admin' },
-] as const;
+const ITEMS: { to: string; icon: IconName; key: string }[] = [
+  { to: '/rules', icon: 'rules', key: 'rules' },
+  { to: '/committee', icon: 'committee', key: 'committee' },
+  { to: '/awards', icon: 'awards', key: 'awards' },
+];
 
 /** "More" tab: links to the smaller sections. */
 export default function MorePage() {
@@ -22,8 +22,8 @@ export default function MorePage() {
               to={i.to}
               className="flex items-center gap-4 rounded-2xl bg-white p-4 shadow-sm active:bg-slate-50 dark:bg-slate-900 dark:active:bg-slate-800"
             >
-              <span aria-hidden className="text-3xl">
-                {i.icon}
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-night-950 text-bpl-yellow">
+                <Icon name={i.icon} />
               </span>
               <span className="flex-1">
                 <span className="block font-semibold">{t(`more.${i.key}`)}</span>
@@ -38,6 +38,14 @@ export default function MorePage() {
           </li>
         ))}
       </ul>
+      {/* For scorers and the organisers; viewers don't need it up front */}
+      <Link
+        to="/admin"
+        className="mx-auto mt-4 flex items-center gap-1.5 rounded-full px-3 py-2 text-sm text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800"
+      >
+        <Icon name="lock" className="size-4" />
+        {t('more.adminLink')}
+      </Link>
     </main>
   );
 }
