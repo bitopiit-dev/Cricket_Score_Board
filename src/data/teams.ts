@@ -255,6 +255,7 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
     short: 'PP',
     group: 'B',
     color: '#dc2626',
+    logo: 'icons/teams/power-player.jpg',
     players: [
       squad('power-player', 'Nazmul', { captain: true }),
       squad('power-player', 'Sharif'),
