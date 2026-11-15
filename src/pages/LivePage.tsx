@@ -8,6 +8,7 @@ import { matchRepository } from '../db/repository';
 import { deriveMatchState } from '../engine/scoring';
 import type { Match, MatchState } from '../engine/types';
 import { useFormat } from '../hooks/useFormat';
+import { MATCHES_CHANGED } from '../sync/matchSync';
 import { stageLabel } from '../utils/fixtureText';
 
 /** Live tab: matches being scored on this device, newest first; tap to open the scoring screen. */
@@ -16,12 +17,21 @@ export default function LivePage() {
   const [matches, setMatches] = useState<{ m: Match; s: MatchState }[] | null>(null);
 
   useEffect(() => {
-    void matchRepository.list().then((ms) => {
-      const rows = ms.map((m) => ({ m, s: deriveMatchState(m) }));
-      // Matches still being played come first
-      rows.sort((a, b) => Number(isLive(b)) - Number(isLive(a)));
-      setMatches(rows);
-    });
+    const load = () =>
+      void matchRepository.list().then((ms) => {
+        const rows = ms.map((m) => ({ m, s: deriveMatchState(m) }));
+        // Matches still being played come first
+        rows.sort((a, b) => Number(isLive(b)) - Number(isLive(a)));
+        setMatches(rows);
+      });
+    load();
+    // Live scores from the scorer's phone, plus a slow refresh as a backstop
+    window.addEventListener(MATCHES_CHANGED, load);
+    const timer = setInterval(load, 20000);
+    return () => {
+      window.removeEventListener(MATCHES_CHANGED, load);
+      clearInterval(timer);
+    };
   }, []);
 
   return (

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { matchRepository } from '../db/repository';
 import type { Match } from '../engine/types';
+import { MATCHES_CHANGED } from '../sync/matchSync';
 import { tournamentState, type TournamentState } from '../tournament/standings';
 
 /**
@@ -19,9 +20,12 @@ export function useTournament(
       });
     load();
     const timer = refreshMs ? setInterval(load, refreshMs) : undefined;
+    // Scores downloaded from other phones
+    window.addEventListener(MATCHES_CHANGED, load);
     return () => {
       alive = false;
       if (timer) clearInterval(timer);
+      window.removeEventListener(MATCHES_CHANGED, load);
     };
   }, [refreshMs]);
   return value;

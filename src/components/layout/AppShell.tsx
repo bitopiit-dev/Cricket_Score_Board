@@ -5,6 +5,7 @@ import { APP_SUBTITLE, APP_TITLE } from '../../config/app';
 import { BPL_LOGO, COMMITTEE_LOGO, COMMITTEE_NAME } from '../../data/committee';
 import { LanguageToggle, useGoBack } from '../common/Header';
 import { TabBar } from './TabBar';
+import { DataUpdatedBar } from './DataUpdatedBar';
 
 /**
  * Layout for the main sections: dark header with the tournament name,
@@ -51,6 +52,7 @@ export function AppShell() {
         </div>
       </header>
       <Outlet />
+      <DataUpdatedBar />
       <TabBar variant="bottom" />
     </div>
   );

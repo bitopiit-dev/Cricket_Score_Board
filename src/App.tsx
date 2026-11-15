@@ -1,4 +1,5 @@
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
 import { AppShell } from './components/layout/AppShell';
 import { useApplyTheme } from './hooks/useApplyTheme';
 import AwardsPage from './pages/AwardsPage';
@@ -14,6 +15,9 @@ import FixturesPage from './pages/FixturesPage';
 import { MediaPage, StatsPage } from './pages/SoonPages';
 import TeamPage from './pages/TeamPage';
 import TeamsPage from './pages/TeamsPage';
+
+// Only the admin downloads the admin screens
+const AdminPage = lazy(() => import('./pages/admin/AdminPage'));
 
 /**
  * HashRouter so the app works from any static host (and offline) without
@@ -34,6 +38,14 @@ export default function App() {
           <Route path="/teams" element={<TeamsPage />} />
           <Route path="/team/:id" element={<TeamPage />} />
           <Route path="/more" element={<MorePage />} />
+          <Route
+            path="/admin"
+            element={
+              <Suspense fallback={null}>
+                <AdminPage />
+              </Suspense>
+            }
+          />
           <Route path="/rules" element={<RulesPage />} />
           <Route path="/committee" element={<CommitteePage />} />
           <Route path="/media" element={<MediaPage />} />

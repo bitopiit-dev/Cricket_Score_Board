@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { matchRepository } from '../db/repository';
 import { addEvent, deriveMatchState, undoLastEvent, type ValidationError } from '../engine/scoring';
 import type { Match, MatchEventInput, MatchState } from '../engine/types';
+import { canScore } from '../sync/auth';
+import { MATCHES_CHANGED } from '../sync/matchSync';
 import { newId } from '../utils/id';
 
 interface MatchStore {
@@ -66,6 +68,27 @@ export const useMatchStore = create<MatchStore>((set, get) => ({
 
   clearError: () => set({ lastError: null }),
 }));
+
+// A match open on screen follows the scores downloaded from the scorer's phone.
+if (typeof window !== 'undefined') {
+  window.addEventListener(MATCHES_CHANGED, () => {
+    const open = useMatchStore.getState().match;
+    if (!open) return;
+    void matchRepository.get(open.id).then((stored) => {
+      const now = useMatchStore.getState().match;
+      if (!now || now.id !== open.id) return;
+      if (!stored) {
+        useMatchStore.setState({ match: null, state: null, notFound: true });
+        return;
+      }
+      const a = stored.updatedAt ?? 0;
+      const b = now.updatedAt ?? 0;
+      if (a !== b && (!canScore() || a > b)) {
+        useMatchStore.setState({ match: stored, state: deriveMatchState(stored) });
+      }
+    });
+  });
+}
 
 /** Creates and stores a new match, returning its id. */
 export async function createMatch(data: Omit<Match, 'id' | 'createdAt' | 'updatedAt' | 'events'>) {

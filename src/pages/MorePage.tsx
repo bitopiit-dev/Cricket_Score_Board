@@ -7,6 +7,7 @@ const ITEMS = [
   { to: '/committee', icon: '👥', key: 'committee' },
   { to: '/media', icon: '📸', key: 'media' },
   { to: '/awards', icon: '🏆', key: 'awards' },
+  { to: '/admin', icon: '🔐', key: 'admin' },
 ] as const;
 
 /** "More" tab: links to the smaller sections. */

@@ -260,7 +260,9 @@
     }
   },
   "app": {
-    "savedOnDevice": "Saved on this device"
+    "savedOnDevice": "Saved on this device",
+    "dataUpdated": "The fixture or teams were just updated.",
+    "refresh": "Refresh"
   },
   "tabs": {
     "label": "Sections",
@@ -279,7 +281,9 @@
     "media": "Media",
     "mediaHint": "Photo albums",
     "awards": "Awards",
-    "awardsHint": "Man of the Series and Best Wicket-Taker"
+    "awardsHint": "Man of the Series and Best Wicket-Taker",
+    "admin": "Admin",
+    "adminHint": "Sign in to edit fixtures, teams and scores"
   },
   "comingSoon": {
     "badge": "Coming soon",

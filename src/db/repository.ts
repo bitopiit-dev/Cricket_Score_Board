@@ -1,4 +1,5 @@
 import type { Match } from '../engine/types';
+import { withUpload } from '../sync/matchSync';
 import { db as defaultDb, type ScoreBoardDB } from './database';
 
 /**
@@ -30,7 +31,7 @@ export function createLocalRepository(db: ScoreBoardDB = defaultDb): MatchReposi
   };
 }
 
-export const matchRepository = createLocalRepository();
+export const matchRepository = withUpload(createLocalRepository());
 
 /** Ask the browser not to evict our data under storage pressure. */
 export async function requestPersistentStorage(): Promise<boolean> {
