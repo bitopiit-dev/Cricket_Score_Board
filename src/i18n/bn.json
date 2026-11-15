@@ -304,6 +304,12 @@
   },
   "fixtures": {
     "downloadPdf": "PDF ডাউনলোড",
+    "team": "দল",
+    "allTeams": "সব দল",
+    "teamMatches": "{{n}}টা ম্যাচ",
+    "teamNoMatches": "এই পর্বে এই দলের কোনো ম্যাচ নেই।",
+    "teamLater": "দলটি পরের পর্বে উঠলে সুপার সিক্স আর নকআউটের ম্যাচও এখানে দেখাবে।",
+    "clearTeam": "সব দল দেখাও",
     "matchNo": "ম্যাচ {{n}}",
     "today": "আজ",
     "noneToday": "আজ কোনো ম্যাচ নেই।",

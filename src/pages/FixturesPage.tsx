@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { TeamAvatar } from '../components/common/TeamAvatar';
 import { PageTitle } from '../components/layout/AppShell';
 import {
@@ -11,12 +11,13 @@ import {
   type Fixture,
   type StageId,
 } from '../data/fixtures';
-import { findTeam } from '../data/teams';
+import { findTeam, TOURNAMENT_TEAMS, type TournamentTeam } from '../data/teams';
 import { useFormat } from '../hooks/useFormat';
 import { useTournament } from '../hooks/useTournament';
 import { usePrefs } from '../store/prefsStore';
 import { fixtureTeams, type FixtureOutcome, type TournamentState } from '../tournament/standings';
 import { formatDate, formatTime, slotLabel, stageLabel } from '../utils/fixtureText';
+import { teamFixtures, teamRecord } from '../tournament/teamView';
 import { resultText } from '../utils/matchText';
 import { assetUrl } from '../utils/asset';
 
@@ -37,26 +38,33 @@ export default function FixturesPage() {
   const bengaliDigits = usePrefs((s) => s.bengaliDigits);
   const tour = useTournament();
   const [filter, setFilter] = useState<Filter>('all');
+  // The chosen team lives in the link (#/fixtures?team=ddc) so it can be shared or bookmarked.
+  const [params, setParams] = useSearchParams();
+  const teamId = findTeam(params.get('team') ?? undefined)?.id ?? '';
+  const setTeam = (id: string) => setParams(id ? { team: id } : {}, { replace: true });
   const loaded = tour !== null;
 
   // Open the list at the next match day (today's, or the next one), once loaded.
   useEffect(() => {
-    if (!loaded) return;
+    if (!loaded || teamId) return;
     const today = todayInDhaka();
     const target = FIXTURES.find((fx) => fx.date >= today)?.date;
     if (!target || target === FIXTURES[0].date) return;
     document.getElementById(`day-${target}`)?.scrollIntoView({ block: 'start' });
-  }, [loaded]);
+  }, [loaded, teamId]);
 
   if (!tour) return null;
 
   const today = todayInDhaka();
   const todays = FIXTURES.filter((fx) => fx.date === today);
   const next = FIXTURES.find((fx) => fx.date > today);
-  const list = FIXTURES.filter((fx) => matchesFilter(fx, filter));
+  const pool = teamId ? teamFixtures(teamId, tour.ts) : FIXTURES;
+  const list = pool.filter((fx) => matchesFilter(fx, filter));
   const byDate = new Map<string, Fixture[]>();
   for (const fx of list) byDate.set(fx.date, [...(byDate.get(fx.date) ?? []), fx]);
   const day = (d: string) => formatDate(d, lang, bengaliDigits);
+  const team = findTeam(teamId || undefined);
+  const showRestDays = filter === 'all' && !team;
 
   return (
     <main className="mx-auto flex max-w-lg flex-col gap-4 p-4 md:max-w-3xl">
@@ -126,7 +134,33 @@ export default function FixturesPage() {
         ))}
       </div>
 
-      {(filter === 'all' ? tournamentDays() : [...byDate.keys()]).map((date) => {
+      <label className="flex items-center gap-3">
+        <span className="shrink-0 text-sm font-semibold text-slate-600 dark:text-slate-300">
+          {t('fixtures.team')}
+        </span>
+        <select
+          value={teamId}
+          onChange={(e) => setTeam(e.target.value)}
+          className="min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-800 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+        >
+          <option value="">{t('fixtures.allTeams')}</option>
+          {TOURNAMENT_TEAMS.map((tm) => (
+            <option key={tm.id} value={tm.id} lang="en">
+              {tm.name}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      {team && <TeamRecord team={team} ts={tour.ts} onClear={() => setTeam('')} />}
+
+      {team && list.length === 0 && (
+        <p className="rounded-2xl bg-white p-4 text-sm text-slate-500 shadow-sm dark:bg-slate-900">
+          {t('fixtures.teamNoMatches')}
+        </p>
+      )}
+
+      {(showRestDays ? tournamentDays() : [...byDate.keys()]).map((date) => {
         const fxs = byDate.get(date);
         if (!fxs) {
           // A day off inside the tournament
@@ -163,6 +197,88 @@ export default function FixturesPage() {
         );
       })}
     </main>
+  );
+}
+
+/** The chosen team's record so far: played, won, lost, tied or no result, and the next match. */
+function TeamRecord({
+  team,
+  ts,
+  onClear,
+}: {
+  team: TournamentTeam;
+  ts: TournamentState;
+  onClear: () => void;
+}) {
+  const { t } = useTranslation();
+  const f = useFormat();
+  const lang = usePrefs((s) => s.lang);
+  const bengaliDigits = usePrefs((s) => s.bengaliDigits);
+  const mine = teamFixtures(team.id, ts);
+  const {
+    played,
+    won,
+    lost,
+    tiedNr,
+    next: upcoming,
+    onlyGroupSoFar,
+  } = teamRecord(team.id, ts, todayInDhaka());
+  const stats: [string, number][] = [
+    [t('points.playedLong'), played],
+    [t('points.wonLong'), won],
+    [t('points.lostLong'), lost],
+    [t('points.tiedLong'), tiedNr],
+  ];
+
+  return (
+    <section
+      aria-label={team.name}
+      className="rounded-2xl border-l-4 bg-white p-4 shadow-sm dark:bg-slate-900"
+      style={{ borderLeftColor: team.color }}
+    >
+      <div className="flex items-center gap-3">
+        <TeamAvatar name={team.name} color={team.color} logo={team.logo} size="md" />
+        <div className="min-w-0 flex-1">
+          <h2 lang="en" className="font-display text-xl leading-tight font-bold">
+            {team.name}
+          </h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            {t(`fixtures.filter_group${team.group}`)} ·{' '}
+            {t('fixtures.teamMatches', { n: f.num(mine.length) })}
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={onClear}
+          className="shrink-0 rounded-full px-3 py-1 text-xs font-semibold text-slate-500 ring-1 ring-slate-200 dark:text-slate-300 dark:ring-slate-700"
+        >
+          {t('fixtures.clearTeam')}
+        </button>
+      </div>
+      <dl className="mt-3 grid grid-cols-4 gap-2 text-center">
+        {stats.map(([label, n]) => (
+          <div
+            key={label}
+            className="flex flex-col-reverse rounded-xl bg-slate-50 px-1 py-2 dark:bg-slate-800"
+          >
+            <dt className="mt-1 text-[11px] leading-tight text-slate-500 dark:text-slate-400">
+              {label}
+            </dt>
+            <dd className="tabular font-display text-2xl leading-none font-bold">{f.num(n)}</dd>
+          </div>
+        ))}
+      </dl>
+      {upcoming && (
+        <p className="mt-3 text-sm">
+          {t('fixtures.nextOn', {
+            date: `${formatDate(upcoming.date, lang, bengaliDigits)}, ${formatTime(upcoming.time, lang, f)}`,
+          })}
+        </p>
+      )}
+      {onlyGroupSoFar && (
+        <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">{t('fixtures.teamLater')}</p>
+      )}
+    </section>
   );
 }
 

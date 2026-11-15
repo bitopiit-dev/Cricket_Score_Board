@@ -309,6 +309,12 @@
   },
   "fixtures": {
     "downloadPdf": "Download PDF",
+    "team": "Team",
+    "allTeams": "All teams",
+    "teamMatches": "{{n}} matches",
+    "teamNoMatches": "No matches for this team in this stage.",
+    "teamLater": "Super Six and knockout matches show here once the team qualifies.",
+    "clearTeam": "Show all teams",
     "matchNo": "Match {{n}}",
     "today": "Today",
     "noneToday": "No match today.",
