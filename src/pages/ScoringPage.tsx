@@ -25,6 +25,7 @@ import { KICK_PENALTY_RUNS } from '../engine/rules';
 import type { ExtraType } from '../engine/types';
 import { useFormat } from '../hooks/useFormat';
 import { useMatchStore } from '../store/matchStore';
+import { useCanScore } from '../sync/auth';
 
 type Open =
   null | 'wicket' | 'other' | 'more' | 'retire' | 'changeBowler' | 'openers' | 'review' | ExtraType;
@@ -35,6 +36,8 @@ export default function ScoringPage() {
   const { id } = useParams<{ id: string }>();
   const { match, state, notFound, lastError, load, dispatch, undo, clearError } = useMatchStore();
   const [open, setOpen] = useState<Open>(null);
+  // Viewers follow the score; only scorers and super admins get the controls.
+  const canScore = useCanScore();
 
   useEffect(() => {
     if (id) void load(id);
@@ -122,14 +125,16 @@ export default function ScoringPage() {
         title={title}
         backTo="/home"
         actions={
-          <button
-            type="button"
-            onClick={() => setOpen('more')}
-            aria-label={t('scoring.more')}
-            className="flex h-10 w-10 items-center justify-center rounded-full text-2xl hover:bg-white/10"
-          >
-            ⋮
-          </button>
+          canScore && (
+            <button
+              type="button"
+              onClick={() => setOpen('more')}
+              aria-label={t('scoring.more')}
+              className="flex h-10 w-10 items-center justify-center rounded-full text-2xl hover:bg-white/10"
+            >
+              ⋮
+            </button>
+          )
         }
       />
 
@@ -151,46 +156,59 @@ export default function ScoringPage() {
           <InningsBreakCard
             match={match}
             state={state}
-            onStart={() => setOpen('openers')}
-            onUndo={undo}
+            onStart={canScore ? () => setOpen('openers') : undefined}
+            onUndo={canScore ? undo : undefined}
           />
         )}
         {phase === 'superOverBreak' && (
           <SuperOverBreakCard
             match={match}
             state={state}
-            onStart={() => setOpen('openers')}
-            onUndo={undo}
+            onStart={canScore ? () => setOpen('openers') : undefined}
+            onUndo={canScore ? undo : undefined}
           />
         )}
-        {phase === 'completed' && <ResultCard match={match} state={state} onUndo={undo} />}
+        {phase === 'completed' && (
+          <ResultCard match={match} state={state} onUndo={canScore ? undo : undefined} />
+        )}
+
+        {!canScore &&
+          (phase === 'needOpeners' || phase === 'needBatter' || phase === 'needBowler') && (
+            <p className="p-4 text-center text-sm text-slate-500 dark:text-slate-400">
+              {match.events.length === 0
+                ? t('scoring.notStartedYet')
+                : t('scoring.waitingForScorer')}
+            </p>
+          )}
 
         {inn && !between && phase !== 'completed' && (
           <>
             <CreasePanel match={match} inn={inn} />
             <ThisOver inn={inn} />
-            <div className="mt-auto">
-              <RunPad
-                disabled={phase !== 'inPlay'}
-                canUndo={canUndo}
-                sixOut={!!match.settings.sixOut}
-                onRuns={(runs, boundary) =>
-                  send({ type: 'ball', runs, extra: null, ...(boundary ? { boundary } : {}) })
-                }
-                onSixOut={() =>
-                  send({
-                    type: 'ball',
-                    runs: 0,
-                    extra: null,
-                    wicket: { kind: 'sixOut', batterId: inn.strikerId! },
-                  })
-                }
-                onExtra={(x) => setOpen(x)}
-                onOther={() => setOpen('other')}
-                onWicket={() => setOpen('wicket')}
-                onUndo={undo}
-              />
-            </div>
+            {canScore && (
+              <div className="mt-auto">
+                <RunPad
+                  disabled={phase !== 'inPlay'}
+                  canUndo={canUndo}
+                  sixOut={!!match.settings.sixOut}
+                  onRuns={(runs, boundary) =>
+                    send({ type: 'ball', runs, extra: null, ...(boundary ? { boundary } : {}) })
+                  }
+                  onSixOut={() =>
+                    send({
+                      type: 'ball',
+                      runs: 0,
+                      extra: null,
+                      wicket: { kind: 'sixOut', batterId: inn.strikerId! },
+                    })
+                  }
+                  onExtra={(x) => setOpen(x)}
+                  onOther={() => setOpen('other')}
+                  onWicket={() => setOpen('wicket')}
+                  onUndo={undo}
+                />
+              </div>
+            )}
           </>
         )}
       </main>
@@ -204,113 +222,117 @@ export default function ScoringPage() {
         </div>
       )}
 
-      {/* Required choices driven by the match phase */}
-      {phase === 'needOpeners' && (
-        <OpenersSheet
-          match={match}
-          innings={state.innings}
-          onStart={(s, n, b) =>
-            send({ type: 'inningsStart', strikerId: s, nonStrikerId: n, bowlerId: b })
-          }
-        />
-      )}
-      {between && open === 'openers' && (
-        <OpenersSheet
-          key={state.innings.length}
-          match={match}
-          innings={state.innings}
-          onClose={close}
-          onStart={(s, n, b) =>
-            send({ type: 'inningsStart', strikerId: s, nonStrikerId: n, bowlerId: b })
-          }
-        />
-      )}
-      {phase === 'needBatter' && inn && (
-        <NewBatterSheet
-          match={match}
-          inn={inn}
-          onUndo={undo}
-          onPick={(batterId) => send({ type: 'newBatter', batterId })}
-        />
-      )}
-      {phase === 'needBowler' && inn && open !== 'more' && open !== 'retire' && (
-        <BowlerSheet
-          match={match}
-          inn={inn}
-          onUndo={undo}
-          onPick={(bowlerId) => send({ type: 'newBowler', bowlerId })}
-        />
-      )}
-
-      {/* Optional sheets */}
-      {inn && phase === 'inPlay' && (
+      {canScore && (
         <>
-          <ExtrasSheet
-            extra={
-              open === 'wide' || open === 'noBall' || open === 'bye' || open === 'legBye'
-                ? open
-                : null
-            }
-            sixOut={!!match.settings.sixOut}
-            onClose={close}
-            onPick={(runs, boundary) =>
-              send({
-                type: 'ball',
-                runs,
-                extra: open as ExtraType,
-                ...(boundary ? { boundary } : {}),
-              })
-            }
-          />
-          <OtherRunsSheet
-            open={open === 'other'}
-            onClose={close}
-            onPick={(runs) => send({ type: 'ball', runs, extra: null })}
-          />
-          {open === 'wicket' && (
-            <WicketSheet
+          {/* Required choices driven by the match phase */}
+          {phase === 'needOpeners' && (
+            <OpenersSheet
               match={match}
-              inn={inn}
-              onClose={close}
-              onConfirm={(w) => send({ type: 'ball', ...w })}
+              innings={state.innings}
+              onStart={(s, n, b) =>
+                send({ type: 'inningsStart', strikerId: s, nonStrikerId: n, bowlerId: b })
+              }
             />
           )}
-          {open === 'changeBowler' && (
+          {between && open === 'openers' && (
+            <OpenersSheet
+              key={state.innings.length}
+              match={match}
+              innings={state.innings}
+              onClose={close}
+              onStart={(s, n, b) =>
+                send({ type: 'inningsStart', strikerId: s, nonStrikerId: n, bowlerId: b })
+              }
+            />
+          )}
+          {phase === 'needBatter' && inn && (
+            <NewBatterSheet
+              match={match}
+              inn={inn}
+              onUndo={undo}
+              onPick={(batterId) => send({ type: 'newBatter', batterId })}
+            />
+          )}
+          {phase === 'needBowler' && inn && open !== 'more' && open !== 'retire' && (
             <BowlerSheet
               match={match}
               inn={inn}
-              onClose={close}
+              onUndo={undo}
               onPick={(bowlerId) => send({ type: 'newBowler', bowlerId })}
             />
           )}
+
+          {/* Optional sheets */}
+          {inn && phase === 'inPlay' && (
+            <>
+              <ExtrasSheet
+                extra={
+                  open === 'wide' || open === 'noBall' || open === 'bye' || open === 'legBye'
+                    ? open
+                    : null
+                }
+                sixOut={!!match.settings.sixOut}
+                onClose={close}
+                onPick={(runs, boundary) =>
+                  send({
+                    type: 'ball',
+                    runs,
+                    extra: open as ExtraType,
+                    ...(boundary ? { boundary } : {}),
+                  })
+                }
+              />
+              <OtherRunsSheet
+                open={open === 'other'}
+                onClose={close}
+                onPick={(runs) => send({ type: 'ball', runs, extra: null })}
+              />
+              {open === 'wicket' && (
+                <WicketSheet
+                  match={match}
+                  inn={inn}
+                  onClose={close}
+                  onConfirm={(w) => send({ type: 'ball', ...w })}
+                />
+              )}
+              {open === 'changeBowler' && (
+                <BowlerSheet
+                  match={match}
+                  inn={inn}
+                  onClose={close}
+                  onPick={(bowlerId) => send({ type: 'newBowler', bowlerId })}
+                />
+              )}
+            </>
+          )}
+          {inn && open === 'retire' && (
+            <RetireSheet
+              match={match}
+              inn={inn}
+              onClose={close}
+              onConfirm={(batterId, kind) => send({ type: 'retire', batterId, kind })}
+            />
+          )}
+          {open === 'review' && inn && state.reviewsLeft && (
+            <ReviewSheet
+              match={match}
+              inn={inn}
+              reviewsLeft={state.reviewsLeft}
+              onClose={close}
+              onConfirm={(team, successful) => send({ type: 'review', team, successful })}
+            />
+          )}
+          <MoreSheet
+            open={open === 'more'}
+            enabled={moreEnabled}
+            onClose={close}
+            onAction={(a) => {
+              close();
+              onMore(a);
+            }}
+          />
         </>
       )}
-      {inn && open === 'retire' && (
-        <RetireSheet
-          match={match}
-          inn={inn}
-          onClose={close}
-          onConfirm={(batterId, kind) => send({ type: 'retire', batterId, kind })}
-        />
-      )}
-      {open === 'review' && inn && state.reviewsLeft && (
-        <ReviewSheet
-          match={match}
-          inn={inn}
-          reviewsLeft={state.reviewsLeft}
-          onClose={close}
-          onConfirm={(team, successful) => send({ type: 'review', team, successful })}
-        />
-      )}
-      <MoreSheet
-        open={open === 'more'}
-        enabled={moreEnabled}
-        onClose={close}
-        onAction={(a) => {
-          close();
-          onMore(a);
-        }}
-      />
     </div>
   );
 }

@@ -45,8 +45,9 @@ export function InningsBreakCard({
 }: {
   match: Match;
   state: MatchState;
-  onStart: () => void;
-  onUndo: () => void;
+  /** Omitted for viewers, who only follow the match. */
+  onStart?: () => void;
+  onUndo?: () => void;
 }) {
   const { t } = useTranslation();
   const f = useFormat();
@@ -62,12 +63,16 @@ export function InningsBreakCard({
         {match.teams[first.bowlingTeam].name} — {t('scoring.target')}{' '}
         <span className="font-bold">{f.num(first.runs + 1)}</span>
       </p>
-      <button type="button" className={`${btn.primary} text-lg`} onClick={onStart}>
-        {first.superOver ? t('scoring.startSuperOverChase') : t('scoring.startSecondInnings')}
-      </button>
-      <button type="button" className={btn.secondary} onClick={onUndo}>
-        ↶ {t('common.undoLast')}
-      </button>
+      {onStart && (
+        <button type="button" className={`${btn.primary} text-lg`} onClick={onStart}>
+          {first.superOver ? t('scoring.startSuperOverChase') : t('scoring.startSecondInnings')}
+        </button>
+      )}
+      {onUndo && (
+        <button type="button" className={btn.secondary} onClick={onUndo}>
+          ↶ {t('common.undoLast')}
+        </button>
+      )}
     </div>
   );
 }
@@ -79,7 +84,8 @@ export function ResultCard({
 }: {
   match: Match;
   state: MatchState;
-  onUndo: () => void;
+  /** Omitted for viewers, who only follow the match. */
+  onUndo?: () => void;
 }) {
   const { t } = useTranslation();
   const f = useFormat();
@@ -94,9 +100,11 @@ export function ResultCard({
         </p>
       )}
       <InningsLines match={match} state={state} />
-      <button type="button" className={btn.secondary} onClick={onUndo}>
-        ↶ {t('common.undoLast')}
-      </button>
+      {onUndo && (
+        <button type="button" className={btn.secondary} onClick={onUndo}>
+          ↶ {t('common.undoLast')}
+        </button>
+      )}
     </div>
   );
 }
@@ -110,8 +118,9 @@ export function SuperOverBreakCard({
 }: {
   match: Match;
   state: MatchState;
-  onStart: () => void;
-  onUndo: () => void;
+  /** Omitted for viewers, who only follow the match. */
+  onStart?: () => void;
+  onUndo?: () => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -121,12 +130,16 @@ export function SuperOverBreakCard({
       </h2>
       <p className="text-center text-slate-600 dark:text-slate-300">{t('scoring.superOverNext')}</p>
       <InningsLines match={match} state={state} />
-      <button type="button" className={`${btn.primary} text-lg`} onClick={onStart}>
-        {t('scoring.startSuperOver')}
-      </button>
-      <button type="button" className={btn.secondary} onClick={onUndo}>
-        ↶ {t('common.undoLast')}
-      </button>
+      {onStart && (
+        <button type="button" className={`${btn.primary} text-lg`} onClick={onStart}>
+          {t('scoring.startSuperOver')}
+        </button>
+      )}
+      {onUndo && (
+        <button type="button" className={btn.secondary} onClick={onUndo}>
+          ↶ {t('common.undoLast')}
+        </button>
+      )}
     </div>
   );
 }

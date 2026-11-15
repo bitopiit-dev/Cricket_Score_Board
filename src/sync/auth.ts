@@ -125,6 +125,9 @@ export function useCanScore(): boolean {
   return !supabase || roleCanScore(role);
 }
 
+/** The same check outside React (the match store). */
+export const mayScore = () => !supabase || canScore();
+
 export async function signIn(email: string, password: string): Promise<void> {
   if (!supabase) throw new Error('Not connected');
   const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });

@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { matchRepository } from '../db/repository';
 import { addEvent, deriveMatchState, undoLastEvent, type ValidationError } from '../engine/scoring';
 import type { Match, MatchEventInput, MatchState } from '../engine/types';
-import { canScore } from '../sync/auth';
+import { canScore, mayScore } from '../sync/auth';
 import { MATCHES_CHANGED } from '../sync/matchSync';
 import { newId } from '../utils/id';
 
@@ -47,7 +47,8 @@ export const useMatchStore = create<MatchStore>((set, get) => ({
 
   dispatch(input) {
     const { match } = get();
-    if (!match) return false;
+    // Viewers only follow the match; the scorer's phone owns it.
+    if (!match || !mayScore()) return false;
     const res = addEvent(match, input, { id: newId(), at: Date.now() });
     if ('error' in res) {
       set({ lastError: res.error });
@@ -60,7 +61,7 @@ export const useMatchStore = create<MatchStore>((set, get) => ({
 
   undo() {
     const { match } = get();
-    if (!match || match.events.length === 0) return;
+    if (!match || match.events.length === 0 || !mayScore()) return;
     const next = undoLastEvent(match, Date.now());
     set({ match: next, state: deriveMatchState(next), lastError: null });
     persist(next);

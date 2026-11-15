@@ -155,7 +155,9 @@
     "reviewResult": "Review result",
     "reviewSuccessful": "Successful (review kept)",
     "reviewFailed": "Unsuccessful (review lost)",
-    "reviewNoneLeft": "No review left"
+    "reviewNoneLeft": "No review left",
+    "waitingForScorer": "Waiting for the scorer…",
+    "notStartedYet": "The match hasn't started yet."
   },
   "endReason": {
     "allOut": "All out",

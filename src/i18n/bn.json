@@ -154,7 +154,9 @@
     "reviewResult": "রিভিউয়ের ফল",
     "reviewSuccessful": "সফল (রিভিউ থেকে যাবে)",
     "reviewFailed": "ব্যর্থ (রিভিউ শেষ)",
-    "reviewNoneLeft": "রিভিউ নেই"
+    "reviewNoneLeft": "রিভিউ নেই",
+    "waitingForScorer": "স্কোরারের অপেক্ষায়…",
+    "notStartedYet": "ম্যাচ এখনো শুরু হয়নি।"
   },
   "endReason": {
     "allOut": "অলআউট",
