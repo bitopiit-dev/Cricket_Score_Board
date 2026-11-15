@@ -420,3 +420,42 @@ describe('Power Player squad', () => {
     }
   });
 });
+
+describe('Power House X1 squad', () => {
+  const phx = findTeam('power-house-x1')!;
+
+  it('has the 14 players in the given order', () => {
+    expect(phx.players.map((p) => p.name)).toEqual([
+      'Gilbird',
+      'Arif',
+      'Foysal',
+      'Jahirul',
+      'Joynal',
+      'Sami',
+      'Tantu',
+      'Habib Ulla',
+      'Khairul',
+      'Supian',
+      'Dhirendra',
+      'Helal',
+      'Sourov',
+      'Alauddin',
+    ]);
+    expect(phx.players.some((p) => p.name === 'Rohim')).toBe(false);
+  });
+
+  it('Gilbird is captain, Arif vice-captain; Helal, Sourov and Alauddin are the extras', () => {
+    expect(phx.players.filter((p) => p.captain).map((p) => p.name)).toEqual(['Gilbird']);
+    expect(phx.players.filter((p) => p.viceCaptain).map((p) => p.name)).toEqual(['Arif']);
+    expect(phx.players.filter((p) => p.substitute).map((p) => p.name)).toEqual([
+      'Helal',
+      'Sourov',
+      'Alauddin',
+    ]);
+    expect(phx.players[7]).toMatchObject({
+      id: 'habib-ulla',
+      photo: 'players/power-house-x1/habib-ulla.jpg',
+    });
+    expect(squadWarnings(phx, SQUAD_LIMITS)).toEqual([]);
+  });
+});
