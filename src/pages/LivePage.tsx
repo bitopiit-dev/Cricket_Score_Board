@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { btn } from '../components/common/controls';
 import { PageTitle } from '../components/layout/AppShell';
 import { NextMatchCountdown } from '../components/live/NextMatchCountdown';
+import { NoticeBanner } from '../components/layout/NoticeBanner';
 import { MatchHero } from '../components/match/MatchCenter';
 import { BallChip } from '../components/scoring/ThisOver';
 import { fixtureById } from '../data/fixtures';
@@ -54,6 +55,7 @@ export default function LivePage() {
           </Link>
         )}
       </div>
+      <NoticeBanner />
       {/* A match being played comes first, big; the countdown waits below it */}
       {live.map((row) => (
         <LiveMatchCard key={row.m.id} {...row} />

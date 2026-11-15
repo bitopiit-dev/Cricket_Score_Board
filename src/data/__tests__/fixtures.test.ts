@@ -128,22 +128,28 @@ describe('fixture data', () => {
     }
   });
 
-  it('starts on Monday 16 November', () => {
-    expect(FIXTURES[0].date).toBe('2026-11-16');
-    expect(new Date('2026-11-16T12:00:00Z').getUTCDay()).toBe(1);
+  it('starts on Wednesday 18 November (opening moved from the 16th)', () => {
+    expect(FIXTURES[0].date).toBe('2026-11-18');
+    expect(new Date('2026-11-18T12:00:00Z').getUTCDay()).toBe(3);
   });
 });
 
 describe('tournament days', () => {
-  it('runs from 16 November to 19 December, and every day without a match is a rest day', () => {
+  it('runs from 18 November to 21 December, and every day without a match is a rest day', () => {
     const days = tournamentDays();
-    expect(days[0]).toBe('2026-11-16');
-    expect(days[days.length - 1]).toBe('2026-12-19');
+    expect(days[0]).toBe('2026-11-18');
+    expect(days[days.length - 1]).toBe('2026-12-21');
     const matchDays = new Set(FIXTURES.map((f) => f.date));
     const rest = days.filter((d) => !matchDays.has(d));
     expect(rest.every(isRestDay)).toBe(true);
     expect(rest).toEqual(
-      expect.arrayContaining(['2026-11-20', '2026-11-30', '2026-12-01', '2026-12-16']),
+      expect.arrayContaining([
+        '2026-11-20',
+        '2026-11-27',
+        '2026-11-30',
+        '2026-12-01',
+        '2026-12-16',
+      ]),
     );
   });
 });

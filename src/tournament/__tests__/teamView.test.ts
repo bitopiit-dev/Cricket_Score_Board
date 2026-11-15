@@ -77,27 +77,27 @@ describe('team view on the Fixtures page', () => {
 
   it('counts a win for the winner and a loss for the other side', () => {
     const ts = tournamentState([play(1, 6, 3)]);
-    expect(teamRecord(MCD, ts, '2026-11-16')).toMatchObject({ played: 1, won: 1, lost: 0 });
-    expect(teamRecord(QFF, ts, '2026-11-16')).toMatchObject({ played: 1, won: 0, lost: 1 });
+    expect(teamRecord(MCD, ts, '2026-11-18')).toMatchObject({ played: 1, won: 1, lost: 0 });
+    expect(teamRecord(QFF, ts, '2026-11-18')).toMatchObject({ played: 1, won: 0, lost: 1 });
   });
 
   it('a win batting second counts for the chasing side', () => {
     const ts = tournamentState([play(1, 3, 6)]);
-    expect(teamRecord(QFF, ts, '2026-11-16')).toMatchObject({ won: 1, lost: 0 });
-    expect(teamRecord(MCD, ts, '2026-11-16')).toMatchObject({ won: 0, lost: 1 });
+    expect(teamRecord(QFF, ts, '2026-11-18')).toMatchObject({ won: 1, lost: 0 });
+    expect(teamRecord(MCD, ts, '2026-11-18')).toMatchObject({ won: 0, lost: 1 });
   });
 
   it('a tie counts as tied / no result for both sides', () => {
     const ts = tournamentState([play(1, 3, 3)]);
     for (const id of [MCD, QFF]) {
-      expect(teamRecord(id, ts, '2026-11-16')).toMatchObject({ played: 1, tiedNr: 1, won: 0 });
+      expect(teamRecord(id, ts, '2026-11-18')).toMatchObject({ played: 1, tiedNr: 1, won: 0 });
     }
   });
 
   it('adds up over several matches and moves the next match on', () => {
     // Match 1: MCD beat QFF. Match 5: Power (Printing & Washing) chase down MCD.
     const ts = tournamentState([play(1, 6, 3), play(5, 3, 6)]);
-    const r = teamRecord(MCD, ts, '2026-11-20');
+    const r = teamRecord(MCD, ts, '2026-11-22');
     expect(r).toMatchObject({ played: 2, won: 1, lost: 1, tiedNr: 0 });
     expect(r.next?.no).toBe(11);
   });
@@ -106,13 +106,13 @@ describe('team view on the Fixtures page', () => {
     const live = makeMatch(11, { overs: 1 });
     live.fixtureId = 'f1';
     const ts = tournamentState([live]);
-    const r = teamRecord(MCD, ts, '2026-11-16');
+    const r = teamRecord(MCD, ts, '2026-11-18');
     expect(r.played).toBe(0);
     expect(r.next?.no).toBe(1);
   });
 
   it('an unplayed match from an earlier day is not shown as next', () => {
-    const r = teamRecord(MCD, tournamentState([]), '2026-11-20');
+    const r = teamRecord(MCD, tournamentState([]), '2026-11-22');
     expect(r.next?.no).toBe(11);
   });
 

@@ -8,6 +8,7 @@ import { runsNeeded, ballsRemaining } from '../engine/stats';
 import type { BallSummary, InningsState, Match, MatchState } from '../engine/types';
 import { TeamAvatar } from '../components/common/TeamAvatar';
 import { InstallHint } from '../components/layout/InstallHint';
+import { NoticeBanner } from '../components/layout/NoticeBanner';
 import { NextMatchCountdown } from '../components/live/NextMatchCountdown';
 import { useFormat } from '../hooks/useFormat';
 import { useNow, useTournament } from '../hooks/useTournament';
@@ -53,6 +54,7 @@ export default function HomePage() {
   return (
     <main className="mx-auto flex w-full max-w-lg flex-col gap-4 p-4 md:max-w-2xl">
       <h1 className="sr-only">{t('homePage.title')}</h1>
+      <NoticeBanner />
       <Hero hero={hero} now={now} />
       <InstallHint />
       <Progress ts={tour.ts} />

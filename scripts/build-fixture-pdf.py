@@ -18,9 +18,22 @@ from reportlab.platypus import (BaseDocTemplate, Frame, Image as RLImage, PageTe
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 P = lambda *a: os.path.join(ROOT, *a)
 FONTS = r'C:\Windows\Fonts'
-pdfmetrics.registerFont(TTFont('R', os.path.join(FONTS, 'arial.ttf')))
-pdfmetrics.registerFont(TTFont('B', os.path.join(FONTS, 'arialbd.ttf')))
-pdfmetrics.registerFont(TTFont('C', os.path.join(FONTS, 'ARIALNB.TTF')))
+if os.path.exists(os.path.join(FONTS, 'arial.ttf')):
+    pdfmetrics.registerFont(TTFont('R', os.path.join(FONTS, 'arial.ttf')))
+    pdfmetrics.registerFont(TTFont('B', os.path.join(FONTS, 'arialbd.ttf')))
+    pdfmetrics.registerFont(TTFont('C', os.path.join(FONTS, 'ARIALNB.TTF')))
+else:
+    # Not on Windows (e.g. Linux / CI): Liberation Sans has Arial's metrics, and the
+    # condensed headings use the app's own Barlow Condensed (from node_modules).
+    LIB = '/usr/share/fonts/truetype/liberation'
+    pdfmetrics.registerFont(TTFont('R', os.path.join(LIB, 'LiberationSans-Regular.ttf')))
+    pdfmetrics.registerFont(TTFont('B', os.path.join(LIB, 'LiberationSans-Bold.ttf')))
+    from fontTools.ttLib import TTFont as FTFont
+    woff = os.path.join(ROOT, 'node_modules', '@fontsource', 'barlow-condensed', 'files',
+                        'barlow-condensed-latin-700-normal.woff')
+    ttf = os.path.join(tempfile.mkdtemp(), 'barlow-condensed-700.ttf')
+    f = FTFont(woff); f.flavor = None; f.save(ttf)
+    pdfmetrics.registerFont(TTFont('C', ttf))
 
 NAVY = colors.HexColor('#0a0d1f'); RED = colors.HexColor('#e10a14'); GREEN = colors.HexColor('#00914a')
 GOLD = colors.HexColor('#f5e400'); INK = colors.HexColor('#0f172a'); SUB = colors.HexColor('#5b6478')
@@ -70,7 +83,8 @@ def header(c, doc):
     c.restoreState()
 
 OUT = P('src', 'assets', 'bpl-2027-fixture.pdf')
-UPDATED = datetime.date.today()
+# BPL_UPDATED=YYYY-MM-DD overrides the date (e.g. a build machine with the wrong clock)
+UPDATED = datetime.date.fromisoformat(os.environ['BPL_UPDATED']) if os.environ.get('BPL_UPDATED') else datetime.date.today()
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 doc = BaseDocTemplate(OUT, pagesize=A4, leftMargin=12 * mm, rightMargin=12 * mm, topMargin=42 * mm,
                       bottomMargin=16 * mm, title='BPL-2027 Official Fixture',

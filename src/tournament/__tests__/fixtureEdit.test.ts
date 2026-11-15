@@ -71,7 +71,7 @@ describe('editing the list', () => {
     expect(f2.teamB).toEqual(FIXTURES[1].teamB);
     expect(next.filter((f) => f.id !== 'f2')).toEqual(FIXTURES.filter((f) => f.id !== 'f2'));
     // The original list is not modified
-    expect(FIXTURES[1].date).toBe('2026-11-17');
+    expect(FIXTURES[1].date).toBe('2026-11-19');
   });
 
   it('adds a match with a new id and the next number, at the end or after another match', () => {
@@ -140,8 +140,8 @@ describe('checks before saving', () => {
 
   it('flags the same team on both sides and a team playing twice on one day', () => {
     expect(validateFixture({ ...f1, teamB: f1.teamA }, FIXTURES)).toContain('sameTeam');
-    // Match 2 is on 17 Nov; moving it to 16 Nov with MCD Super Stars clashes with match 1
-    const f2 = { ...FIXTURES[1], date: '2026-11-16', teamA: team('mcd-super-stars') };
+    // Match 2 is on 19 Nov; moving it to 18 Nov with MCD Super Stars clashes with match 1
+    const f2 = { ...FIXTURES[1], date: '2026-11-18', teamA: team('mcd-super-stars') };
     expect(validateFixture(f2, FIXTURES)).toContain('teamTwiceOnDay');
   });
 

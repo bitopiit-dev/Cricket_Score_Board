@@ -54,7 +54,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f1',
     no: 1,
-    date: '2026-11-16',
+    date: '2026-11-18',
     time: '13:00',
     stage: 'groupA',
     teamA: team('mcd-super-stars'),
@@ -63,7 +63,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f2',
     no: 2,
-    date: '2026-11-17',
+    date: '2026-11-19',
     time: '12:00',
     stage: 'groupB',
     teamA: team('engineer-warriors'),
@@ -72,7 +72,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f3',
     no: 3,
-    date: '2026-11-17',
+    date: '2026-11-19',
     time: '13:00',
     stage: 'groupA',
     teamA: team('quality-flying-fighter'),
@@ -81,7 +81,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f4',
     no: 4,
-    date: '2026-11-18',
+    date: '2026-11-21',
     time: '12:00',
     stage: 'groupB',
     teamA: team('red-bulls-warriors'),
@@ -90,7 +90,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f5',
     no: 5,
-    date: '2026-11-18',
+    date: '2026-11-21',
     time: '13:00',
     stage: 'groupA',
     teamA: team('mcd-super-stars'),
@@ -99,7 +99,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f6',
     no: 6,
-    date: '2026-11-19',
+    date: '2026-11-22',
     time: '12:00',
     stage: 'groupB',
     teamA: team('power-player'),
@@ -108,7 +108,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f7',
     no: 7,
-    date: '2026-11-19',
+    date: '2026-11-22',
     time: '13:00',
     stage: 'groupA',
     teamA: team('quality-flying-fighter'),
@@ -117,7 +117,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f8',
     no: 8,
-    date: '2026-11-21',
+    date: '2026-11-23',
     time: '12:00',
     stage: 'groupB',
     teamA: team('red-bulls-warriors'),
@@ -126,7 +126,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f9',
     no: 9,
-    date: '2026-11-21',
+    date: '2026-11-23',
     time: '13:00',
     stage: 'groupA',
     teamA: team('rainbow-cutting'),
@@ -135,7 +135,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f10',
     no: 10,
-    date: '2026-11-22',
+    date: '2026-11-24',
     time: '12:00',
     stage: 'groupB',
     teamA: team('sky-warrior'),
@@ -144,7 +144,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f11',
     no: 11,
-    date: '2026-11-22',
+    date: '2026-11-24',
     time: '13:00',
     stage: 'groupA',
     teamA: team('mcd-super-stars'),
@@ -153,7 +153,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f12',
     no: 12,
-    date: '2026-11-23',
+    date: '2026-11-25',
     time: '12:00',
     stage: 'groupB',
     teamA: team('power-player'),
@@ -162,7 +162,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f13',
     no: 13,
-    date: '2026-11-23',
+    date: '2026-11-25',
     time: '13:00',
     stage: 'groupA',
     teamA: team('finishing-victorians'),
@@ -171,7 +171,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f14',
     no: 14,
-    date: '2026-11-24',
+    date: '2026-11-26',
     time: '12:00',
     stage: 'groupB',
     teamA: team('engineer-warriors'),
@@ -180,7 +180,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f15',
     no: 15,
-    date: '2026-11-24',
+    date: '2026-11-26',
     time: '13:00',
     stage: 'groupA',
     teamA: team('finishing-victorians'),
@@ -189,7 +189,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f16',
     no: 16,
-    date: '2026-11-25',
+    date: '2026-11-28',
     time: '12:00',
     stage: 'groupB',
     teamA: team('power-player'),
@@ -198,7 +198,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f17',
     no: 17,
-    date: '2026-11-25',
+    date: '2026-11-28',
     time: '13:00',
     stage: 'groupA',
     teamA: team('rainbow-cutting'),
@@ -207,7 +207,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f18',
     no: 18,
-    date: '2026-11-26',
+    date: '2026-11-29',
     time: '12:00',
     stage: 'groupB',
     teamA: team('sky-warrior'),
@@ -216,7 +216,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f19',
     no: 19,
-    date: '2026-11-26',
+    date: '2026-11-29',
     time: '13:00',
     stage: 'groupA',
     teamA: team('mcd-super-stars'),
@@ -225,7 +225,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f20',
     no: 20,
-    date: '2026-11-28',
+    date: '2026-12-02',
     time: '12:00',
     stage: 'groupB',
     teamA: team('power-player'),
@@ -234,7 +234,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f21',
     no: 21,
-    date: '2026-11-28',
+    date: '2026-12-02',
     time: '13:00',
     stage: 'groupA',
     teamA: team('power-printing-washing'),
@@ -243,7 +243,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f22',
     no: 22,
-    date: '2026-11-29',
+    date: '2026-12-03',
     time: '12:00',
     stage: 'groupB',
     teamA: team('ddc'),
@@ -252,7 +252,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f23',
     no: 23,
-    date: '2026-11-29',
+    date: '2026-12-03',
     time: '13:00',
     stage: 'groupA',
     teamA: team('rainbow-cutting'),
@@ -261,7 +261,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f24',
     no: 24,
-    date: '2026-12-02',
+    date: '2026-12-05',
     time: '12:00',
     stage: 'groupB',
     teamA: team('sky-warrior'),
@@ -270,7 +270,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f25',
     no: 25,
-    date: '2026-12-02',
+    date: '2026-12-05',
     time: '13:00',
     stage: 'groupA',
     teamA: team('finishing-victorians'),
@@ -279,7 +279,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f26',
     no: 26,
-    date: '2026-12-03',
+    date: '2026-12-06',
     time: '12:00',
     stage: 'groupB',
     teamA: team('engineer-warriors'),
@@ -288,7 +288,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f27',
     no: 27,
-    date: '2026-12-03',
+    date: '2026-12-06',
     time: '13:00',
     stage: 'groupA',
     teamA: team('rainbow-cutting'),
@@ -297,7 +297,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f28',
     no: 28,
-    date: '2026-12-05',
+    date: '2026-12-07',
     time: '12:00',
     stage: 'groupB',
     teamA: team('sky-warrior'),
@@ -306,7 +306,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f29',
     no: 29,
-    date: '2026-12-05',
+    date: '2026-12-07',
     time: '13:00',
     stage: 'groupA',
     teamA: team('power-printing-washing'),
@@ -315,7 +315,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f30',
     no: 30,
-    date: '2026-12-06',
+    date: '2026-12-08',
     time: '12:00',
     stage: 'groupB',
     teamA: team('ddc'),
@@ -324,7 +324,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f31',
     no: 31,
-    date: '2026-12-07',
+    date: '2026-12-09',
     time: '12:00',
     stage: 'superSix',
     teamA: groupPos('A', 1),
@@ -333,7 +333,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f32',
     no: 32,
-    date: '2026-12-07',
+    date: '2026-12-09',
     time: '13:00',
     stage: 'superSix',
     teamA: groupPos('B', 2),
@@ -342,7 +342,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f33',
     no: 33,
-    date: '2026-12-08',
+    date: '2026-12-10',
     time: '12:00',
     stage: 'superSix',
     teamA: groupPos('A', 3),
@@ -351,7 +351,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f34',
     no: 34,
-    date: '2026-12-08',
+    date: '2026-12-10',
     time: '13:00',
     stage: 'superSix',
     teamA: groupPos('B', 2),
@@ -360,7 +360,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f35',
     no: 35,
-    date: '2026-12-09',
+    date: '2026-12-12',
     time: '12:00',
     stage: 'superSix',
     teamA: groupPos('B', 3),
@@ -369,7 +369,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f36',
     no: 36,
-    date: '2026-12-09',
+    date: '2026-12-12',
     time: '13:00',
     stage: 'superSix',
     teamA: groupPos('A', 3),
@@ -378,7 +378,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f37',
     no: 37,
-    date: '2026-12-10',
+    date: '2026-12-13',
     time: '12:00',
     stage: 'superSix',
     teamA: groupPos('A', 1),
@@ -387,7 +387,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f38',
     no: 38,
-    date: '2026-12-10',
+    date: '2026-12-13',
     time: '13:00',
     stage: 'superSix',
     teamA: groupPos('A', 3),
@@ -396,7 +396,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f39',
     no: 39,
-    date: '2026-12-12',
+    date: '2026-12-14',
     time: '12:00',
     stage: 'superSix',
     teamA: groupPos('B', 3),
@@ -405,7 +405,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f40',
     no: 40,
-    date: '2026-12-12',
+    date: '2026-12-14',
     time: '13:00',
     stage: 'superSix',
     teamA: groupPos('A', 3),
@@ -414,7 +414,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f41',
     no: 41,
-    date: '2026-12-13',
+    date: '2026-12-15',
     time: '12:00',
     stage: 'superSix',
     teamA: groupPos('B', 1),
@@ -423,7 +423,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f42',
     no: 42,
-    date: '2026-12-13',
+    date: '2026-12-15',
     time: '13:00',
     stage: 'superSix',
     teamA: groupPos('B', 3),
@@ -432,7 +432,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f43',
     no: 43,
-    date: '2026-12-14',
+    date: '2026-12-17',
     time: '12:00',
     stage: 'superSix',
     teamA: groupPos('A', 1),
@@ -441,7 +441,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f44',
     no: 44,
-    date: '2026-12-14',
+    date: '2026-12-17',
     time: '13:00',
     stage: 'superSix',
     teamA: groupPos('B', 3),
@@ -450,7 +450,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f45',
     no: 45,
-    date: '2026-12-15',
+    date: '2026-12-19',
     time: '12:00',
     stage: 'superSix',
     teamA: groupPos('B', 1),
@@ -459,7 +459,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f46',
     no: 46,
-    date: '2026-12-17',
+    date: '2026-12-20',
     time: '12:00',
     stage: 'semi1',
     teamA: superSixPos(1),
@@ -468,7 +468,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f47',
     no: 47,
-    date: '2026-12-17',
+    date: '2026-12-20',
     time: '13:00',
     stage: 'semi2',
     teamA: superSixPos(2),
@@ -477,7 +477,7 @@ export const FIXTURES: readonly Fixture[] = [
   {
     id: 'f48',
     no: 48,
-    date: '2026-12-19',
+    date: '2026-12-21',
     time: '12:00',
     stage: 'final',
     teamA: winnerOf('semi1'),
