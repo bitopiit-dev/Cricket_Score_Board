@@ -622,3 +622,16 @@ describe('player photo files', () => {
     }
   });
 });
+
+describe('team logo files', () => {
+  it('every logo path in teams.ts points to a file in public/', () => {
+    const files = new Set(
+      Object.keys(import.meta.glob('/public/icons/teams/*.{png,jpg,jpeg,webp,svg}')).map((f) =>
+        f.replace('/public/', ''),
+      ),
+    );
+    for (const t of TOURNAMENT_TEAMS) {
+      if (t.logo) expect(files.has(t.logo), `${t.name}: ${t.logo}`).toBe(true);
+    }
+  });
+});

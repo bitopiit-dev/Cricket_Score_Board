@@ -79,6 +79,7 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
     short: 'FV',
     group: 'A',
     color: '#7c3aed',
+    logo: 'icons/teams/finishing-victorians.png',
     players: [],
   },
   {
@@ -87,6 +88,7 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
     short: 'PHX',
     group: 'A',
     color: '#ea580c',
+    logo: 'icons/teams/power-house-x1.jpg',
     // A 15th player (Rohim) was left out to keep the squad at 14.
     players: [
       squad('power-house-x1', 'Gilbird', { captain: true }),
@@ -111,6 +113,7 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
     short: 'MCD',
     group: 'A',
     color: '#ca8a04',
+    logo: 'icons/teams/mcd-super-stars.png',
     players: [
       squad('mcd-super-stars', 'Monir Hossain', { captain: true, role: 'bowler' }),
       squad('mcd-super-stars', 'Shahanur'),
@@ -160,6 +163,7 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
     short: 'QFF',
     group: 'A',
     color: '#2563eb',
+    logo: 'icons/teams/quality-flying-fighter.jpg',
     players: [
       squad('quality-flying-fighter', 'Ajmir Hossen', { shortName: 'Rashed', captain: true }),
       squad('quality-flying-fighter', 'Asad Ahmed'),
