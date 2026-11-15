@@ -4,6 +4,7 @@ import { Header } from '../common/Header';
 import { Icon } from '../common/icons';
 import { TeamAvatar } from '../common/TeamAvatar';
 import { CreasePanel } from '../scoring/CreasePanel';
+import { MatchCharts } from './MatchCharts';
 import { MomentBurst } from './MomentBurst';
 import { BallChip, ThisOver } from '../scoring/ThisOver';
 import { findTeam } from '../../data/teams';
@@ -21,7 +22,7 @@ import type { BatterStats, InningsState, Match, MatchState, TeamIndex } from '..
 import { useFormat } from '../../hooks/useFormat';
 import { inningsLabel, playerName, resultText } from '../../utils/matchText';
 
-type Tab = 'summary' | 'scorecard' | 'overs';
+type Tab = 'summary' | 'scorecard' | 'overs' | 'charts';
 
 /**
  * What people who follow a match see (scorers get the scoring screen):
@@ -41,7 +42,7 @@ export function MatchCenter({
 }) {
   const { t } = useTranslation();
   const [tab, setTab] = useState<Tab>('summary');
-  const tabs: Tab[] = ['summary', 'scorecard', 'overs'];
+  const tabs: Tab[] = ['summary', 'scorecard', 'overs', 'charts'];
 
   return (
     <div className="flex min-h-dvh flex-col">
@@ -67,7 +68,7 @@ export function MatchCenter({
         aria-label={t('matchCenter.sections')}
         className="sticky top-[calc(3rem+max(0.5rem,env(safe-area-inset-top)))] z-30 border-b border-slate-200 bg-slate-100/95 backdrop-blur dark:border-slate-800 dark:bg-slate-950/95"
       >
-        <div className="mx-auto grid max-w-lg grid-cols-3">
+        <div className="mx-auto grid max-w-lg grid-cols-4">
           {tabs.map((id) => (
             <button
               key={id}
@@ -95,6 +96,7 @@ export function MatchCenter({
         {tab === 'summary' && <Summary match={match} state={state} />}
         {tab === 'scorecard' && <Scorecard match={match} state={state} />}
         {tab === 'overs' && <Overs match={match} />}
+        {tab === 'charts' && <MatchCharts match={match} state={state} />}
       </main>
     </div>
   );

@@ -406,6 +406,7 @@
     "summary": "Summary",
     "scorecard": "Scorecard",
     "overs": "Overs",
+    "charts": "Charts",
     "inPlay": "In progress",
     "yetToBat": "Yet to bat",
     "oversShort": "{{overs}} ov",
@@ -446,5 +447,11 @@
   },
   "moment": {
     "wicket": "WICKET!"
+  },
+  "charts": {
+    "manhattan": "Runs per over",
+    "manhattanHint": "Each bar is one over; red dots are wickets.",
+    "worm": "Run race",
+    "wormHint": "Total after every ball; circles are wickets."
   }
 }
