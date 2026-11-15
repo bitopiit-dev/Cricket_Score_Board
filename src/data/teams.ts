@@ -135,6 +135,7 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
     short: 'PPW',
     group: 'A',
     color: '#16a34a',
+    logo: 'icons/teams/power-printing-washing.jpg',
     // Captain not named yet: the team page shows a warning until one is set.
     players: [
       squad('power-printing-washing', 'Shubroto'),
@@ -208,6 +209,7 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
     short: 'EW',
     group: 'B',
     color: '#0d9488',
+    logo: 'icons/teams/engineer-warriors.png',
     players: [
       squad('engineer-warriors', 'Farhad', { captain: true }),
       squad('engineer-warriors', 'Akhtar', { role: 'bowler' }),
@@ -280,6 +282,7 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
     short: 'DDC',
     group: 'B',
     color: '#475569',
+    logo: 'icons/teams/ddc.png',
     players: [
       squad('ddc', 'A. Karim', { captain: true }),
       squad('ddc', 'Ratul'),
@@ -328,6 +331,7 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
     short: 'SW',
     group: 'B',
     color: '#0284c7',
+    logo: 'icons/teams/sky-warrior.png',
     players: [
       squad('sky-warrior', 'Md. Mominul Islam', { captain: true }),
       squad('sky-warrior', 'Md. Ashraful Hoque'),
