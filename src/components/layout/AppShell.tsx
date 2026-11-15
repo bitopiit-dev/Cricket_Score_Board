@@ -15,7 +15,7 @@ import { DataUpdatedBar } from './DataUpdatedBar';
 export function AppShell() {
   const { t } = useTranslation();
   return (
-    <div className="min-h-dvh pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:pb-8">
+    <div className="flex min-h-dvh flex-col pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:pb-8">
       <header className="bg-night-950 text-white shadow-lg">
         <div className="mx-auto flex max-w-5xl flex-col gap-3 px-3 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 md:px-4">
           <div className="flex items-center gap-2 sm:gap-3">
@@ -54,6 +54,10 @@ export function AppShell() {
         </div>
       </header>
       <Outlet />
+      {/* Credit line, bottom right; the page padding keeps it above the phone tab bar */}
+      <footer className="mx-auto mt-auto w-full max-w-5xl px-4 pt-6 pb-2 text-right text-xs font-bold text-slate-500 md:text-sm dark:text-slate-400">
+        Copyright Protected By K A Rahman
+      </footer>
       <DataUpdatedBar />
       <TabBar variant="bottom" />
     </div>
