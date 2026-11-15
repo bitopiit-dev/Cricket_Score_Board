@@ -192,7 +192,7 @@ export default function NewMatchPage() {
 
   return (
     <div className="min-h-dvh">
-      <Header title={t('newMatch.title')} backTo="/live" />
+      <Header title={t('newMatch.title')} backTo="/home" />
       <form onSubmit={onSubmit} className="mx-auto flex max-w-lg flex-col gap-4 p-4 pb-28">
         <Card className="ring-2 ring-sky-500/30">
           <SectionTitle>{t('newMatch.fixture')}</SectionTitle>

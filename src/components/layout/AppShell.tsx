@@ -25,12 +25,12 @@ export function AppShell() {
             >
               <img src={assetUrl(COMMITTEE_LOGO)} alt="" className="h-12 w-auto" />
             </Link>
-            <div className="min-w-0 flex-1">
+            <Link to="/home" aria-label={t('homePage.title')} className="min-w-0 flex-1">
               <div className="font-display text-3xl leading-none font-bold tracking-wide md:text-4xl">
                 {APP_TITLE}
               </div>
               <div className="truncate text-xs text-night-muted md:text-sm">{APP_SUBTITLE}</div>
-            </div>
+            </Link>
             <div className="flex shrink-0 flex-col items-end gap-1.5 sm:flex-row sm:items-center sm:gap-3">
               <span className="flex items-center gap-1.5 text-[11px] whitespace-nowrap text-night-muted sm:text-xs">
                 <span aria-hidden className="size-2 rounded-full bg-night-muted" />

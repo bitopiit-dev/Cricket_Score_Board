@@ -334,5 +334,28 @@
     "ord2": "২য়",
     "ord3": "৩য়",
     "ord4": "৪র্থ"
+  },
+  "homePage": {
+    "title": "হোম",
+    "live": "লাইভ",
+    "nextMatch": "পরের ম্যাচ",
+    "startsIn": "ম্যাচ শুরু হতে বাকি",
+    "days": "দিন",
+    "hours": "ঘণ্টা",
+    "minutes": "মিনিট",
+    "seconds": "সেকেন্ড",
+    "startingSoon": "শীঘ্রই শুরু হবে",
+    "result": "ফলাফল",
+    "friendly": "প্রীতি ম্যাচ",
+    "projected": "বর্তমান হারে {{n}}",
+    "over": "টুর্নামেন্ট শেষ",
+    "progress": "টুর্নামেন্টের অগ্রগতি",
+    "matchesPlayed": "{{done}}/{{total}} ম্যাচ হয়েছে",
+    "phase_groups": "গ্রুপ পর্ব",
+    "phase_superSix": "সুপার সিক্স",
+    "phase_semis": "সেমিফাইনাল",
+    "phase_final": "ফাইনাল",
+    "upcoming": "পরের ম্যাচগুলো",
+    "allFixtures": "পুরো সূচি"
   }
 }

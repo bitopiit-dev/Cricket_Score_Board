@@ -459,3 +459,13 @@ describe('Power House X1 squad', () => {
     expect(squadWarnings(phx, SQUAD_LIMITS)).toEqual([]);
   });
 });
+
+describe('short team codes', () => {
+  it('every team has a unique short code of 2-3 capitals', () => {
+    const codes = TOURNAMENT_TEAMS.map((t) => t.short);
+    expect(new Set(codes).size).toBe(12);
+    for (const c of codes) expect(c).toMatch(/^[A-Z]{2,3}$/);
+    expect(findTeam('finishing-victorians')!.short).toBe('FV');
+    expect(findTeam('rainbow-cutting')!.short).toBe('RC');
+  });
+});

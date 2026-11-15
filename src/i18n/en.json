@@ -339,5 +339,28 @@
     "ord2": "2nd",
     "ord3": "3rd",
     "ord4": "4th"
+  },
+  "homePage": {
+    "title": "Home",
+    "live": "Live",
+    "nextMatch": "Next match",
+    "startsIn": "Time until the match starts",
+    "days": "days",
+    "hours": "hours",
+    "minutes": "min",
+    "seconds": "sec",
+    "startingSoon": "Starting soon",
+    "result": "Result",
+    "friendly": "Friendly",
+    "projected": "Projected {{n}}",
+    "over": "Tournament over",
+    "progress": "Tournament progress",
+    "matchesPlayed": "{{done}}/{{total}} matches played",
+    "phase_groups": "Group stage",
+    "phase_superSix": "Super Six",
+    "phase_semis": "Semi-finals",
+    "phase_final": "Final",
+    "upcoming": "Coming up",
+    "allFixtures": "Full schedule"
   }
 }

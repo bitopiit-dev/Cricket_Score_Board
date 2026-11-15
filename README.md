@@ -51,14 +51,15 @@ service_role or secret key, here or anywhere else. Locally, put them in `.env.lo
 
 Every section has its own link, so the phone's back button returns to the previous tab:
 
-| Tab      | Link         | Contents                                                                              |
-| -------- | ------------ | ------------------------------------------------------------------------------------- |
-| Live     | `#/live`     | Matches on this device; tap one to open the scorer                                    |
-| Fixtures | `#/fixtures` | The 48 fixture matches by date, filter by stage, today first, results and live status |
-| Points   | `#/points`   | Group A, Group B and Super Six tables (points, NRR) from scored matches               |
-| Stats    | `#/stats`    | Coming soon (link to the current awards ranking)                                      |
-| Teams    | `#/teams`    | The 12 teams; tap one for its squad                                                   |
-| More     | `#/more`     | Rules, Committee, Media (coming soon), Awards                                         |
+| Tab      | Link         | Contents                                                                                                                                                            |
+| -------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Home     | `#/home`     | Opens first. Hero: next match countdown, live score while a match is on, then the result; tournament progress; next three matches. Reached from the BPL-2027 title. |
+| Live     | `#/live`     | Matches on this device; tap one to open the scorer                                                                                                                  |
+| Fixtures | `#/fixtures` | The 48 fixture matches by date, filter by stage, today first, results and live status                                                                               |
+| Points   | `#/points`   | Group A, Group B and Super Six tables (points, NRR) from scored matches                                                                                             |
+| Stats    | `#/stats`    | Coming soon (link to the current awards ranking)                                                                                                                    |
+| Teams    | `#/teams`    | The 12 teams; tap one for its squad                                                                                                                                 |
+| More     | `#/more`     | Rules, Committee, Media (coming soon), Awards                                                                                                                       |
 
 On phones the tabs sit at the bottom of the screen; on wider screens they sit in the header.
 

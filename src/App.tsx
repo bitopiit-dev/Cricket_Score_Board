@@ -3,6 +3,7 @@ import { AppShell } from './components/layout/AppShell';
 import { useApplyTheme } from './hooks/useApplyTheme';
 import AwardsPage from './pages/AwardsPage';
 import CommitteePage from './pages/CommitteePage';
+import HomePage from './pages/HomePage';
 import LivePage from './pages/LivePage';
 import MorePage from './pages/MorePage';
 import NewMatchPage from './pages/NewMatchPage';
@@ -24,6 +25,7 @@ export default function App() {
     <HashRouter>
       <Routes>
         <Route element={<AppShell />}>
+          <Route path="/home" element={<HomePage />} />
           <Route path="/live" element={<LivePage />} />
           <Route path="/fixtures" element={<FixturesPage />} />
           <Route path="/points" element={<PointsPage />} />
@@ -39,7 +41,7 @@ export default function App() {
         {/* Full-screen pages without the tab bar */}
         <Route path="/new" element={<NewMatchPage />} />
         <Route path="/match/:id" element={<ScoringPage />} />
-        <Route path="*" element={<Navigate to="/live" replace />} />
+        <Route path="*" element={<Navigate to="/home" replace />} />
       </Routes>
     </HashRouter>
   );

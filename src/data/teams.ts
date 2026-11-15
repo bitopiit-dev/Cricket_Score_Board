@@ -31,6 +31,8 @@ export interface TournamentTeam {
   /** Stable slug, used as the key in matches and later as the seed id. */
   id: string;
   name: string;
+  /** Two or three letter code for big headings, e.g. 'FV'. */
+  short: string;
   /** Group in the first round. */
   group: 'A' | 'B';
   /** Badge colour (shown until a logo exists). */
@@ -74,6 +76,7 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
   {
     id: 'finishing-victorians',
     name: 'Finishing Victorians',
+    short: 'FV',
     group: 'A',
     color: '#7c3aed',
     players: [],
@@ -81,6 +84,7 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
   {
     id: 'power-house-x1',
     name: 'Power House X1',
+    short: 'PHX',
     group: 'A',
     color: '#ea580c',
     // A 15th player (Rohim) was left out to keep the squad at 14.
@@ -104,6 +108,7 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
   {
     id: 'mcd-super-stars',
     name: 'MCD Super Stars',
+    short: 'MCD',
     group: 'A',
     color: '#ca8a04',
     players: [
@@ -127,6 +132,7 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
   {
     id: 'power-printing-washing',
     name: 'Power (Printing & Washing)',
+    short: 'PPW',
     group: 'A',
     color: '#16a34a',
     // Captain not named yet: the team page shows a warning until one is set.
@@ -150,6 +156,7 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
   {
     id: 'quality-flying-fighter',
     name: 'Quality Flying Fighter',
+    short: 'QFF',
     group: 'A',
     color: '#2563eb',
     players: [
@@ -169,11 +176,19 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
       squad('quality-flying-fighter', 'Imran', { substitute: true }),
     ],
   },
-  { id: 'rainbow-cutting', name: 'Rainbow Cutting', group: 'A', color: '#db2777', players: [] },
+  {
+    id: 'rainbow-cutting',
+    name: 'Rainbow Cutting',
+    short: 'RC',
+    group: 'A',
+    color: '#db2777',
+    players: [],
+  },
   // Group B
   {
     id: 'engineer-warriors',
     name: 'Engineer Warriors',
+    short: 'EW',
     group: 'B',
     color: '#0d9488',
     players: [
@@ -196,6 +211,7 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
   {
     id: 'hr-vikings',
     name: 'HR Vikings',
+    short: 'HRV',
     group: 'B',
     color: '#4f46e5',
     players: [
@@ -218,6 +234,7 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
   {
     id: 'power-player',
     name: 'Power Player',
+    short: 'PP',
     group: 'B',
     color: '#dc2626',
     players: [
@@ -238,10 +255,11 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
       squad('power-player', 'Al-Amin', { nameTag: '2', substitute: true }),
     ],
   },
-  { id: 'ddc', name: 'DDC', group: 'B', color: '#475569', players: [] },
+  { id: 'ddc', name: 'DDC', short: 'DDC', group: 'B', color: '#475569', players: [] },
   {
     id: 'red-bulls-warriors',
     name: 'Red Bulls Warriors',
+    short: 'RBW',
     group: 'B',
     color: '#b91c1c',
     // 15 players: one over the squad limit; the team page shows a warning.
@@ -263,7 +281,14 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
       squad('red-bulls-warriors', 'Jahirul', { substitute: true }),
     ],
   },
-  { id: 'sky-warrior', name: 'Sky Warrior', group: 'B', color: '#0284c7', players: [] },
+  {
+    id: 'sky-warrior',
+    name: 'Sky Warrior',
+    short: 'SW',
+    group: 'B',
+    color: '#0284c7',
+    players: [],
+  },
 ];
 
 export type GroupId = 'A' | 'B';
