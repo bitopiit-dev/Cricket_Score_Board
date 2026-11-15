@@ -231,6 +231,7 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
     short: 'HRV',
     group: 'B',
     color: '#4f46e5',
+    logo: 'icons/teams/hr-vikings.png',
     players: [
       squad('hr-vikings', 'Jakir', { captain: true }),
       squad('hr-vikings', 'Atiq', { viceCaptain: true }),
