@@ -562,3 +562,51 @@ describe('DDC squad', () => {
     expect(ddc.players[11]).toMatchObject({ id: 'z-i-limon', photo: 'players/ddc/z-i-limon.jpg' });
   });
 });
+
+describe('Sky Warrior squad', () => {
+  const sw = findTeam('sky-warrior')!;
+
+  it('has the 14 players in the given order', () => {
+    expect(sw.players.map(playerDisplayName)).toEqual([
+      'Md. Mominul Islam',
+      'Md. Ashraful Hoque',
+      'Md. Younus',
+      'Md. Bashar',
+      'Haripad',
+      'Md. Miraz',
+      'Md. Mehdi',
+      'Md. Showib',
+      'Md. Saju',
+      'Antar',
+      'Md. Mosharaf',
+      'Md. Tanvir',
+      'Md. Ashraful (Jr.)',
+      'Md. Hossain Saiful',
+    ]);
+  });
+
+  it('Md. Mominul Islam is captain; Md. Tanvir, Md. Ashraful (Jr.) and Md. Hossain Saiful are the extras', () => {
+    expect(sw.players.filter((p) => p.captain).map((p) => p.name)).toEqual(['Md. Mominul Islam']);
+    expect(sw.players.filter((p) => p.substitute).map(playerDisplayName)).toEqual([
+      'Md. Tanvir',
+      'Md. Ashraful (Jr.)',
+      'Md. Hossain Saiful',
+    ]);
+    expect(squadWarnings(sw, SQUAD_LIMITS)).toEqual([]);
+  });
+
+  it('the two Ashrafuls get different ids and photo files', () => {
+    expect(sw.players[1]).toMatchObject({
+      id: 'md-ashraful-hoque',
+      photo: 'players/sky-warrior/md-ashraful-hoque.jpg',
+    });
+    expect(sw.players[12]).toMatchObject({
+      id: 'md-ashraful-jr',
+      photo: 'players/sky-warrior/md-ashraful-jr.jpg',
+    });
+  });
+
+  it('names carry no "Mr." prefix', () => {
+    expect(sw.players.some((p) => p.name.startsWith('Mr.'))).toBe(false);
+  });
+});

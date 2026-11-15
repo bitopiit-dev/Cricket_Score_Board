@@ -326,7 +326,23 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
     short: 'SW',
     group: 'B',
     color: '#0284c7',
-    players: [],
+    players: [
+      squad('sky-warrior', 'Md. Mominul Islam', { captain: true }),
+      squad('sky-warrior', 'Md. Ashraful Hoque'),
+      squad('sky-warrior', 'Md. Younus'),
+      squad('sky-warrior', 'Md. Bashar'),
+      squad('sky-warrior', 'Haripad'),
+      squad('sky-warrior', 'Md. Miraz'),
+      squad('sky-warrior', 'Md. Mehdi'),
+      squad('sky-warrior', 'Md. Showib'),
+      squad('sky-warrior', 'Md. Saju'),
+      squad('sky-warrior', 'Antar'),
+      squad('sky-warrior', 'Md. Mosharaf'),
+      squad('sky-warrior', 'Md. Tanvir', { substitute: true }),
+      // Not the same player as Md. Ashraful Hoque above
+      squad('sky-warrior', 'Md. Ashraful', { nameTag: 'Jr.', substitute: true }),
+      squad('sky-warrior', 'Md. Hossain Saiful', { substitute: true }),
+    ],
   },
 ];
 
