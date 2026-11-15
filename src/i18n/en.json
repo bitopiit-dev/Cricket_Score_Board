@@ -159,7 +159,8 @@
     "reviewFailed": "Unsuccessful (review lost)",
     "reviewNoneLeft": "No review left",
     "waitingForScorer": "Waiting for the scorer…",
-    "notStartedYet": "The match hasn't started yet."
+    "notStartedYet": "The match hasn't started yet.",
+    "recorded": "Recorded"
   },
   "endReason": {
     "allOut": "All out",
@@ -453,5 +454,16 @@
     "manhattanHint": "Each bar is one over; red dots are wickets.",
     "worm": "Run race",
     "wormHint": "Total after every ball; circles are wickets."
+  },
+  "live": {
+    "details": "Full match"
+  },
+  "sync": {
+    "synced": "Uploaded",
+    "pending": "Waiting",
+    "offline": "Offline",
+    "syncedLong": "Everyone following can see the latest ball.",
+    "pendingLong": "Saved on this phone, uploading when the signal allows.",
+    "offlineLong": "No signal. Balls are safe on this phone and upload when it’s back."
   }
 }

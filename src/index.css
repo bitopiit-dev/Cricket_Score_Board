@@ -254,3 +254,19 @@ body {
     animation: none;
   }
 }
+
+/* ---- Scorer: "recorded" confirmation slides down ---- */
+.toast-in {
+  animation: toast-in 220ms ease-out;
+}
+@keyframes toast-in {
+  from {
+    transform: translateY(-8px);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .toast-in {
+    animation: none;
+  }
+}

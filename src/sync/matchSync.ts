@@ -47,13 +47,19 @@ const readQueue = (): string[] => {
     return [];
   }
 };
+/** Fired whenever the upload queue changes (scorer's sync indicator). */
+export const QUEUE_CHANGED = 'bpl:queue';
 const writeQueue = (ids: string[]) => {
   try {
     localStorage.setItem(QUEUE, JSON.stringify([...new Set(ids)]));
   } catch {
     /* ignore */
   }
+  if (typeof window !== 'undefined') window.dispatchEvent(new Event(QUEUE_CHANGED));
 };
+
+/** True while this phone still has changes to this match that the server hasn't got. */
+export const isQueued = (id: string) => readQueue().includes(id);
 
 export interface MergeDeps {
   db: Pick<typeof db, 'matches'>;

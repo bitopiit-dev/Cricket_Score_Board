@@ -30,6 +30,7 @@ interface Side {
   short: string;
   name: string;
   color?: string;
+  logo?: string;
 }
 
 /**
@@ -64,7 +65,7 @@ export default function HomePage() {
 function sideOfTeam(teamId: string | null | undefined, fallbackName: string): Side {
   const team = findTeam(teamId ?? undefined);
   return team
-    ? { short: team.short, name: team.name, color: team.color }
+    ? { short: team.short, name: team.name, color: team.color, logo: team.logo }
     : { short: initials(fallbackName), name: fallbackName };
 }
 
@@ -117,14 +118,9 @@ function HeroFrame({
 
 function SideName({ side }: { side: Side }) {
   return (
-    <div className="flex min-w-0 flex-col items-center">
-      <span
-        lang="en"
-        className="font-display text-6xl leading-none font-extrabold tracking-wide drop-shadow"
-      >
-        {side.short}
-      </span>
-      <span lang="en" className="mt-1 line-clamp-2 text-xs leading-tight text-white/85">
+    <div className="flex min-w-0 flex-col items-center gap-1.5">
+      <TeamAvatar name={side.name} color={side.color} logo={side.logo} size="lg" />
+      <span lang="en" className="line-clamp-2 text-sm leading-tight font-semibold">
         {side.name}
       </span>
     </div>

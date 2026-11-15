@@ -29,6 +29,8 @@ import { useCanScore } from '../sync/auth';
 import { Icon } from '../components/common/icons';
 import { matchShareText, shareText } from '../utils/share';
 import { MatchCenter } from '../components/match/MatchCenter';
+import { SyncStatus } from '../components/scoring/SyncStatus';
+import { ballOutcome } from '../utils/ballText';
 
 type Open =
   null | 'wicket' | 'other' | 'more' | 'retire' | 'changeBowler' | 'openers' | 'review' | ExtraType;
@@ -39,12 +41,20 @@ export default function ScoringPage() {
   const { id } = useParams<{ id: string }>();
   const { match, state, notFound, lastError, load, dispatch, undo, clearError } = useMatchStore();
   const [open, setOpen] = useState<Open>(null);
+  /** The ball just recorded, shown briefly so the scorer can see it went in right. */
+  const [done, setDone] = useState<{ key: number; text: string } | null>(null);
   // Viewers follow the score; only scorers and super admins get the controls.
   const canScore = useCanScore();
 
   useEffect(() => {
     if (id) void load(id);
   }, [id, load]);
+
+  useEffect(() => {
+    if (!done) return;
+    const timer = setTimeout(() => setDone(null), 2200);
+    return () => clearTimeout(timer);
+  }, [done]);
 
   useEffect(() => {
     if (!lastError) return;
@@ -73,8 +83,19 @@ export default function ScoringPage() {
   /** Dispatch and close the open sheet if accepted. */
   const send: typeof dispatch = (input) => {
     const ok = dispatch(input);
-    if (ok) close();
+    if (ok) {
+      close();
+      // A short buzz confirms the tap; a wicket gets a double one
+      buzz(input.type === 'ball' && input.wicket ? [30, 60, 30] : 15);
+      if (input.type === 'ball')
+        setDone({ key: Date.now(), text: ballOutcome(input, match, t, f) });
+    }
     return ok;
+  };
+  const undoNow = () => {
+    undo();
+    buzz(10);
+    setDone(null);
   };
   const canUndo = match.events.length > 0;
 
@@ -141,6 +162,7 @@ export default function ScoringPage() {
         backTo="/home"
         actions={
           <>
+            <SyncStatus matchId={match.id} />
             <button
               type="button"
               onClick={() => void onShare()}
@@ -230,13 +252,32 @@ export default function ScoringPage() {
                   onExtra={(x) => setOpen(x)}
                   onOther={() => setOpen('other')}
                   onWicket={() => setOpen('wicket')}
-                  onUndo={undo}
+                  onUndo={undoNow}
                 />
               </div>
             )}
           </>
         )}
       </main>
+
+      {done && !lastError && (
+        <div
+          key={done.key}
+          role="status"
+          className="toast-in fixed inset-x-0 top-[calc(3.5rem+env(safe-area-inset-top))] z-[60] mx-auto flex w-fit max-w-[92%] items-center gap-3 rounded-full bg-slate-900 py-1.5 pr-1.5 pl-4 text-sm text-white shadow-lg dark:bg-white dark:text-slate-900"
+        >
+          <span className="truncate">
+            {t('scoring.recorded')}: <span className="font-semibold">{done.text}</span>
+          </span>
+          <button
+            type="button"
+            onClick={undoNow}
+            className="shrink-0 rounded-full bg-white/15 px-3 py-1 font-semibold dark:bg-slate-900/10"
+          >
+            ↶ {t('common.undo')}
+          </button>
+        </div>
+      )}
 
       {lastError && (
         <div
@@ -274,7 +315,7 @@ export default function ScoringPage() {
             <NewBatterSheet
               match={match}
               inn={inn}
-              onUndo={undo}
+              onUndo={undoNow}
               onPick={(batterId) => send({ type: 'newBatter', batterId })}
             />
           )}
@@ -282,7 +323,7 @@ export default function ScoringPage() {
             <BowlerSheet
               match={match}
               inn={inn}
-              onUndo={undo}
+              onUndo={undoNow}
               onPick={(bowlerId) => send({ type: 'newBowler', bowlerId })}
             />
           )}
@@ -360,4 +401,13 @@ export default function ScoringPage() {
       )}
     </div>
   );
+}
+
+/** Vibrates where the phone supports it (Android); silently nothing elsewhere. */
+function buzz(pattern: number | number[]) {
+  try {
+    navigator.vibrate?.(pattern);
+  } catch {
+    /* not supported */
+  }
 }

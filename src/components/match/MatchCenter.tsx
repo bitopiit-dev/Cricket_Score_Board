@@ -20,6 +20,7 @@ import {
 } from '../../engine/stats';
 import type { BatterStats, InningsState, Match, MatchState, TeamIndex } from '../../engine/types';
 import { useFormat } from '../../hooks/useFormat';
+import { ballOutcome } from '../../utils/ballText';
 import { inningsLabel, playerName, resultText } from '../../utils/matchText';
 
 type Tab = 'summary' | 'scorecard' | 'overs' | 'charts';
@@ -60,7 +61,7 @@ export function MatchCenter({
           </button>
         }
       />
-      <Hero match={match} state={state} />
+      <MatchHero match={match} state={state} />
       <MomentBurst match={match} />
 
       <div
@@ -104,7 +105,8 @@ export function MatchCenter({
 
 /* ---------------------------------- Hero ---------------------------------- */
 
-function Hero({ match, state }: { match: Match; state: MatchState }) {
+/** Both teams with logos and scores, the live badge and where the match stands. */
+export function MatchHero({ match, state }: { match: Match; state: MatchState }) {
   const { t } = useTranslation();
   const f = useFormat();
   const inn = state.current;
@@ -615,18 +617,7 @@ function BallLine({ b, match }: { b: CommentaryBall; match: Match }) {
   const bowler = playerName(match, b.bowlerId);
   const batter = playerName(match, b.batterId);
 
-  let outcome: string;
-  if (ev.wicket) {
-    const who = playerName(match, ev.wicket.batterId);
-    outcome = t('matchCenter.outcome.out', { name: who, how: t(`dismissal.${ev.wicket.kind}`) });
-  } else if (ev.extra === 'wide') outcome = t('matchCenter.outcome.wide', { n: f.num(b.total) });
-  else if (ev.extra === 'noBall') outcome = t('matchCenter.outcome.noBall', { n: f.num(b.total) });
-  else if (ev.extra === 'bye') outcome = t('matchCenter.outcome.bye', { n: f.num(ev.runs) });
-  else if (ev.extra === 'legBye') outcome = t('matchCenter.outcome.legBye', { n: f.num(ev.runs) });
-  else if (ev.boundary && ev.runs === 6) outcome = t('matchCenter.outcome.six');
-  else if (ev.boundary && ev.runs === 4) outcome = t('matchCenter.outcome.four');
-  else if (ev.runs === 0) outcome = t('matchCenter.outcome.dot');
-  else outcome = t('matchCenter.outcome.runs', { n: f.num(ev.runs), count: ev.runs });
+  const outcome = ballOutcome(ev, match, t, f);
 
   const accent = ev.wicket
     ? 'text-bpl-red'
