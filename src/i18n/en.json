@@ -390,5 +390,15 @@
   },
   "share": {
     "failed": "Couldn’t open sharing on this device."
+  },
+  "crash": {
+    "title": "This page couldn’t open",
+    "body": "Something went wrong here. The rest of the app still works, and no scores were lost.",
+    "reload": "Reload",
+    "home": "Go to Home"
+  },
+  "conflict": {
+    "title": "Another phone changed this match",
+    "body": "The server already had newer scoring for this match from another phone, so its score is shown. This phone’s copy is kept as a backup. Please score each match from one phone only."
   }
 }

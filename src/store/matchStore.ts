@@ -3,7 +3,7 @@ import { matchRepository } from '../db/repository';
 import { addEvent, deriveMatchState, undoLastEvent, type ValidationError } from '../engine/scoring';
 import type { Match, MatchEventInput, MatchState } from '../engine/types';
 import { canScore, mayScore } from '../sync/auth';
-import { MATCHES_CHANGED } from '../sync/matchSync';
+import { compareCopies, MATCH_CONFLICT, MATCHES_CHANGED } from '../sync/matchSync';
 import { newId } from '../utils/id';
 
 interface MatchStore {
@@ -72,6 +72,14 @@ export const useMatchStore = create<MatchStore>((set, get) => ({
 
 // A match open on screen follows the scores downloaded from the scorer's phone.
 if (typeof window !== 'undefined') {
+  // The server refused this phone's copy: show the server's score on screen too
+  window.addEventListener(MATCH_CONFLICT, (e) => {
+    const open = useMatchStore.getState().match;
+    if (!open || open.id !== (e as CustomEvent<string>).detail) return;
+    void matchRepository.get(open.id).then((stored) => {
+      if (stored) useMatchStore.setState({ match: stored, state: deriveMatchState(stored) });
+    });
+  });
   window.addEventListener(MATCHES_CHANGED, () => {
     const open = useMatchStore.getState().match;
     if (!open) return;
@@ -82,9 +90,8 @@ if (typeof window !== 'undefined') {
         useMatchStore.setState({ match: null, state: null, notFound: true });
         return;
       }
-      const a = stored.updatedAt ?? 0;
-      const b = now.updatedAt ?? 0;
-      if (a !== b && (!canScore() || a > b)) {
+      const cmp = compareCopies(stored, now);
+      if (cmp !== 0 && (!canScore() || cmp > 0)) {
         useMatchStore.setState({ match: stored, state: deriveMatchState(stored) });
       }
     });

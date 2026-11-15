@@ -504,11 +504,23 @@ export function addEvent(
   const error = validateEvent(match, deriveMatchState(match), input);
   if (error) return { error };
   const event = { ...input, ...meta } as MatchEvent;
-  return { match: { ...match, events: [...match.events, event], updatedAt: meta.at } };
+  return {
+    match: {
+      ...match,
+      events: [...match.events, event],
+      updatedAt: meta.at,
+      rev: (match.rev ?? 0) + 1,
+    },
+  };
 }
 
 /** Removes the most recent event. */
 export function undoLastEvent(match: Match, at: number): Match {
   if (match.events.length === 0) return match;
-  return { ...match, events: match.events.slice(0, -1), updatedAt: at };
+  return {
+    ...match,
+    events: match.events.slice(0, -1),
+    updatedAt: at,
+    rev: (match.rev ?? 0) + 1,
+  };
 }

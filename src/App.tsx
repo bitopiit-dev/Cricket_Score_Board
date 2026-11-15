@@ -1,6 +1,8 @@
-import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { HashRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { lazy, Suspense, type ReactNode } from 'react';
 import { AppShell } from './components/layout/AppShell';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
+import { ConflictNotice } from './components/layout/ConflictNotice';
 import { useApplyTheme } from './hooks/useApplyTheme';
 import AwardsPage from './pages/AwardsPage';
 import CommitteePage from './pages/CommitteePage';
@@ -28,41 +30,44 @@ export default function App() {
   useApplyTheme();
   return (
     <HashRouter>
-      <Routes>
-        <Route element={<AppShell />}>
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/live" element={<LivePage />} />
-          <Route path="/fixtures" element={<FixturesPage />} />
-          <Route path="/points" element={<PointsPage />} />
-          <Route path="/stats" element={<StatsPage />} />
-          <Route path="/awards" element={<AwardsPage />} />
-          <Route path="/teams" element={<TeamsPage />} />
-          <Route path="/team/:id" element={<TeamPage />} />
-          <Route path="/more" element={<MorePage />} />
+      <ConflictNotice />
+      <RouteBoundary>
+        <Routes>
+          <Route element={<AppShell />}>
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/live" element={<LivePage />} />
+            <Route path="/fixtures" element={<FixturesPage />} />
+            <Route path="/points" element={<PointsPage />} />
+            <Route path="/stats" element={<StatsPage />} />
+            <Route path="/awards" element={<AwardsPage />} />
+            <Route path="/teams" element={<TeamsPage />} />
+            <Route path="/team/:id" element={<TeamPage />} />
+            <Route path="/more" element={<MorePage />} />
+            <Route
+              path="/admin"
+              element={
+                <Suspense fallback={null}>
+                  <AdminPage />
+                </Suspense>
+              }
+            />
+            <Route path="/rules" element={<RulesPage />} />
+            <Route path="/committee" element={<CommitteePage />} />
+            <Route path="/media" element={<MediaPage />} />
+          </Route>
+          {/* Full-screen pages without the tab bar */}
           <Route
-            path="/admin"
+            path="/new"
             element={
-              <Suspense fallback={null}>
-                <AdminPage />
-              </Suspense>
+              <ScorerOnly>
+                <NewMatchPage />
+              </ScorerOnly>
             }
           />
-          <Route path="/rules" element={<RulesPage />} />
-          <Route path="/committee" element={<CommitteePage />} />
-          <Route path="/media" element={<MediaPage />} />
-        </Route>
-        {/* Full-screen pages without the tab bar */}
-        <Route
-          path="/new"
-          element={
-            <ScorerOnly>
-              <NewMatchPage />
-            </ScorerOnly>
-          }
-        />
-        <Route path="/match/:id" element={<ScoringPage />} />
-        <Route path="*" element={<Navigate to="/home" replace />} />
-      </Routes>
+          <Route path="/match/:id" element={<ScoringPage />} />
+          <Route path="*" element={<Navigate to="/home" replace />} />
+        </Routes>
+      </RouteBoundary>
     </HashRouter>
   );
 }
@@ -70,4 +75,10 @@ export default function App() {
 /** Pages only scorers and super admins may open; anyone else (e.g. an old link) goes to Live. */
 function ScorerOnly({ children }: { children: ReactNode }) {
   return useCanScore() ? children : <Navigate to="/live" replace />;
+}
+
+/** A crash in one page shows a message there; opening another page recovers. */
+function RouteBoundary({ children }: { children: ReactNode }) {
+  const { pathname } = useLocation();
+  return <ErrorBoundary resetKey={pathname}>{children}</ErrorBoundary>;
 }

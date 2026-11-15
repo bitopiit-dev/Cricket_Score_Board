@@ -4,7 +4,7 @@ import { ScoreBoardDB } from '../../db/database';
 import { makeMatch } from '../../engine/__tests__/helpers';
 import type { Match } from '../../engine/types';
 import { nextRole } from '../auth';
-import { mergeRow, type MergeDeps, type Row } from '../matchSync';
+import { compareCopies, isUsableMatch, mergeRow, type MergeDeps, type Row } from '../matchSync';
 
 describe('scorer role with a weak signal', () => {
   const cached = { email: 'scorer@example.com', role: 'scorer' as const };
@@ -101,5 +101,50 @@ describe('downloading scores onto a phone', () => {
     await db.matches.put(match(200, 12));
     expect(await mergeRow(row(match(300, 0), true), deps)).toBe(true);
     expect(await db.matches.get('m1')).toBeUndefined();
+  });
+
+  it('skips a broken row instead of storing it (it would crash every viewer)', async () => {
+    const deps = setup();
+    await db.matches.put(match(100, 6));
+    const broken = {
+      id: 'm1',
+      data: { id: 'm1', teams: [] } as unknown as Match,
+      deleted: false,
+      updated_at: 500,
+    };
+    expect(await mergeRow(broken, deps)).toBe(false);
+    expect((await db.matches.get('m1'))!.events).toHaveLength(6);
+  });
+
+  it('a higher revision wins even when its phone clock is behind', async () => {
+    const deps = setup({ scorer: true });
+    await db.matches.put({ ...match(900, 6), rev: 6 });
+    const server = { ...match(100, 8), rev: 8 };
+    expect(await mergeRow({ ...row(server), rev: 8 }, deps)).toBe(true);
+    expect((await db.matches.get('m1'))!.events).toHaveLength(8);
+  });
+
+  it("a scorer's higher revision is kept over the server's lower one", async () => {
+    const deps = setup({ scorer: true });
+    await db.matches.put({ ...match(100, 9), rev: 9 });
+    expect(await mergeRow({ ...row({ ...match(900, 7), rev: 7 }), rev: 7 }, deps)).toBe(false);
+    expect((await db.matches.get('m1'))!.events).toHaveLength(9);
+  });
+});
+
+describe('match copies', () => {
+  it('compares revisions first, then time for copies from before revisions', () => {
+    expect(compareCopies({ rev: 3, updatedAt: 1 }, { rev: 2, updatedAt: 9 })).toBeGreaterThan(0);
+    expect(compareCopies({ updatedAt: 5 }, { rev: 0, updatedAt: 9 })).toBeLessThan(0);
+    expect(compareCopies({ rev: 2, updatedAt: 5 }, { rev: 2, updatedAt: 5 })).toBe(0);
+  });
+
+  it('recognises a real match and rejects junk', () => {
+    const m = makeMatch();
+    expect(isUsableMatch(m, m.id)).toBe(true);
+    expect(isUsableMatch(m, 'other-id')).toBe(false);
+    expect(isUsableMatch({}, m.id)).toBe(false);
+    expect(isUsableMatch(null, m.id)).toBe(false);
+    expect(isUsableMatch({ ...m, events: 'x' }, m.id)).toBe(false);
   });
 });

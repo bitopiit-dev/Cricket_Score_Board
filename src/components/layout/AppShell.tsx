@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { assetUrl } from '../../utils/asset';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
+import { ErrorBoundary } from '../common/ErrorBoundary';
 import { APP_SUBTITLE, APP_TITLE } from '../../config/app';
 import { BPL_LOGO, COMMITTEE_LOGO, COMMITTEE_NAME } from '../../data/committee';
 import { LanguageToggle, useGoBack } from '../common/Header';
@@ -14,6 +15,7 @@ import { DataUpdatedBar } from './DataUpdatedBar';
  */
 export function AppShell() {
   const { t } = useTranslation();
+  const { pathname } = useLocation();
   return (
     <div className="flex min-h-dvh flex-col pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:pb-8">
       <header className="bg-night-950 text-white shadow-lg">
@@ -53,7 +55,9 @@ export function AppShell() {
           </div>
         </div>
       </header>
-      <Outlet />
+      <ErrorBoundary resetKey={pathname}>
+        <Outlet />
+      </ErrorBoundary>
       {/* Credit line, bottom right; the page padding keeps it above the phone tab bar */}
       <footer
         lang="en"

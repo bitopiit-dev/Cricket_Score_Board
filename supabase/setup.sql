@@ -34,7 +34,9 @@ create table if not exists public.matches (
   data jsonb not null,
   deleted boolean not null default false,
   updated_at bigint not null,
-  updated_by text
+  updated_by text,
+  -- Goes up with every change; the server keeps the higher one (patch 2)
+  rev integer not null default 0
 );
 
 -- 4. Security: everyone reads; only the right people write.
@@ -85,20 +87,30 @@ drop policy if exists "super deletes media" on storage.objects;
 create policy "super deletes media" on storage.objects for delete
   using (bucket_id = 'media' and public.my_role() = 'super');
 
--- 7. Uploaded scores: the server keeps the newest copy, only the super admin
---    deletes or brings back a match, and "updated by" is the signed-in email.
---    A refused change is skipped quietly (no error), so a phone does not retry it forever.
+-- 7. Uploaded scores: the server keeps the higher revision and answers a stale
+--    copy with 'stale_match'; only the super admin deletes or brings back a
+--    match, and "updated by" is the signed-in email.
 create or replace function public.guard_match_write() returns trigger
   language plpgsql security definer set search_path = public as $$
 begin
   new.updated_by := auth.jwt() ->> 'email';
   if tg_op = 'UPDATE' then
-    -- An older copy from another phone never replaces a newer score
-    if new.updated_at < old.updated_at then return old; end if;
     -- Deleting a match, or bringing a deleted one back, is for the super admin
-    if new.deleted is distinct from old.deleted and coalesce(public.my_role(), '') <> 'super' then
-      return old;
+    if new.deleted is distinct from old.deleted then
+      if coalesce(public.my_role(), '') <> 'super' then return old; end if;
+      return new;
     end if;
+    -- The same copy sent again (a retry after a lost answer): nothing to do
+    if new.data is not distinct from old.data then return old; end if;
+    -- A newer revision always goes in
+    if new.rev > old.rev then return new; end if;
+    -- Rows and apps from before revisions: the old rule by time
+    if new.rev = 0 and old.rev = 0 then
+      if new.updated_at < old.updated_at then return old; end if;
+      return new;
+    end if;
+    -- Another phone has already changed this match
+    raise exception 'stale_match' using errcode = 'P0001', hint = old.rev::text;
   end if;
   return new;
 end $$;

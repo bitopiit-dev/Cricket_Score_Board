@@ -1,5 +1,6 @@
 import { db } from '../db/database';
 import type { MatchRepository } from '../db/repository';
+import { isUsableMatch } from '../engine/validate';
 import type { Match } from '../engine/types';
 import { authState, canScore } from './auth';
 import { supabase, withTimeout } from './supabase';
@@ -13,7 +14,12 @@ import { supabase, withTimeout } from './supabase';
  *   score on their own phone, but it stays there.
  * - Other phones download the scores and are told when anything changes.
  */
+export { isUsableMatch };
+
 export const MATCHES_CHANGED = 'bpl:matches';
+/** Fired with the match id when the server refused this phone's copy (see flushUploads). */
+export const MATCH_CONFLICT = 'bpl:match-conflict';
+const BACKUP = 'bpl:conflict-backup:';
 const QUEUE = 'bpl:upload-queue';
 const notify = () => window.dispatchEvent(new Event(MATCHES_CHANGED));
 
@@ -22,6 +28,16 @@ export interface Row {
   data: Match;
   deleted: boolean;
   updated_at: number;
+  /** Revision (see Match.rev); 0 on rows from before it existed. */
+  rev?: number;
+}
+
+/** Which copy is newer: the revision first, then (for old copies without one) the time. */
+export function compareCopies(
+  a: { rev?: number; updatedAt?: number },
+  b: { rev?: number; updatedAt?: number },
+): number {
+  return (a.rev ?? 0) - (b.rev ?? 0) || (a.updatedAt ?? 0) - (b.updatedAt ?? 0);
 }
 
 const readQueue = (): string[] => {
@@ -61,13 +77,53 @@ export async function mergeRow(row: Row, deps: MergeDeps = defaultDeps): Promise
     await deps.db.matches.delete(row.id);
     return true;
   }
-  if (local && (local.updatedAt ?? 0) === row.updated_at) return false;
+  if (!isUsableMatch(row.data, row.id)) return false;
+  const remote = { rev: row.rev ?? row.data.rev, updatedAt: row.updated_at };
+  if (local && compareCopies(local, remote) === 0) return false;
   if (local && deps.queued().includes(row.id)) return false;
   // On a scorer's phone, its own newer copy wins
-  if (deps.isScorer() && local && (local.updatedAt ?? 0) > row.updated_at) return false;
+  if (deps.isScorer() && local && compareCopies(local, remote) > 0) return false;
   // Everyone else always shows the uploaded score, even over a stray tap on their phone
   await deps.db.matches.put(row.data);
   return true;
+}
+
+/** False once the server says the matches table has no rev column yet (SQL patch 2 not run). */
+let revColumn = true;
+type UploadError = { message?: string; code?: string } | null;
+const isStale = (e: UploadError) => !!e?.message?.includes('stale_match');
+const noRevColumn = (e: UploadError) =>
+  e?.code === 'PGRST204' || (!!e?.message?.includes("'rev'") && !!e?.message?.includes('column'));
+
+/**
+ * The server already has a newer change to this match from another phone.
+ * Its copy is kept and shown here too; this phone's copy is saved aside so
+ * nothing is lost, and the scorer is told.
+ */
+async function resolveConflict(id: string, local: Match): Promise<void> {
+  if (!supabase) return;
+  try {
+    localStorage.setItem(BACKUP + id, JSON.stringify(local));
+  } catch {
+    /* no room: the server copy still wins */
+  }
+  try {
+    const { data } = await withTimeout(
+      supabase
+        .from('matches')
+        .select('id, data, deleted, updated_at, rev')
+        .eq('id', id)
+        .maybeSingle(),
+      8000,
+    );
+    const row = data as Row | null;
+    if (row?.deleted) await db.matches.delete(id);
+    else if (row && isUsableMatch(row.data, id)) await db.matches.put(row.data);
+  } catch {
+    /* offline: the next download brings it */
+  }
+  notify();
+  window.dispatchEvent(new CustomEvent(MATCH_CONFLICT, { detail: id }));
 }
 
 let flushing = false;
@@ -82,13 +138,26 @@ export async function flushUploads(): Promise<void> {
     const done: string[] = [];
     for (const id of ids) {
       const m = await db.matches.get(id);
-      const row = m
+      const row: Record<string, unknown> = m
         ? { id, data: m, deleted: false, updated_at: m.updatedAt ?? Date.now(), updated_by: email }
         : { id, data: {}, deleted: true, updated_at: Date.now(), updated_by: email };
-      const { error } = await withTimeout(supabase.from('matches').upsert(row), 8000).catch(
-        (e: Error) => ({ error: e }),
-      );
+      if (revColumn) row.rev = m?.rev ?? 0;
+      const send = () =>
+        withTimeout(supabase!.from('matches').upsert(row), 8000).catch((e: Error) => ({
+          error: e as UploadError,
+        }));
+      let { error } = (await send()) as { error: UploadError };
+      if (error && revColumn && noRevColumn(error)) {
+        // The database hasn't had SQL patch 2 yet: upload the old way meanwhile
+        revColumn = false;
+        delete row.rev;
+        ({ error } = (await send()) as { error: UploadError });
+      }
       if (!error) done.push(id);
+      else if (m && isStale(error)) {
+        done.push(id);
+        await resolveConflict(id, m);
+      }
     }
     writeQueue(readQueue().filter((id) => !done.includes(id)));
   } finally {
@@ -121,10 +190,7 @@ export function startMatchSync(): void {
   const client = supabase;
   const pull = async () => {
     try {
-      const { data } = await withTimeout(
-        client.from('matches').select('id, data, deleted, updated_at'),
-        10000,
-      );
+      const { data } = await withTimeout(client.from('matches').select('*'), 10000);
       let changed = false;
       for (const row of (data ?? []) as Row[]) changed = (await mergeRow(row)) || changed;
       if (changed) notify();

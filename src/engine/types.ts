@@ -168,6 +168,12 @@ export interface Match {
   id: string;
   createdAt: number;
   updatedAt: number;
+  /**
+   * Goes up by one with every change (ball, undo). The server keeps the copy
+   * with the higher number, so a phone whose clock is wrong can't win or lose
+   * an upload by its timestamp. Missing on matches saved before this existed.
+   */
+  rev?: number;
   teams: [Team, Team];
   settings: MatchSettings;
   toss: Toss;

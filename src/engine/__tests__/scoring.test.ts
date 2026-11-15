@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { Game, makeMatch } from './helpers';
 import { availableBatters, bowlerEligibility, formatOvers } from '../rules';
 import { requiredRunRate, runsNeeded } from '../stats';
+import { undoLastEvent } from '../scoring';
 
 const bat = (g: Game, id: string) => g.inn.batters.find((b) => b.playerId === id)!;
 const bowl = (g: Game, id: string) => g.inn.bowlers.find((b) => b.playerId === id)!;
@@ -395,5 +396,16 @@ describe('undo', () => {
     g.undo();
     expect(g.state.phase).toBe('inPlay');
     expect(g.inn.legalBalls).toBe(5);
+  });
+});
+
+describe('revision number', () => {
+  it('goes up by one with every ball and every undo', () => {
+    const g = new Game(makeMatch()).start('a1', 'a2', 'b1');
+    expect(g.match.rev).toBe(1);
+    g.ball(1).ball(4);
+    expect(g.match.rev).toBe(3);
+    g.match = undoLastEvent(g.match, 99);
+    expect(g.match.rev).toBe(4);
   });
 });
