@@ -19,10 +19,7 @@ export function AppShell() {
         <div className="mx-auto flex max-w-5xl flex-col gap-3 px-3 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 md:px-4">
           <div className="flex items-center gap-3">
             <div className="min-w-0 flex-1">
-              <Link
-                to="/home"
-                className="inline-block max-w-full active:scale-95"
-              >
+              <Link to="/home" className="inline-block max-w-full active:scale-95">
                 <img
                   src={assetUrl(BPL_LOGO)}
                   alt={`${APP_TITLE} | ${APP_SUBTITLE}`}
