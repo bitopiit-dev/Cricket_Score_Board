@@ -391,7 +391,8 @@
     "phase_semis": "Semi-finals",
     "phase_final": "Final",
     "upcoming": "Coming up",
-    "allFixtures": "Full schedule"
+    "allFixtures": "Full schedule",
+    "shareScore": "Share score"
   },
   "install": {
     "title": "Put BPL-2027 on your home screen",
@@ -401,7 +402,8 @@
     "android": "Open the browser menu (⋮), then tap “Add to Home screen”."
   },
   "share": {
-    "failed": "Couldn’t open sharing on this device."
+    "failed": "Couldn’t open sharing on this device.",
+    "copied": "Score copied: paste it in WhatsApp"
   },
   "crash": {
     "title": "This page couldn’t open",

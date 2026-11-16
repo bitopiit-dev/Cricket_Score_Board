@@ -142,7 +142,7 @@ export function MatchHero({ match, state }: { match: Match; state: MatchState })
               <span className="flex items-center gap-1.5 rounded-full bg-bpl-red px-2.5 py-0.5 text-xs font-bold">
                 <span
                   aria-hidden
-                  className="size-1.5 animate-pulse rounded-full bg-white motion-reduce:animate-none"
+                  className="live-pulse size-1.5 rounded-full bg-white text-white"
                 />
                 {t('homePage.live')}
               </span>

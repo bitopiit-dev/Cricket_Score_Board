@@ -1,12 +1,15 @@
-import type { ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import type { Fixture } from '../data/fixtures';
 import { findTeam, initials } from '../data/teams';
 import { runRate } from '../engine/rules';
-import { runsNeeded, ballsRemaining } from '../engine/stats';
+import { runsNeeded, ballsRemaining, requiredRunRate } from '../engine/stats';
 import type { BallSummary, InningsState, Match, MatchState } from '../engine/types';
 import { TeamAvatar } from '../components/common/TeamAvatar';
+import { TeamEdge } from '../components/common/TeamEdge';
+import { Icon } from '../components/common/icons';
+import { useShareMatch } from '../hooks/useShareMatch';
 import { InstallHint } from '../components/layout/InstallHint';
 import { NoticeBanner } from '../components/layout/NoticeBanner';
 import { NextMatchCountdown } from '../components/live/NextMatchCountdown';
@@ -77,11 +80,14 @@ function HeroFrame({
   label,
   children,
   to,
+  onShare,
 }: {
   sides: [Side, Side];
   label: ReactNode;
   children: ReactNode;
   to?: string;
+  /** Shows a "Share score" button in the top-right corner. */
+  onShare?: () => void;
 }) {
   const { t } = useTranslation();
   const [a, b] = sides;
@@ -98,7 +104,11 @@ function HeroFrame({
         }}
       />
       <div className="relative flex flex-col gap-4 p-5">
-        <div className="text-xs font-semibold tracking-wide text-white/80 uppercase">{label}</div>
+        <div
+          className={`text-xs font-semibold tracking-wide text-white/80 uppercase ${onShare ? 'pr-10' : ''}`}
+        >
+          {label}
+        </div>
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-center">
           <SideName side={a} />
           <span className="font-display text-2xl font-bold text-white/70">{t('common.vs')}</span>
@@ -110,12 +120,27 @@ function HeroFrame({
   );
   const cls =
     'relative block overflow-hidden rounded-3xl bg-night-950 text-white shadow-lg ring-1 ring-night-line';
-  return to ? (
+  const card = to ? (
     <Link to={to} className={`${cls} active:opacity-90`}>
       {body}
     </Link>
   ) : (
     <section className={cls}>{body}</section>
+  );
+  if (!onShare) return card;
+  return (
+    <div className="relative">
+      {card}
+      <button
+        type="button"
+        onClick={onShare}
+        aria-label={t('homePage.shareScore')}
+        title={t('homePage.shareScore')}
+        className="absolute top-3 right-3 flex size-9 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-white/20 backdrop-blur active:scale-95"
+      >
+        <Icon name="share" className="size-5" />
+      </button>
+    </div>
   );
 }
 
@@ -148,6 +173,7 @@ function Hero({ hero, now }: { hero: HomeHero; now: number }) {
       : t('homePage.friendly');
   const when = (fx: Fixture) =>
     `${formatDate(fx.date, lang, bengaliDigits)} · ${formatTime(fx.time, lang, f)}`;
+  const share = useShareMatch();
 
   switch (hero.kind) {
     case 'upcoming':
@@ -155,30 +181,28 @@ function Hero({ hero, now }: { hero: HomeHero; now: number }) {
       return <NextMatchCountdown />;
     case 'live':
       return (
-        <HeroFrame
-          sides={matchSides(hero.match)}
-          to={`/match/${hero.match.id}`}
-          label={
-            <span className="flex items-center gap-2">
-              <span className="flex items-center gap-1.5 rounded-full bg-bpl-red px-2 py-0.5 text-white">
-                <span
-                  aria-hidden
-                  className="size-2 animate-pulse rounded-full bg-white motion-reduce:animate-none"
-                />
-                {t('homePage.live')}
+        <StickyWhenGone ticker={<LiveTicker match={hero.match} state={hero.state} />}>
+          <HeroFrame
+            sides={matchSides(hero.match)}
+            to={`/match/${hero.match.id}`}
+            onShare={() => void share(hero.match, hero.state)}
+            label={
+              <span className="flex items-center gap-2">
+                <LiveBadge />
+                {fixtureLabel(hero.fixture)}
               </span>
-              {fixtureLabel(hero.fixture)}
-            </span>
-          }
-        >
-          <LiveScore match={hero.match} state={hero.state} />
-        </HeroFrame>
+            }
+          >
+            <LiveScore match={hero.match} state={hero.state} />
+          </HeroFrame>
+        </StickyWhenGone>
       );
     case 'result':
       return (
         <HeroFrame
           sides={matchSides(hero.match)}
           to={`/match/${hero.match.id}`}
+          onShare={() => void share(hero.match, hero.state)}
           label={`${t('homePage.result')} · ${fixtureLabel(hero.fixture)}`}
         >
           {hero.state.result && (
@@ -250,6 +274,7 @@ function LiveScore({ match, state }: { match: Match; state: MatchState }) {
   const between = state.phase === 'inningsBreak' || state.phase === 'superOverBreak';
   const projected = projectedTotal(inn);
   const need = runsNeeded(inn);
+  const rrr = requiredRunRate(inn);
   const batters = [inn.strikerId, inn.nonStrikerId].filter((x): x is string => !!x);
   const over = inn.overs[inn.overs.length - 1];
 
@@ -268,7 +293,9 @@ function LiveScore({ match, state }: { match: Match; state: MatchState }) {
           {t('scoring.oversOf', { overs: f.overs(inn.legalBalls), total: f.num(inn.oversLimit) })}
           {' · '}
           {t('scoring.crr')} {f.dec(runRate(inn.runs, inn.legalBalls))}
+          {rrr !== null && !inn.ended && ` · ${t('scoring.rrr')} ${f.dec(rrr)}`}
           {projected !== null &&
+            rrr === null &&
             !inn.ended &&
             ` · ${t('homePage.projected', { n: f.num(projected) })}`}
         </div>
@@ -320,7 +347,7 @@ function LiveScore({ match, state }: { match: Match; state: MatchState }) {
   );
 }
 
-function HeroBall({ ball }: { ball: BallSummary }) {
+function HeroBall({ ball, small }: { ball: BallSummary; small?: boolean }) {
   const { t } = useTranslation();
   const f = useFormat();
   let label =
@@ -347,7 +374,7 @@ function HeroBall({ ball }: { ball: BallSummary }) {
           : 'border border-night-line bg-night-900 text-white';
   return (
     <span
-      className={`flex size-8 items-center justify-center rounded-full text-xs font-bold ${style}`}
+      className={`flex items-center justify-center rounded-full font-bold ${small ? 'size-6 text-[10px]' : 'size-8 text-xs'} ${style}`}
     >
       {label}
     </span>
@@ -371,6 +398,104 @@ function InningsTotals({ match, state }: { match: Match; state: MatchState }) {
         </li>
       ))}
     </ul>
+  );
+}
+
+/** Red LIVE pill with a pulsing dot. */
+function LiveBadge() {
+  const { t } = useTranslation();
+  return (
+    <span className="flex items-center gap-1.5 rounded-full bg-bpl-red px-2 py-0.5 text-white">
+      <span aria-hidden className="live-pulse size-2 rounded-full bg-white text-white" />
+      {t('homePage.live')}
+    </span>
+  );
+}
+
+/**
+ * Renders `children` in place; once most of them have scrolled up, `ticker`
+ * is pinned to the top of the screen. The ticker floats over the page, so
+ * nothing below moves.
+ */
+function StickyWhenGone({ children, ticker }: { children: ReactNode; ticker: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [gone, setGone] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    // Pinned once two thirds of the card (the big score with it) has scrolled up
+    const io = new IntersectionObserver(
+      ([e]) => setGone(e.intersectionRatio < 0.35 && e.boundingClientRect.top < 0),
+      { threshold: [0, 0.35, 1] },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <>
+      <div ref={ref}>{children}</div>
+      <div
+        aria-hidden={!gone}
+        className={`fixed inset-x-0 top-0 z-40 transition-transform duration-200 ease-out motion-reduce:transition-none ${
+          gone ? 'translate-y-0' : 'pointer-events-none -translate-y-full'
+        }`}
+      >
+        {ticker}
+      </div>
+    </>
+  );
+}
+
+/** The compact live score pinned to the top of Home while the big card is scrolled away. */
+function LiveTicker({ match, state }: { match: Match; state: MatchState }) {
+  const { t } = useTranslation();
+  const f = useFormat();
+  const inn = state.innings[state.innings.length - 1];
+  if (!inn) return null;
+  const batting = sideOfTeam(
+    match.teams[inn.battingTeam].teamId,
+    match.teams[inn.battingTeam].name,
+  );
+  const bowling = sideOfTeam(
+    match.teams[inn.bowlingTeam].teamId,
+    match.teams[inn.bowlingTeam].name,
+  );
+  const rrr = requiredRunRate(inn);
+  const balls = inn.overs.flatMap((o) => o.balls).slice(-6);
+  return (
+    <Link
+      to={`/match/${match.id}`}
+      tabIndex={-1}
+      className="block border-b border-night-line bg-night-950/95 pt-[env(safe-area-inset-top)] text-white shadow-lg backdrop-blur"
+    >
+      <div className="relative mx-auto flex max-w-lg items-center gap-2.5 overflow-hidden px-4 py-2 md:max-w-2xl">
+        <TeamEdge a={batting.color} b={bowling.color} />
+        <span
+          aria-hidden
+          className="live-pulse size-2 shrink-0 rounded-full bg-bpl-red text-bpl-red"
+        />
+        <TeamAvatar name={batting.name} color={batting.color} logo={batting.logo} size="sm" />
+        <span className="flex min-w-0 flex-col leading-tight">
+          <span className="tabular font-display text-xl font-extrabold">
+            {f.num(inn.runs)}/{f.num(inn.wickets)}{' '}
+            <span className="text-sm font-semibold text-white/70">({f.overs(inn.legalBalls)})</span>
+          </span>
+          <span className="tabular truncate text-[11px] text-white/70">
+            {/* One rate fits next to the balls: the required one while chasing */}
+            {rrr !== null
+              ? `${t('scoring.rrr')} ${f.dec(rrr)}`
+              : `${t('scoring.crr')} ${f.dec(runRate(inn.runs, inn.legalBalls))}`}
+          </span>
+        </span>
+        <ol className="ml-auto flex shrink-0 gap-1" aria-label={t('scoring.thisOver')}>
+          {balls.map((b) => (
+            <li key={b.eventId}>
+              <HeroBall ball={b} small />
+            </li>
+          ))}
+        </ol>
+      </div>
+    </Link>
   );
 }
 
@@ -435,7 +560,11 @@ function NextMatches({ fixtures, ts }: { fixtures: Fixture[]; ts: TournamentStat
         {fixtures.map((fx) => {
           const ids = fixtureTeams(fx, ts);
           return (
-            <li key={fx.id} className="py-2">
+            <li key={fx.id} className="relative py-2 pl-3">
+              <TeamEdge
+                a={findTeam(ids[0] ?? undefined)?.color}
+                b={findTeam(ids[1] ?? undefined)?.color}
+              />
               <div className="text-[13px] text-slate-600 dark:text-slate-400">
                 {t('fixtures.matchNo', { n: f.num(fx.no) })} ·{' '}
                 {formatDate(fx.date, lang, bengaliDigits, {

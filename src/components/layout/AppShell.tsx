@@ -3,6 +3,7 @@ import { assetUrl } from '../../utils/asset';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { ErrorBoundary } from '../common/ErrorBoundary';
 import { APP_SUBTITLE, APP_TITLE } from '../../config/app';
+import { ToastHost } from '../common/Toast';
 import { BPL_LOGO, COMMITTEE_LOGO, COMMITTEE_NAME } from '../../data/committee';
 import { LanguageToggle, useGoBack } from '../common/Header';
 import { TabBar } from './TabBar';
@@ -57,6 +58,7 @@ export function AppShell() {
       </header>
       <ErrorBoundary resetKey={pathname}>
         <Outlet />
+        <ToastHost />
       </ErrorBoundary>
       {/* Credit line, bottom right; the page padding keeps it above the phone tab bar */}
       <footer

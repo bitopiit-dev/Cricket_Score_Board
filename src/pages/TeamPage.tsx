@@ -289,7 +289,7 @@ function TeamMatches({ team, ts }: { team: TournamentTeam; ts: TournamentState }
               <span className="flex items-center gap-1.5 rounded-full bg-bpl-red px-2 py-0.5 text-xs font-bold text-white">
                 <span
                   aria-hidden
-                  className="size-1.5 animate-pulse rounded-full bg-white motion-reduce:animate-none"
+                  className="live-pulse size-1.5 rounded-full bg-white text-white"
                 />
                 {t('homePage.live')}
               </span>

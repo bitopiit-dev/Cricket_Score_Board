@@ -27,7 +27,7 @@ import { useFormat } from '../hooks/useFormat';
 import { useMatchStore } from '../store/matchStore';
 import { useCanScore } from '../sync/auth';
 import { Icon } from '../components/common/icons';
-import { matchShareText, shareText } from '../utils/share';
+import { useShareMatch } from '../hooks/useShareMatch';
 import { MatchCenter } from '../components/match/MatchCenter';
 import { SyncStatus } from '../components/scoring/SyncStatus';
 import { ballOutcome } from '../utils/ballText';
@@ -39,6 +39,7 @@ type Open =
 export default function ScoringPage() {
   const { t } = useTranslation();
   const f = useFormat();
+  const shareMatch = useShareMatch();
   const { id } = useParams<{ id: string }>();
   const { match, state, notFound, lastError, load, dispatch, undo, clearError } = useMatchStore();
   const [open, setOpen] = useState<Open>(null);
@@ -118,9 +119,7 @@ export default function ScoringPage() {
 
   /** Score message + a link straight to this match, for WhatsApp and friends. */
   async function onShare() {
-    const url = window.location.href.split('#')[0] + `#/match/${match!.id}`;
-    const ok = await shareText(title, matchShareText(match!, state!, t, f), url);
-    if (!ok) window.alert(t('share.failed'));
+    await shareMatch(match!, state!);
   }
 
   function onMore(action: MoreAction) {

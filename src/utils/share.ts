@@ -24,20 +24,29 @@ export function matchShareText(
   return lines.join('\n');
 }
 
+export type ShareOutcome = 'shared' | 'copied' | 'failed';
+
 /**
- * Opens the phone's share sheet; where there is none (most desktops), opens
- * WhatsApp with the message. Resolves false only if nothing could be opened.
+ * Opens the phone's share sheet. Where there is none (most desktops), copies
+ * the message and link to the clipboard; failing that, opens WhatsApp.
  */
-export async function shareText(title: string, text: string, url: string): Promise<boolean> {
+export async function shareText(title: string, text: string, url: string): Promise<ShareOutcome> {
   if (navigator.share) {
     try {
       await navigator.share({ title, text, url });
-      return true;
+      return 'shared';
     } catch (e) {
       // Closing the share sheet is not an error
-      if ((e as Error).name === 'AbortError') return true;
+      if ((e as Error).name === 'AbortError') return 'shared';
     }
   }
-  const w = window.open(`https://wa.me/?text=${encodeURIComponent(`${text}\n${url}`)}`, '_blank');
-  return !!w;
+  const full = `${text}\n${url}`;
+  try {
+    await navigator.clipboard.writeText(full);
+    return 'copied';
+  } catch {
+    // No clipboard (old browser or not allowed): fall through to WhatsApp
+  }
+  const w = window.open(`https://wa.me/?text=${encodeURIComponent(full)}`, '_blank');
+  return w ? 'shared' : 'failed';
 }

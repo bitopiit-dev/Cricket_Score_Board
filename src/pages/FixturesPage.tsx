@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router-dom';
 import { TeamAvatar } from '../components/common/TeamAvatar';
+import { TeamEdge } from '../components/common/TeamEdge';
 import { PageTitle } from '../components/layout/AppShell';
 import {
   FIXTURES,
@@ -340,10 +341,7 @@ function FixtureCard({
   const status =
     outcome.status === 'live' ? (
       <span className="flex items-center gap-1.5 font-bold text-bpl-red">
-        <span
-          aria-hidden
-          className="size-2 animate-pulse rounded-full bg-bpl-red motion-reduce:animate-none"
-        />
+        <span aria-hidden className="live-pulse size-2 rounded-full bg-bpl-red text-bpl-red" />
         {t('fixtures.live')}
       </span>
     ) : outcome.status === 'completed' ? (
@@ -356,6 +354,10 @@ function FixtureCard({
 
   const body = (
     <>
+      <TeamEdge
+        a={findTeam(sides[0] ?? undefined)?.color}
+        b={findTeam(sides[1] ?? undefined)?.color}
+      />
       <div
         className={`flex items-center justify-between gap-2 text-xs ${dark ? 'text-night-muted' : 'text-slate-500 dark:text-slate-400'}`}
       >
@@ -379,7 +381,7 @@ function FixtureCard({
     </>
   );
 
-  const cls = `block rounded-2xl p-3 ${
+  const cls = `relative block overflow-hidden rounded-2xl p-3 pl-4 ${
     dark
       ? 'border border-night-line bg-night-900'
       : `bg-white shadow-sm dark:bg-slate-900 ${highlight ? 'ring-2 ring-sky-400' : ''}`

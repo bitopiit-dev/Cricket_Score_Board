@@ -101,8 +101,10 @@ body {
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-/* Large numbers line up nicely */
-.tabular {
+/* Large numbers line up nicely, and never jitter sideways as live scores change */
+.tabular,
+table,
+.font-display {
   font-variant-numeric: tabular-nums;
 }
 
