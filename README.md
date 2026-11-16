@@ -173,20 +173,20 @@ Team logos work the same way. Put the file in `public/icons/teams/`, for example
 ## Committee members
 
 The **Committee** tab shows the BGL Sports Committee logo
-(`public/images/bgl-sports-committee-logo.png`) and its 10 members. The logo also
+(`public/images/bgl-sports-committee-logo.png`) and its 9 members with photos. The logo also
 sits next to the BPL-2027 title on the home page and links to this page.
 
-Members are in [`src/data/committee.ts`](src/data/committee.ts). Until a name is
-set, a member shows as "Member 1" / "সদস্য ১". To fill one in:
+Members are in [`src/data/committee.ts`](src/data/committee.ts). To add one:
 
 ```ts
-{ id: 'member-1', name: 'Rahim Uddin', role: 'convener', photo: 'committee/member-1.jpg' },
+member('rahim-uddin', 'Mr. Rahim Uddin'),
 ```
 
-- `role`: `convener` (আহ্বায়ক), `memberSecretary` (সদস্য সচিব) or `member` (সদস্য)
-- Photos go in `public/committee/`, named after the member's `id`
-  (for example `public/committee/member-1.jpg`), square, about 400 × 400 px.
-  Without a photo, the initials are shown.
+- Everyone is a plain member (সদস্য), so no role badge is shown. A `convener`
+  (আহ্বায়ক) or `memberSecretary` (সদস্য সচিব) would get a badge.
+- The photo must be `public/committee/<id>.jpg` (for example
+  `public/committee/rahim-uddin.jpg`), square, about 400 × 400 px, face centred.
+  A test fails if it is missing.
 
 ## Project layout
 

@@ -1,18 +1,25 @@
 import { describe, expect, it } from 'vitest';
 import { COMMITTEE_MEMBERS } from '../committee';
 
+/** Photo files that really exist, as 'committee/<file>'. */
+const PHOTOS = new Set(
+  Object.keys(import.meta.glob('/public/committee/*', { query: '?url' })).map((p) =>
+    p.replace('/public/', ''),
+  ),
+);
+
 describe('committee members', () => {
-  it('has 10 members with unique ids, one convener and one member secretary', () => {
-    expect(COMMITTEE_MEMBERS).toHaveLength(10);
-    expect(new Set(COMMITTEE_MEMBERS.map((m) => m.id)).size).toBe(10);
-    expect(COMMITTEE_MEMBERS.filter((m) => m.role === 'convener')).toHaveLength(1);
-    expect(COMMITTEE_MEMBERS.filter((m) => m.role === 'memberSecretary')).toHaveLength(1);
+  it('has 9 named members with unique ids, all plain members', () => {
+    expect(COMMITTEE_MEMBERS).toHaveLength(9);
+    expect(new Set(COMMITTEE_MEMBERS.map((m) => m.id)).size).toBe(9);
+    expect(COMMITTEE_MEMBERS.every((m) => m.role === 'member')).toBe(true);
   });
 
-  it('keeps photos in public/committee/ and names non-empty when set', () => {
+  it('has a non-empty name and an existing photo in public/committee/ for everyone', () => {
     for (const m of COMMITTEE_MEMBERS) {
-      if (m.photo) expect(m.photo.startsWith('committee/'), m.photo).toBe(true);
-      if (m.name !== undefined) expect(m.name.trim(), m.id).not.toBe('');
+      expect(m.name?.trim(), m.id).toBeTruthy();
+      expect(m.photo, m.id).toBe(`committee/${m.id}.jpg`);
+      expect(PHOTOS.has(m.photo!), m.photo).toBe(true);
     }
   });
 });

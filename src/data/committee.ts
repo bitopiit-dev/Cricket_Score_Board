@@ -2,8 +2,7 @@
  * BGL Sports Committee members. Seed data for the future Supabase
  * `committee_members` table, where the admin will add, edit and remove them.
  *
- * Names are not filled in yet: a member without a name is shown as
- * "Member 1" / "সদস্য ১" in the current language.
+ * Only members with a name are listed. Names are shown exactly as written.
  */
 export type CommitteeRole = 'convener' | 'memberSecretary' | 'member';
 
@@ -23,11 +22,22 @@ export const COMMITTEE_LOGO = 'images/bgl-sports-committee-logo.png';
 export const BPL_LOGO = 'images/bpl-2027-logo.png';
 export const COMMITTEE_NAME = 'BGL Sports Committee';
 
-const roleFor = (n: number): CommitteeRole =>
-  n === 1 ? 'convener' : n === 2 ? 'memberSecretary' : 'member';
+const member = (id: string, name: string): CommitteeMember => ({
+  id,
+  name,
+  role: 'member',
+  photo: `committee/${id}.jpg`,
+});
 
-/** Listed in display order. */
-export const COMMITTEE_MEMBERS: readonly CommitteeMember[] = Array.from({ length: 10 }, (_, i) => ({
-  id: `member-${i + 1}`,
-  role: roleFor(i + 1),
-}));
+/** Listed in display order. Everyone is a member; no convener or secretary. */
+export const COMMITTEE_MEMBERS: readonly CommitteeMember[] = [
+  member('amzad-hossain', 'Mr. Amzad Hossain'),
+  member('barkat-ullah', 'Mr. Barkat Ullah'),
+  member('faisal-imam-tanim', 'Mr. Faisal Imam Tanim'),
+  member('forhad-hossain', 'Mr. Forhad Hossain'),
+  member('hossain', 'Mr. Hossain'),
+  member('jakir-hossain', 'Mr. Jakir Hossain'),
+  member('k-a-rahman', 'Mr. K A Rahman'),
+  member('mahbubur-rahman-sohel', 'Mr. Mahbubur Rahman Sohel'),
+  member('monir-hossain', 'Mr. Monir Hossain'),
+];

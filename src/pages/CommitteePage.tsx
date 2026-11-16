@@ -50,11 +50,14 @@ export default function CommitteePage() {
                 >
                   <PlayerAvatar name={name} color="#065f46" photo={m.photo} size="lg" />
                   <span className="text-sm leading-tight font-semibold break-words">{name}</span>
-                  <span
-                    className={`rounded-full px-2 py-0.5 text-xs font-semibold ${ROLE_STYLE[m.role]}`}
-                  >
-                    {t(`committee.role.${m.role}`)}
-                  </span>
+                  {/* Only special roles get a badge; a plain "Member" on every card is noise. */}
+                  {m.role !== 'member' && (
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-xs font-semibold ${ROLE_STYLE[m.role]}`}
+                    >
+                      {t(`committee.role.${m.role}`)}
+                    </span>
+                  )}
                 </li>
               );
             })}
