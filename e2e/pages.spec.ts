@@ -2,7 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 import { open, prefs } from './helpers';
 
-/** Every public page; the scorer and admin screens need a login. */
+/** Every page that opens without a login in the offline e2e build (admin needs one). */
 const PAGES = [
   'home',
   'live',
@@ -15,6 +15,7 @@ const PAGES = [
   'rules',
   'committee',
   'awards',
+  'new',
 ];
 
 for (const theme of ['dark', 'light'] as const) {

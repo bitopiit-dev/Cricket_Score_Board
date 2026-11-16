@@ -20,12 +20,13 @@ import {
 } from '../engine/rules';
 import type { Team, TeamIndex } from '../engine/types';
 import { TeamAvatar } from '../components/common/TeamAvatar';
-import { FIXTURE_OVERS, fixturesOn, fixtureById, todayInDhaka } from '../data/fixtures';
+import { FIXTURE_OVERS, FIXTURES, fixtureById } from '../data/fixtures';
 import { TOURNAMENT_TEAMS, findTeam, playerDisplayName } from '../data/teams';
-import { useTournament } from '../hooks/useTournament';
+import { useNow, useTournament } from '../hooks/useTournament';
 import { usePrefs } from '../store/prefsStore';
 import { fixtureTeams } from '../tournament/standings';
-import { fixtureLabel, formatTime, slotLabel, stageLabel } from '../utils/fixtureText';
+import { nextFixture } from '../tournament/home';
+import { fixtureLabel, formatDate, formatTime, slotLabel, stageLabel } from '../utils/fixtureText';
 import { captainMark } from '../utils/matchText';
 import { createMatch } from '../store/matchStore';
 import { useFormat } from '../hooks/useFormat';
@@ -43,16 +44,27 @@ export default function NewMatchPage() {
   const navigate = useNavigate();
 
   const lang = usePrefs((s) => s.lang);
+  const bengaliDigits = usePrefs((s) => s.bengaliDigits);
   const tour = useTournament();
+  const now = useNow(60_000);
 
-  // Fixture link: pick a date, then one of that day's matches.
-  const [date, setDate] = useState(todayInDhaka);
+  // Fixture link: pick the match number; both teams fill in from the fixture.
   /** Fixture id, or null for a match outside the fixture (friendly / practice). */
   const [fixtureId, setFixtureId] = useState<string | null>(null);
   /** Fields filled from the fixture are locked until the scorer chooses to edit. */
   const [manualEdit, setManualEdit] = useState(false);
   const fixture = fixtureById(fixtureId ?? undefined);
-  const dayFixtures = fixturesOn(date);
+  // The whole fixture, grouped by day, for the match-number list
+  const fixtureDays = new Map<string, typeof FIXTURES>();
+  for (const fx of FIXTURES) fixtureDays.set(fx.date, [...(fixtureDays.get(fx.date) ?? []), fx]);
+  const statusNote = (id: string) => {
+    const status = tour?.ts.outcomes.get(id)?.status;
+    return status === 'completed'
+      ? ` (${t('newMatch.statusDone')})`
+      : status && status !== 'scheduled'
+        ? ` (${t('newMatch.statusLive')})`
+        : '';
+  };
   const sidesOf = (id: string): [string | null, string | null] =>
     tour ? fixtureTeams(fixtureById(id)!, tour.ts) : [null, null];
   const existing = fixture && tour?.ts.outcomes.get(fixture.id);
@@ -130,6 +142,14 @@ export default function NewMatchPage() {
   const sameTeam = teamIds[0] !== '' && teamIds[0] === teamIds[1];
   const canStart = !saving && !alreadyStarted && xiReady && !sameTeam;
 
+  // Opens on the next match still to be played, with its teams already filled in
+  const [autoPicked, setAutoPicked] = useState(false);
+  if (!autoPicked && tour) {
+    setAutoPicked(true);
+    const next = nextFixture(tour.ts, now);
+    if (next) pickFixture(next.id);
+  }
+
   const displayName = (i: TeamIndex) =>
     findTeam(teamIds[i])?.name ??
     (teamNames[i].trim() || t('newMatch.teamDefault', { n: f.num(i + 1) }));
@@ -199,41 +219,31 @@ export default function NewMatchPage() {
           <div className="flex flex-col gap-3">
             <label className="flex flex-col gap-1">
               <span className="text-sm text-slate-600 dark:text-slate-400">
-                {t('newMatch.date')}
+                {t('newMatch.matchNo')}
               </span>
-              <input
-                type="date"
+              <select
                 className={inputClass}
-                value={date}
-                onChange={(e) => {
-                  setDate(e.target.value);
-                  pickFixture(null);
-                }}
-              />
-            </label>
-            {dayFixtures.length === 0 ? (
-              <p className="rounded-xl bg-slate-100 px-3 py-2 text-sm text-slate-600 dark:bg-slate-800 dark:text-slate-300">
-                {t('newMatch.noFixtureOnDate')}
-              </p>
-            ) : (
-              <label className="flex flex-col gap-1">
-                <span className="text-sm text-slate-600 dark:text-slate-400">
-                  {t('newMatch.fixtureMatch')}
+                value={fixtureId ?? ''}
+                onChange={(e) => pickFixture(e.target.value || null)}
+              >
+                <option value="">{t('newMatch.outsideFixture')}</option>
+                {[...fixtureDays].map(([day, fxs]) => (
+                  <optgroup key={day} label={formatDate(day, lang, bengaliDigits)}>
+                    {fxs.map((fx) => (
+                      <option key={fx.id} value={fx.id}>
+                        {fixtureLabel(fx, sidesOf(fx.id), lang, t, f)}
+                        {statusNote(fx.id)}
+                      </option>
+                    ))}
+                  </optgroup>
+                ))}
+              </select>
+              {fixture && (
+                <span className="text-xs text-slate-600 dark:text-slate-400">
+                  {t('newMatch.teamsFromFixture')}
                 </span>
-                <select
-                  className={inputClass}
-                  value={fixtureId ?? ''}
-                  onChange={(e) => pickFixture(e.target.value || null)}
-                >
-                  <option value="">{t('newMatch.outsideFixture')}</option>
-                  {dayFixtures.map((fx) => (
-                    <option key={fx.id} value={fx.id}>
-                      {fixtureLabel(fx, sidesOf(fx.id), lang, t, f)}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            )}
+              )}
+            </label>
             {!fixture && (
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 {t('newMatch.outsideFixtureHint')}
@@ -241,8 +251,8 @@ export default function NewMatchPage() {
             )}
             {fixture && (
               <dl className="grid grid-cols-2 gap-x-3 gap-y-1 rounded-xl bg-sky-50 p-3 text-sm dark:bg-sky-950/40">
-                <dt className="text-slate-500 dark:text-slate-400">{t('newMatch.matchNo')}</dt>
-                <dd className="font-semibold">{f.num(fixture.no)}</dd>
+                <dt className="text-slate-500 dark:text-slate-400">{t('newMatch.date')}</dt>
+                <dd className="font-semibold">{formatDate(fixture.date, lang, bengaliDigits)}</dd>
                 <dt className="text-slate-500 dark:text-slate-400">{t('newMatch.stage')}</dt>
                 <dd className="font-semibold">{stageLabel(fixture.stage, t)}</dd>
                 <dt className="text-slate-500 dark:text-slate-400">{t('newMatch.startTime')}</dt>

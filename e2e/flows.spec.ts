@@ -86,3 +86,26 @@ test('a two-match day shows both countdowns in turn', async ({ page }) => {
   await page.keyboard.press('ArrowLeft');
   await expect(dots.nth(0)).toHaveAttribute('aria-current', 'true');
 });
+
+test('new match: picking a match number fills in both teams', async ({ page }) => {
+  await open(page, 'new');
+  const matchNo = page.getByLabel('ম্যাচ নম্বর');
+  const team1 = page.getByLabel('দল ১-এর নাম');
+  const team2 = page.getByLabel('দল ২-এর নাম');
+  await matchNo.selectOption({ label: await optionLabel(matchNo, 'ম্যাচ ১০ ') });
+  await expect(team1.locator('option:checked')).toHaveText('Quality Flying Fighter');
+  await expect(team2.locator('option:checked')).toHaveText('Power House X1');
+  // Fixture teams are locked until the scorer chooses to edit them
+  await expect(team1).toBeDisabled();
+  await matchNo.selectOption({ label: await optionLabel(matchNo, 'ম্যাচ ১ ') });
+  await expect(team1.locator('option:checked')).toHaveText('Red Bulls Warriors');
+  await expect(team2.locator('option:checked')).toHaveText('Rainbow Cutting');
+});
+
+/** The full text of the first option starting with `prefix`. */
+async function optionLabel(select: import('@playwright/test').Locator, prefix: string) {
+  return select.evaluate(
+    (s: HTMLSelectElement, p) => [...s.options].find((o) => o.text.startsWith(p))!.text,
+    prefix,
+  );
+}

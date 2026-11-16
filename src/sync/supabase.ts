@@ -12,7 +12,10 @@ const KEY =
 
 /** Null in tests, without a browser, or where storage is blocked, so the app still runs (offline mode). */
 export const supabase: SupabaseClient | null = (() => {
-  if (typeof window === 'undefined' || import.meta.env.MODE === 'test') return null;
+  // Unit tests and the browser-test build (vite build --mode e2e) run offline,
+  // so their results never depend on live scores
+  const mode = import.meta.env.MODE;
+  if (typeof window === 'undefined' || mode === 'test' || mode === 'e2e') return null;
   try {
     return createClient(URL, KEY, { auth: { persistSession: true, autoRefreshToken: true } });
   } catch {

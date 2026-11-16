@@ -68,8 +68,6 @@
     "ruleNoFreeHit": "No free hit (the ball after a no-ball is a normal delivery)",
     "fixture": "Fixture",
     "date": "Date",
-    "fixtureMatch": "Match on that day",
-    "noFixtureOnDate": "No match on this date. You can still play a friendly / practice match by filling in everything below.",
     "outsideFixture": "Outside the fixture (friendly / practice)",
     "outsideFixtureHint": "A match outside the fixture: pick the teams, players and rules yourself. It does not count in the points table.",
     "matchNo": "Match no.",
@@ -85,7 +83,10 @@
     "lockAgain": "Lock again",
     "fromFixture": "Filled from the fixture",
     "slotPending": "{{slot}}: team not decided yet, pick it from the list",
-    "xiCount": "Playing XI: {{n}}/{{of}} picked"
+    "xiCount": "Playing XI: {{n}}/{{of}} picked",
+    "statusDone": "finished",
+    "statusLive": "in progress",
+    "teamsFromFixture": "Both teams were filled in from the fixture."
   },
   "scoring": {
     "crr": "CRR",

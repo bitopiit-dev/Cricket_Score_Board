@@ -1,9 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
 
 /**
- * Browser tests against the production build (`npm run build` first).
- * The build is made without Supabase keys, so the app runs in its offline
- * mode and the tests never depend on the network or live data.
+ * Browser tests against a production build made in the offline `e2e` mode
+ * (npm run test:e2e builds it first). Supabase is switched off in that mode,
+ * so the tests never depend on live scores, and scorer screens open without a login.
  */
 const executablePath = process.env.PW_CHROMIUM_PATH; // only for sandboxes with a preinstalled browser
 

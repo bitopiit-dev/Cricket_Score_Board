@@ -51,7 +51,7 @@ export function Segmented<T extends string | number>({
           className={`min-w-0 flex-1 truncate rounded-lg px-3 py-2 text-sm font-semibold ${
             o.value === value
               ? 'bg-white text-emerald-800 shadow dark:bg-slate-950 dark:text-emerald-400'
-              : 'text-slate-600 dark:text-slate-400'
+              : 'text-slate-600 dark:text-slate-300'
           }`}
         >
           {o.label}
