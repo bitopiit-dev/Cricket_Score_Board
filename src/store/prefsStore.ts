@@ -9,9 +9,12 @@ interface PrefsState {
   /** Show numbers in Bengali digits when the language is Bengali. */
   bengaliDigits: boolean;
   theme: Theme;
+  /** The viewer's own team, shown first on Home; null for none. */
+  favoriteTeam: string | null;
   setLang: (lang: Lang) => void;
   setBengaliDigits: (on: boolean) => void;
   setTheme: (theme: Theme) => void;
+  setFavoriteTeam: (id: string | null) => void;
 }
 
 /** localStorage that never throws (private mode, blocked storage). */
@@ -45,9 +48,11 @@ export const usePrefs = create<PrefsState>()(
       lang: 'bn',
       bengaliDigits: true,
       theme: 'system',
+      favoriteTeam: null,
       setLang: (lang) => set({ lang }),
       setBengaliDigits: (bengaliDigits) => set({ bengaliDigits }),
       setTheme: (theme) => set({ theme }),
+      setFavoriteTeam: (favoriteTeam) => set({ favoriteTeam }),
     }),
     { name: 'csb-prefs', storage: safeStorage },
   ),

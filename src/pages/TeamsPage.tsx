@@ -5,11 +5,13 @@ import { PageTitle } from '../components/layout/AppShell';
 import { TOURNAMENT_TEAMS, type GroupId } from '../data/teams';
 import { teamsOfGroup } from '../tournament/groups';
 import { useFormat } from '../hooks/useFormat';
+import { usePrefs } from '../store/prefsStore';
 
 /** Teams tab: the 12 tournament teams; tap one for its squad. */
 export default function TeamsPage() {
   const { t } = useTranslation();
   const f = useFormat();
+  const favoriteTeam = usePrefs((s) => s.favoriteTeam);
   return (
     <main className="mx-auto flex w-full max-w-lg flex-col gap-3 p-4 md:max-w-3xl">
       <PageTitle>
@@ -28,9 +30,15 @@ export default function TeamsPage() {
               <li key={team.id}>
                 <Link
                   to={`/team/${team.id}`}
-                  className="flex h-full flex-col items-center gap-2 rounded-2xl bg-white p-3 text-center shadow-sm active:bg-slate-50 dark:bg-slate-900 dark:active:bg-slate-800"
+                  className="relative flex h-full flex-col items-center gap-2 rounded-2xl bg-white p-3 text-center shadow-sm active:bg-slate-50 dark:bg-slate-900 dark:active:bg-slate-800"
                   style={{ borderTop: `4px solid ${team.color}` }}
                 >
+                  {team.id === favoriteTeam && (
+                    <span className="absolute top-2 right-2 text-lg leading-none text-bpl-yellow">
+                      <span aria-hidden>★</span>
+                      <span className="sr-only">{t('favorite.star')}</span>
+                    </span>
+                  )}
                   <TeamAvatar name={team.name} color={team.color} logo={team.logo} size="lg" />
                   <span lang="en" className="text-sm leading-tight font-semibold break-words">
                     {team.name}

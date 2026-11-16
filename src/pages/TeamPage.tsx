@@ -206,14 +206,17 @@ function TeamHero({
         }}
       />
       <div className="relative mx-auto flex max-w-lg flex-col items-center gap-2 px-4 pt-3 pb-4 text-center">
-        <button
-          type="button"
-          onClick={goBack}
-          aria-label={t('common.back')}
-          className="flex size-10 items-center justify-center self-start rounded-full text-3xl text-white/85 hover:bg-white/10"
-        >
-          ‹
-        </button>
+        <div className="flex w-full items-center justify-between">
+          <button
+            type="button"
+            onClick={goBack}
+            aria-label={t('common.back')}
+            className="flex size-11 items-center justify-center rounded-full text-3xl text-white/85 hover:bg-white/10"
+          >
+            ‹
+          </button>
+          <FavoriteButton team={team} />
+        </div>
         <span className="-mt-6 rounded-full bg-white p-1 shadow-xl ring-4 ring-white/15">
           <TeamAvatar name={team.name} color={team.color} logo={team.logo} size="xl" />
         </span>
@@ -410,5 +413,30 @@ function TeamMatches({ team, ts }: { team: TournamentTeam; ts: TournamentState }
         </section>
       )}
     </>
+  );
+}
+
+/** Marks this team as the viewer's own; Home then shows it first. */
+function FavoriteButton({ team }: { team: TournamentTeam }) {
+  const { t } = useTranslation();
+  const favorite = usePrefs((s) => s.favoriteTeam === team.id);
+  const setFavorite = usePrefs((s) => s.setFavoriteTeam);
+  return (
+    <button
+      type="button"
+      aria-pressed={favorite}
+      aria-label={t(favorite ? 'favorite.removeLabel' : 'favorite.addLabel', { team: team.name })}
+      onClick={() => setFavorite(favorite ? null : team.id)}
+      className={`flex min-h-11 items-center gap-1.5 rounded-full px-4 text-sm font-semibold ring-1 active:scale-95 ${
+        favorite
+          ? 'bg-bpl-yellow text-night-950 ring-bpl-yellow'
+          : 'bg-white/10 text-white ring-white/30 hover:bg-white/15'
+      }`}
+    >
+      <span aria-hidden className="text-base leading-none">
+        {favorite ? '★' : '☆'}
+      </span>
+      {t(favorite ? 'favorite.added' : 'favorite.add')}
+    </button>
   );
 }

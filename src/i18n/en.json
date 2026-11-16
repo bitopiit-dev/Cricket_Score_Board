@@ -539,5 +539,20 @@
     "pick": "Choose the Man of the Match",
     "none": "Not chosen yet",
     "hint": "Shown to everyone following the match."
+  },
+  "favorite": {
+    "add": "Make favourite",
+    "added": "Favourite",
+    "addLabel": "Make {{team}} your favourite team",
+    "removeLabel": "Remove {{team}} as your favourite team",
+    "yourTeam": "Your team",
+    "record": "{{p}} played, {{w}} won, {{l}} lost",
+    "next": "Next match",
+    "vs": "vs {{team}}",
+    "noneLeft": "No more matches for this team in this stage.",
+    "pick": "Pick a favourite team",
+    "pickHint": "Tap ☆ on a team's page and Home shows that team first.",
+    "star": "(your favourite team)",
+    "open": "Team page"
   }
 }

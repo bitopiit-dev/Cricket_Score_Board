@@ -8,6 +8,7 @@ import { LEAGUE_POINTS, QUALIFIERS } from '../tournament/format';
 import type { LeagueStage, TableRow } from '../tournament/standings';
 import { stageLabel } from '../utils/fixtureText';
 import { PageSkeleton } from '../components/common/Skeleton';
+import { usePrefs } from '../store/prefsStore';
 
 /** Points tab: Group A, Group B and Super Six tables from the matches scored in the app. */
 export default function PointsPage() {
@@ -59,6 +60,7 @@ function Table({
   const nrr = (n: number) => `${n > 0 ? '+' : n < 0 ? '−' : ''}${f.dec(Math.abs(n), 3)}`;
   // Before the first match the order is only the fixture order, not a ranking
   const started = rows.some((r) => r.played > 0);
+  const favoriteTeam = usePrefs((s) => s.favoriteTeam);
   const th = 'px-0.5 py-2 text-center font-semibold';
   const td = 'tabular px-1 py-2 text-center';
 
@@ -140,6 +142,14 @@ function Table({
                     <span lang="en" className="min-w-0 leading-tight font-semibold break-words">
                       {team?.name ?? r.teamId}
                     </span>
+                    {r.teamId === favoriteTeam && (
+                      <>
+                        <span aria-hidden className="shrink-0 text-bpl-yellow">
+                          ★
+                        </span>
+                        <span className="sr-only">{t('favorite.star')}</span>
+                      </>
+                    )}
                     {q && <span className="sr-only">{t('points.qualifiedMark')}</span>}
                   </span>
                 </td>

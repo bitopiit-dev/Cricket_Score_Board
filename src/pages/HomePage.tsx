@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import type { Fixture } from '../data/fixtures';
+import { todayInDhaka, type Fixture } from '../data/fixtures';
 import { findTeam, initials } from '../data/teams';
 import { runRate } from '../engine/rules';
 import { manOfTheMatchId } from '../engine/milestones';
@@ -30,6 +30,7 @@ import { fixtureTeams, type TournamentState } from '../tournament/standings';
 import { formatDate, formatTime, slotLabel, stageLabel } from '../utils/fixtureText';
 import { playerName, resultText } from '../utils/matchText';
 import { PageSkeleton } from '../components/common/Skeleton';
+import { teamRecord } from '../tournament/teamView';
 
 /** A side in the hero: short code, full name and team colour. */
 interface Side {
@@ -60,10 +61,88 @@ export default function HomePage() {
       <h1 className="sr-only">{t('homePage.title')}</h1>
       <NoticeBanner page="home" />
       <Hero hero={hero} now={now} />
+      <FavoriteTeamCard ts={tour.ts} />
       <InstallHint />
       <Progress ts={tour.ts} />
       {next3.length > 0 && <NextMatches fixtures={next3} ts={tour.ts} />}
     </main>
+  );
+}
+
+/* ----------------------------- Favourite team ---------------------------- */
+
+/** The viewer's own team: record so far and its next match. Without one, a short invitation. */
+function FavoriteTeamCard({ ts }: { ts: TournamentState }) {
+  const { t } = useTranslation();
+  const f = useFormat();
+  const lang = usePrefs((s) => s.lang);
+  const bengaliDigits = usePrefs((s) => s.bengaliDigits);
+  const team = findTeam(usePrefs((s) => s.favoriteTeam) ?? undefined);
+
+  if (!team)
+    return (
+      <Link
+        to="/teams"
+        className="flex min-h-11 items-center gap-3 rounded-2xl border border-dashed border-slate-300 px-4 py-3 text-sm dark:border-slate-700"
+      >
+        <span aria-hidden className="text-xl text-bpl-yellow">
+          ☆
+        </span>
+        <span className="flex-1">
+          <span className="block font-semibold">{t('favorite.pick')}</span>
+          <span className="block text-[13px] text-slate-600 dark:text-slate-400">
+            {t('favorite.pickHint')}
+          </span>
+        </span>
+      </Link>
+    );
+
+  const rec = teamRecord(team.id, ts, todayInDhaka());
+  const next = rec.next;
+  let opponent: string | null = null;
+  if (next) {
+    const [a, b] = fixtureTeams(next, ts);
+    const mineIsA = a === team.id;
+    opponent = slotLabel(mineIsA ? next.teamB : next.teamA, mineIsA ? b : a, t, f);
+  }
+
+  return (
+    <Link
+      to={`/team/${team.id}`}
+      aria-label={`${t('favorite.yourTeam')}: ${team.name}. ${t('favorite.open')}`}
+      className="flex items-center gap-3 rounded-2xl border-l-4 bg-white p-4 shadow-sm active:bg-slate-50 dark:bg-slate-900 dark:active:bg-slate-800"
+      style={{ borderLeftColor: team.color }}
+    >
+      <TeamAvatar name={team.name} color={team.color} logo={team.logo} size="md" />
+      <span className="min-w-0 flex-1">
+        <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 dark:text-slate-400">
+          <span aria-hidden className="text-bpl-yellow">
+            ★
+          </span>
+          {t('favorite.yourTeam')}
+        </span>
+        <span lang="en" className="block font-display text-xl leading-tight font-bold">
+          {team.name}
+        </span>
+        <span className="block text-[13px] text-slate-600 dark:text-slate-400">
+          {t('favorite.record', { p: f.num(rec.played), w: f.num(rec.won), l: f.num(rec.lost) })}
+        </span>
+        <span className="mt-1 block text-sm">
+          {next ? (
+            <>
+              <span className="font-semibold">{t('favorite.next')}: </span>
+              {formatDate(next.date, lang, bengaliDigits)}, {formatTime(next.time, lang, f)},{' '}
+              {t('favorite.vs', { team: opponent })}
+            </>
+          ) : (
+            t('favorite.noneLeft')
+          )}
+        </span>
+      </span>
+      <span aria-hidden className="text-xl text-slate-500 dark:text-slate-400">
+        ›
+      </span>
+    </Link>
   );
 }
 
