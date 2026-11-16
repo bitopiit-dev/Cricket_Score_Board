@@ -80,7 +80,94 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
     group: 'A',
     color: '#7c3aed',
     logo: 'icons/teams/finishing-victorians.png',
-    players: [],
+    players: [
+      {
+        id: 'abdullah',
+        name: 'Tamim',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/finishing-victorians/abdullah-1794827102678.jpg',
+      },
+      {
+        id: 'alif',
+        name: 'Alif',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/finishing-victorians/alif-1794748704687.jpg',
+      },
+      {
+        id: 'atik',
+        name: 'Atik',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/finishing-victorians/atik-1794748715314.jpg',
+      },
+      {
+        id: 'fahad',
+        name: 'Fahad',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/finishing-victorians/fahad-1794748728707.jpg',
+      },
+      {
+        id: 'ismail',
+        name: 'Ismail',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/finishing-victorians/ismail-1794748740890.jpg',
+      },
+      {
+        id: 'jobayer',
+        name: 'Jobayer',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/finishing-victorians/jobayer-1794748753721.jpg',
+      },
+      {
+        id: 'kabir',
+        name: 'Kabir',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/finishing-victorians/kabir-1794748764760.jpg',
+      },
+      {
+        id: 'monjur',
+        name: 'Monjur',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/finishing-victorians/monjur-1794748782228.jpg',
+      },
+      {
+        id: 'rasidul',
+        name: 'Rasidul',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/finishing-victorians/rasidul-1794748795197.jpg',
+      },
+      {
+        id: 'siful',
+        name: 'Safiul',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/finishing-victorians/siful-1794748824924.jpg',
+        viceCaptain: true,
+      },
+      {
+        id: 'saiful-2',
+        name: 'Saiful 2',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/finishing-victorians/saiful-2-1794748841684.jpg',
+      },
+      {
+        id: 'saiful-3',
+        name: 'Saiful 3',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/finishing-victorians/saiful-3-1794748884722.jpg',
+      },
+      {
+        id: 'sohel',
+        name: 'Sohel',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/finishing-victorians/sohel-1794748895207.jpg',
+      },
+      {
+        id: 'player',
+        name: 'Shihab',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/finishing-victorians/player-1794749115070.jpg',
+        captain: true,
+      },
+    ],
   },
   {
     id: 'power-house-x1',
@@ -115,11 +202,10 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
     color: '#ca8a04',
     logo: 'icons/teams/mcd-super-stars.png',
     players: [
-      squad('mcd-super-stars', 'Monir Hossain', { captain: true, role: 'bowler' }),
-      squad('mcd-super-stars', 'Shahanur'),
+      squad('mcd-super-stars', 'Monir Hossain', { role: 'bowler', captain: true }),
+      squad('mcd-super-stars', 'Shahanur', { viceCaptain: true }),
       squad('mcd-super-stars', 'Nazmul Hassan'),
       squad('mcd-super-stars', 'Robel Mia', { role: 'bowler' }),
-      // A second player called Monir Hossain
       squad('mcd-super-stars', 'Monir Hossain', { nameTag: '2' }),
       squad('mcd-super-stars', 'Kamrul Hasan'),
       squad('mcd-super-stars', 'Shahin Alom', { role: 'bowler' }),
@@ -141,9 +227,9 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
     logo: 'icons/teams/power-printing-washing.jpg',
     // Captain not named yet: the team page shows a warning until one is set.
     players: [
-      squad('power-printing-washing', 'Shubroto'),
-      squad('power-printing-washing', 'Salah Uddin'),
-      squad('power-printing-washing', 'Johurul'),
+      { id: 'shubroto', name: 'Subroto', photo: 'players/power-printing-washing/shubroto.jpg' },
+      squad('power-printing-washing', 'Salah Uddin', { viceCaptain: true }),
+      squad('power-printing-washing', 'Johurul', { captain: true }),
       squad('power-printing-washing', 'Kawsar'),
       squad('power-printing-washing', 'Alal'),
       squad('power-printing-washing', 'Jahidul'),
@@ -152,7 +238,13 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
       squad('power-printing-washing', 'Shawon'),
       squad('power-printing-washing', 'Mojir'),
       squad('power-printing-washing', 'Shafiqul'),
-      squad('power-printing-washing', 'Easin', { substitute: true }),
+      {
+        id: 'easin',
+        name: 'Robin',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/power-printing-washing/easin-1794827459609.jpg',
+        substitute: true,
+      },
       squad('power-printing-washing', 'Shuvo', { substitute: true }),
       squad('power-printing-washing', 'Nazmul', { substitute: true }),
     ],
@@ -165,20 +257,95 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
     color: '#2563eb',
     logo: 'icons/teams/quality-flying-fighter.jpg',
     players: [
-      squad('quality-flying-fighter', 'Ajmir Hossen', { shortName: 'Rashed', captain: true }),
-      squad('quality-flying-fighter', 'Asad Ahmed'),
-      squad('quality-flying-fighter', 'Billal Hossain'),
-      squad('quality-flying-fighter', 'Ibrahim'),
-      squad('quality-flying-fighter', 'Morshed'),
-      squad('quality-flying-fighter', 'Mamun'),
-      squad('quality-flying-fighter', 'Rakib'),
-      squad('quality-flying-fighter', 'Parvez'),
-      squad('quality-flying-fighter', 'Hridoy'),
-      squad('quality-flying-fighter', 'Abdur Rahman'),
-      squad('quality-flying-fighter', 'Sohel'),
-      squad('quality-flying-fighter', 'Tariqul', { substitute: true }),
-      squad('quality-flying-fighter', 'Saiful', { substitute: true }),
-      squad('quality-flying-fighter', 'Imran', { substitute: true }),
+      {
+        id: 'ajmir-hossen',
+        name: 'Asad',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/quality-flying-fighter/ajmir-hossen-1794804763286.jpg',
+        shortName: 'Rashed',
+      },
+      {
+        id: 'asad-ahmed',
+        name: 'Rashed',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/quality-flying-fighter/asad-ahmed-1794804768215.jpg',
+        captain: true,
+      },
+      {
+        id: 'billal-hossain',
+        name: 'Billal',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/quality-flying-fighter/billal-hossain-1794804775668.jpg',
+      },
+      {
+        id: 'ibrahim',
+        name: 'Ibrahim',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/quality-flying-fighter/ibrahim-1794804780384.jpg',
+      },
+      {
+        id: 'morshed',
+        name: 'Morshed',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/quality-flying-fighter/morshed-1794804784698.jpg',
+      },
+      {
+        id: 'mamun',
+        name: 'Mamun',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/quality-flying-fighter/mamun-1794804789926.jpg',
+      },
+      {
+        id: 'rakib',
+        name: 'Rakib',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/quality-flying-fighter/rakib-1794804800232.jpg',
+      },
+      {
+        id: 'parvez',
+        name: 'Parvez',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/quality-flying-fighter/parvez-1794804804231.jpg',
+      },
+      {
+        id: 'hridoy',
+        name: 'Hridoy',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/quality-flying-fighter/hridoy-1794804816880.jpg',
+      },
+      {
+        id: 'abdur-rahman',
+        name: 'Rony',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/quality-flying-fighter/abdur-rahman-1794834786233.jpg',
+      },
+      {
+        id: 'sohel',
+        name: 'Sohel',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/quality-flying-fighter/sohel-1794804844815.jpg',
+      },
+      {
+        id: 'tariqul',
+        name: 'Tariqul',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/quality-flying-fighter/tariqul-1794804855533.jpg',
+        substitute: true,
+      },
+      {
+        id: 'saiful',
+        name: 'Saiful',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/quality-flying-fighter/saiful-1794804860377.jpg',
+        substitute: true,
+      },
+      {
+        id: 'imran',
+        name: 'UZZAL',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/quality-flying-fighter/imran-1794804866324.jpg',
+        substitute: true,
+      },
     ],
   },
   {
@@ -201,7 +368,6 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
       squad('sky-warrior', 'Antar'),
       squad('sky-warrior', 'Md. Mosharaf'),
       squad('sky-warrior', 'Md. Tanvir', { substitute: true }),
-      // Not the same player as Md. Ashraful Hoque above
       squad('sky-warrior', 'Md. Ashraful', { nameTag: 'Jr.', substitute: true }),
       squad('sky-warrior', 'Md. Hossain Saiful', { substitute: true }),
     ],
@@ -215,20 +381,92 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
     color: '#0d9488',
     logo: 'icons/teams/engineer-warriors.png',
     players: [
-      squad('engineer-warriors', 'Farhad', { captain: true }),
-      squad('engineer-warriors', 'Akhtar', { role: 'bowler' }),
-      squad('engineer-warriors', 'Avijit', { role: 'bowler' }),
-      squad('engineer-warriors', 'Harun', { role: 'wicketKeeper' }),
-      squad('engineer-warriors', 'Shakil', { role: 'batter' }),
-      squad('engineer-warriors', 'Akbar', { role: 'batter' }),
-      squad('engineer-warriors', 'Mohiuddin', { role: 'batter' }),
-      squad('engineer-warriors', 'Aktar', { role: 'bowler' }),
-      squad('engineer-warriors', 'Imran', { role: 'bowler' }),
-      squad('engineer-warriors', 'Masud', { role: 'batter' }),
-      squad('engineer-warriors', 'Shimanto', { role: 'allRounder' }),
-      squad('engineer-warriors', 'Tawhid', { substitute: true }),
-      squad('engineer-warriors', 'Samad', { substitute: true }),
-      squad('engineer-warriors', 'Amzad', { substitute: true }),
+      {
+        id: 'forhad',
+        name: 'Forhad',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/engineer-warriors/forhad-1794833715718.jpg',
+        captain: true,
+      },
+      {
+        id: 'akhter',
+        name: 'Akhter',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/engineer-warriors/akhter-1794833719704.jpg',
+      },
+      {
+        id: 'antor',
+        name: 'Antor',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/engineer-warriors/antor-1794833737920.jpg',
+        viceCaptain: true,
+      },
+      {
+        id: 'avijit',
+        name: 'Avijit',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/engineer-warriors/avijit-1794833746636.jpg',
+      },
+      {
+        id: 'azad',
+        name: 'Azad',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/engineer-warriors/azad-1794833755882.jpg',
+      },
+      {
+        id: 'hasan',
+        name: 'Hasan',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/engineer-warriors/hasan-1794833765919.jpg',
+      },
+      {
+        id: 'imran',
+        name: 'Imran',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/engineer-warriors/imran-1794833780007.jpg',
+      },
+      {
+        id: 'mohiuddin',
+        name: 'Mohiuddin',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/engineer-warriors/mohiuddin-1794833792230.jpg',
+      },
+      {
+        id: 'shakil',
+        name: 'Shakil',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/engineer-warriors/shakil-1794833801997.jpg',
+      },
+      {
+        id: 'tawhid',
+        name: 'Tawhid',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/engineer-warriors/tawhid-1794833810993.jpg',
+      },
+      {
+        id: 'yousuf',
+        name: 'Yousuf',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/engineer-warriors/yousuf-1794833822170.jpg',
+      },
+      {
+        id: 'masud',
+        name: 'Masud',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/engineer-warriors/masud-1794834863935.jpg',
+      },
+      {
+        id: 'shimanto',
+        name: 'Shimanto',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/engineer-warriors/shimanto-1794834873507.jpg',
+      },
+      {
+        id: 'akbar',
+        name: 'Akbar',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/engineer-warriors/akbar-1794834888661.jpg',
+      },
     ],
   },
   {
@@ -247,12 +485,12 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
       squad('hr-vikings', 'Hasib'),
       squad('hr-vikings', 'Hasnat'),
       squad('hr-vikings', 'Kader'),
-      squad('hr-vikings', 'Kamrul'),
+      squad('hr-vikings', 'Kamrul', { substitute: true }),
       squad('hr-vikings', 'Rakib'),
       squad('hr-vikings', 'Salauddin'),
-      squad('hr-vikings', 'Shakil'),
-      squad('hr-vikings', 'Nayeem', { substitute: true }),
-      squad('hr-vikings', 'Saimon', { substitute: true }),
+      squad('hr-vikings', 'Shakil', { substitute: true }),
+      squad('hr-vikings', 'Nayeem'),
+      squad('hr-vikings', 'Saimon'),
     ],
   },
   {
@@ -276,7 +514,6 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
       squad('power-player', 'Sabuj'),
       squad('power-player', 'Kalam', { substitute: true }),
       squad('power-player', 'Rashed', { substitute: true }),
-      // A second player called Al-Amin
       squad('power-player', 'Al-Amin', { nameTag: '2', substitute: true }),
     ],
   },
@@ -293,15 +530,37 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
       squad('ddc', 'Sajib'),
       squad('ddc', 'Shoikat'),
       squad('ddc', 'K. Rana'),
-      squad('ddc', 'Siam'),
+      {
+        id: 'siam',
+        name: 'Siam',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/ddc/siam-1794835251065.jpg',
+      },
       squad('ddc', 'Imran'),
-      squad('ddc', 'Topayel'),
+      {
+        id: 'topayel',
+        name: 'Topayel',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/ddc/topayel-1794835255417.jpg',
+      },
       squad('ddc', 'Sabbir'),
       squad('ddc', 'Khayer'),
       squad('ddc', 'Sanaullah'),
-      squad('ddc', 'Z.I. Limon', { substitute: true }),
+      {
+        id: 'z-i-limon',
+        name: 'Z.I. Limon',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/ddc/z-i-limon-1794835259841.jpg',
+        substitute: true,
+      },
       squad('ddc', 'Sazzad', { substitute: true }),
-      squad('ddc', 'Mamun', { substitute: true }),
+      {
+        id: 'mamun',
+        name: 'Mamun',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/ddc/mamun-1794835264932.jpg',
+        substitute: true,
+      },
     ],
   },
   {
@@ -339,20 +598,95 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
     logo: 'icons/teams/rainbow-cutting.png',
     // Captain not decided yet: the team page shows a warning until one is set.
     players: [
-      squad('rainbow-cutting', 'Kazi Pholash'),
-      squad('rainbow-cutting', 'Sagor'),
-      squad('rainbow-cutting', 'Md. Faysal'),
-      squad('rainbow-cutting', 'Iqbal'),
-      squad('rainbow-cutting', 'Probash'),
-      squad('rainbow-cutting', 'Nasir'),
-      squad('rainbow-cutting', 'Sumon'),
-      squad('rainbow-cutting', 'Abu Saeed'),
-      squad('rainbow-cutting', 'Md. Naieem Khan'),
-      squad('rainbow-cutting', 'Arif'),
-      squad('rainbow-cutting', 'Monir'),
-      squad('rainbow-cutting', 'Rifat', { substitute: true }),
-      squad('rainbow-cutting', 'Biplob', { substitute: true }),
-      squad('rainbow-cutting', 'Kawser', { substitute: true }),
+      {
+        id: 'kazi-pholash',
+        name: 'Polash',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/rainbow-cutting/kazi-pholash-1794834581639.jpg',
+        captain: true,
+      },
+      {
+        id: 'sagor',
+        name: 'Sagor',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/rainbow-cutting/sagor-1794834597638.jpg',
+      },
+      {
+        id: 'md-faysal',
+        name: 'Faysal',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/rainbow-cutting/md-faysal-1794834592300.jpg',
+      },
+      {
+        id: 'iqbal',
+        name: 'Iqbal',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/rainbow-cutting/iqbal-1794827832585.jpg',
+      },
+      {
+        id: 'probash',
+        name: 'Probash',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/rainbow-cutting/probash-1794827853340.jpg',
+      },
+      {
+        id: 'nasir',
+        name: 'Nasir',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/rainbow-cutting/nasir-1794834609336.jpg',
+      },
+      {
+        id: 'sumon',
+        name: 'Sumon',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/rainbow-cutting/sumon-1794834618063.jpg',
+      },
+      {
+        id: 'abu-saeed',
+        name: 'Abu Saeed',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/rainbow-cutting/abu-saeed-1794834624567.jpg',
+        viceCaptain: true,
+      },
+      {
+        id: 'md-naieem-khan',
+        name: 'Nayeem',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/rainbow-cutting/md-naieem-khan-1794834636819.jpg',
+      },
+      {
+        id: 'arif',
+        name: 'Arif',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/rainbow-cutting/arif-1794834675731.jpg',
+      },
+      {
+        id: 'monir',
+        name: 'Monir',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/rainbow-cutting/monir-1794834681179.jpg',
+      },
+      {
+        id: 'rifat',
+        name: 'Rifat',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/rainbow-cutting/rifat-1794827918737.jpg',
+        substitute: true,
+      },
+      {
+        id: 'biplob',
+        name: 'Biplob',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/rainbow-cutting/biplob-1794827911653.jpg',
+        substitute: true,
+      },
+      {
+        id: 'kawser',
+        name: 'Kawser',
+        photo:
+          'https://dkdomfmhqdtlthpchrij.supabase.co/storage/v1/object/public/media/players/rainbow-cutting/kawser-1794827908078.jpg',
+        substitute: true,
+      },
     ],
   },
 ];
