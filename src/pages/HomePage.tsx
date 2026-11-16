@@ -20,6 +20,7 @@ import { usePrefs } from '../store/prefsStore';
 import {
   countdown,
   fixtureStart,
+  nextMatchDay,
   pickHero,
   projectedTotal,
   tournamentProgress,
@@ -52,9 +53,14 @@ export default function HomePage() {
   if (!tour) return <PageSkeleton variant="hero" />;
 
   const hero = pickHero(tour.matches, tour.ts, now);
-  const heroFixtureId =
-    hero.kind === 'upcoming' ? hero.fixture.id : hero.kind === 'result' ? hero.next?.id : undefined;
-  const next3 = upcomingFixtures(tour.ts, now, 3, heroFixtureId);
+  // Matches already in the hero (the whole next match day while counting down) aren't listed again
+  const inHero =
+    hero.kind === 'upcoming'
+      ? nextMatchDay(tour.ts, now).map((fx) => fx.id)
+      : hero.kind === 'result' && hero.next
+        ? [hero.next.id]
+        : [];
+  const next3 = upcomingFixtures(tour.ts, now, 3, inHero);
 
   return (
     <main className="mx-auto flex w-full max-w-lg flex-col gap-4 p-4 md:max-w-2xl">

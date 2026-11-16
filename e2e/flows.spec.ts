@@ -70,3 +70,19 @@ test('link preview tags are present', async ({ page }) => {
   const res = await page.request.get('images/og-share.jpg');
   expect(res.ok()).toBe(true);
 });
+
+test('a two-match day shows both countdowns in turn', async ({ page }) => {
+  await open(page, 'home');
+  const dots = page.getByRole('button', { name: /^ম্যাচ .+ দেখুন$/ });
+  // Only on days with two matches still to start (not, say, the final)
+  test.skip((await dots.count()) < 2, 'next match day has a single match');
+  await dots.nth(1).click();
+  await expect(dots.nth(1)).toHaveAttribute('aria-current', 'true');
+  await expect(page.getByText('এরপর', { exact: true })).toBeVisible();
+  // Tapping a dot stops the automatic turn; the button offers to start it again
+  await expect(page.getByRole('button', { name: 'স্লাইড আবার চালু করুন' })).toBeVisible();
+  // Keyboard users switch with the arrow keys
+  await page.getByLabel('দিনের ম্যাচগুলো, বাম-ডান তীর দিয়ে বদলান').focus();
+  await page.keyboard.press('ArrowLeft');
+  await expect(dots.nth(0)).toHaveAttribute('aria-current', 'true');
+});

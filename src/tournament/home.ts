@@ -42,6 +42,23 @@ export function nextFixture(
     );
 }
 
+/**
+ * Every fixture still to start on the next match day (today's remaining ones,
+ * or the next day with matches), in start order. The Home and Live countdown
+ * shows them one after another.
+ */
+export function nextMatchDay(
+  ts: TournamentState,
+  now: number,
+  fixtures: readonly Fixture[] = FIXTURES,
+): Fixture[] {
+  const first = nextFixture(ts, now, fixtures);
+  if (!first) return [];
+  return upcomingFixtures(ts, now, fixtures.length, undefined, fixtures).filter(
+    (f) => f.date === first.date,
+  );
+}
+
 export function pickHero(
   matches: Match[],
   ts: TournamentState,
@@ -86,14 +103,16 @@ export function upcomingFixtures(
   ts: TournamentState,
   now: number,
   count: number,
-  skipId?: string,
+  /** Fixtures already shown elsewhere on the page. */
+  skip?: string | readonly string[],
   fixtures: readonly Fixture[] = FIXTURES,
 ): Fixture[] {
+  const skipped = new Set(typeof skip === 'string' ? [skip] : (skip ?? []));
   return [...fixtures]
     .sort((a, b) => fixtureStart(a) - fixtureStart(b))
     .filter(
       (f) =>
-        f.id !== skipId &&
+        !skipped.has(f.id) &&
         ts.outcomes.get(f.id)?.status === 'scheduled' &&
         fixtureStart(f) > now - LATE_START_GRACE_MS,
     )

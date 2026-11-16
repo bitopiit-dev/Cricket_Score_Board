@@ -7,6 +7,7 @@ import {
   countdown,
   fixtureStart,
   nextFixture,
+  nextMatchDay,
   pickHero,
   projectedTotal,
   tournamentProgress,
@@ -111,6 +112,26 @@ describe('hero', () => {
     expect(countdown(M1_START, M1_START + 60_000).due).toBe(true);
     // f1 (12:00) is past its grace by 15:30; f2 (13:00) is not yet
     expect(nextFixture(ts, at('2026-11-17T15:30:00+06:00'))?.id).toBe('f2');
+  });
+
+  it("next match day: both of the day's matches, then only the one still to start", () => {
+    const ts = tournamentState([]);
+    const ids = (now: number) => nextMatchDay(ts, now).map((f) => f.id);
+    // The evening before: the opening day's two matches
+    expect(ids(at('2026-11-16T21:00:00+06:00'))).toEqual(['f1', 'f2']);
+    // f1 is past its late-start grace by 15:30, f2 is not
+    expect(ids(at('2026-11-17T15:30:00+06:00'))).toEqual(['f2']);
+    // Once a match has been scored it is no longer "to start"
+    const started = fixtureMatch(false, M1_START + 60_000);
+    expect(nextMatchDay(tournamentState([started]), M1_START + 120_000).map((f) => f.id)).toEqual([
+      'f2',
+    ]);
+  });
+
+  it('upcoming list can skip several fixtures already on screen', () => {
+    const ts = tournamentState([]);
+    const now = at('2026-11-16T21:00:00+06:00');
+    expect(upcomingFixtures(ts, now, 2, ['f1', 'f2']).map((f) => f.id)).toEqual(['f3', 'f4']);
   });
 
   it('after the final: nothing left', () => {

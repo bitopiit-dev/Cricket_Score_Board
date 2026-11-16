@@ -392,7 +392,15 @@
     "phase_final": "ফাইনাল",
     "upcoming": "পরের ম্যাচগুলো",
     "allFixtures": "পুরো সূচি",
-    "shareScore": "স্কোর শেয়ার"
+    "shareScore": "স্কোর শেয়ার",
+    "thenMatch": "এরপর",
+    "carousel": "স্লাইড",
+    "slide": "ম্যাচ",
+    "slideOf": "{{n}}টির মধ্যে {{i}}",
+    "showMatch": "ম্যাচ {{n}} দেখুন",
+    "pauseSlides": "স্লাইড থামান",
+    "playSlides": "স্লাইড আবার চালু করুন",
+    "slidesKeys": "দিনের ম্যাচগুলো, বাম-ডান তীর দিয়ে বদলান"
   },
   "install": {
     "title": "BPL-2027 ফোনের হোম স্ক্রিনে রাখুন",

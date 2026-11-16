@@ -362,3 +362,11 @@ table,
 .edge-fade::-webkit-scrollbar {
   display: none;
 }
+
+/* A swipeable row whose position is shown another way (dots), so no scrollbar */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

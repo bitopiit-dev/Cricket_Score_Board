@@ -398,7 +398,15 @@
     "phase_final": "Final",
     "upcoming": "Coming up",
     "allFixtures": "Full schedule",
-    "shareScore": "Share score"
+    "shareScore": "Share score",
+    "thenMatch": "Then",
+    "carousel": "carousel",
+    "slide": "match",
+    "slideOf": "{{i}} of {{n}}",
+    "showMatch": "Show match {{n}}",
+    "pauseSlides": "Pause slides",
+    "playSlides": "Play slides",
+    "slidesKeys": "The day's matches; use the left and right arrows to switch"
   },
   "install": {
     "title": "Put BPL-2027 on your home screen",
