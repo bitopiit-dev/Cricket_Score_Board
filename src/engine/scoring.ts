@@ -524,3 +524,19 @@ export function undoLastEvent(match: Match, at: number): Match {
     rev: (match.rev ?? 0) + 1,
   };
 }
+
+/**
+ * Sets (or clears, with null) the Man of the Match. Counts as a change like a
+ * ball, so the new choice syncs to every phone. Only a player of the match
+ * can be chosen.
+ */
+export function setManOfTheMatch(match: Match, playerId: string | null, at: number): Match {
+  const current = match.manOfTheMatch ?? null;
+  if (playerId === current) return match;
+  if (playerId !== null && !match.teams.some((t) => t.players.some((p) => p.id === playerId)))
+    return match;
+  const next: Match = { ...match, updatedAt: at, rev: (match.rev ?? 0) + 1 };
+  if (playerId === null) delete next.manOfTheMatch;
+  else next.manOfTheMatch = playerId;
+  return next;
+}

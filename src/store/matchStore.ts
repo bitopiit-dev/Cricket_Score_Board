@@ -1,6 +1,12 @@
 import { create } from 'zustand';
 import { matchRepository } from '../db/repository';
-import { addEvent, deriveMatchState, undoLastEvent, type ValidationError } from '../engine/scoring';
+import {
+  addEvent,
+  deriveMatchState,
+  setManOfTheMatch,
+  undoLastEvent,
+  type ValidationError,
+} from '../engine/scoring';
 import type { Match, MatchEventInput, MatchState } from '../engine/types';
 import { canScore, mayScore } from '../sync/auth';
 import { compareCopies, MATCH_CONFLICT, MATCHES_CHANGED } from '../sync/matchSync';
@@ -16,6 +22,8 @@ interface MatchStore {
   /** Applies an event; returns false (and sets lastError) if rejected. */
   dispatch: (input: MatchEventInput) => boolean;
   undo: () => void;
+  /** Scorer only: picks (or clears) the Man of the Match. */
+  setManOfTheMatch: (playerId: string | null) => void;
   clearError: () => void;
 }
 
@@ -64,6 +72,15 @@ export const useMatchStore = create<MatchStore>((set, get) => ({
     if (!match || match.events.length === 0 || !mayScore()) return;
     const next = undoLastEvent(match, Date.now());
     set({ match: next, state: deriveMatchState(next), lastError: null });
+    persist(next);
+  },
+
+  setManOfTheMatch(playerId) {
+    const { match } = get();
+    if (!match || !mayScore()) return;
+    const next = setManOfTheMatch(match, playerId, Date.now());
+    if (next === match) return;
+    set({ match: next, state: deriveMatchState(next) });
     persist(next);
   },
 

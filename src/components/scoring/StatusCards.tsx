@@ -3,6 +3,8 @@ import type { MatchState, Match } from '../../engine/types';
 import { useFormat } from '../../hooks/useFormat';
 import { inningsLabel, resultText } from '../../utils/matchText';
 import { btn } from '../common/controls';
+import { manOfTheMatchId } from '../../engine/milestones';
+import { ManOfTheMatchCard } from '../match/MatchCenter';
 
 function InningsLines({ match, state }: { match: Match; state: MatchState }) {
   const { t } = useTranslation();
@@ -81,14 +83,18 @@ export function ResultCard({
   match,
   state,
   onUndo,
+  onPickMom,
 }: {
   match: Match;
   state: MatchState;
   /** Omitted for viewers, who only follow the match. */
   onUndo?: () => void;
+  /** Scorer only: choose (or clear, with null) the Man of the Match. */
+  onPickMom?: (playerId: string | null) => void;
 }) {
   const { t } = useTranslation();
   const f = useFormat();
+  const mom = manOfTheMatchId(match);
   return (
     <div className="flex flex-col gap-4 p-4">
       <h2 className="text-center text-sm font-semibold tracking-wide text-slate-500 uppercase">
@@ -100,6 +106,29 @@ export function ResultCard({
         </p>
       )}
       <InningsLines match={match} state={state} />
+      <ManOfTheMatchCard match={match} state={state} />
+      {onPickMom && (
+        <label className="flex flex-col gap-1.5 rounded-2xl bg-white p-3 shadow-sm dark:bg-slate-900">
+          <span className="text-sm font-semibold">🏅 {t('mom.pick')}</span>
+          <select
+            value={mom ?? ''}
+            onChange={(e) => onPickMom(e.target.value || null)}
+            className="rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-base dark:border-slate-700 dark:bg-slate-800"
+          >
+            <option value="">— {t('mom.none')} —</option>
+            {match.teams.map((team, i) => (
+              <optgroup key={i} label={team.name}>
+                {team.players.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
+          </select>
+          <span className="text-xs text-slate-500 dark:text-slate-400">{t('mom.hint')}</span>
+        </label>
+      )}
       {onUndo && (
         <button type="button" className={btn.secondary} onClick={onUndo}>
           ↶ {t('common.undoLast')}

@@ -42,6 +42,7 @@ export default function ScoringPage() {
   const shareMatch = useShareMatch();
   const { id } = useParams<{ id: string }>();
   const { match, state, notFound, lastError, load, dispatch, undo, clearError } = useMatchStore();
+  const setManOfTheMatch = useMatchStore((s) => s.setManOfTheMatch);
   const [open, setOpen] = useState<Open>(null);
   /** The ball just recorded, shown briefly so the scorer can see it went in right. */
   const [done, setDone] = useState<{ key: number; text: string } | null>(null);
@@ -216,7 +217,12 @@ export default function ScoringPage() {
           />
         )}
         {phase === 'completed' && (
-          <ResultCard match={match} state={state} onUndo={canScore ? undo : undefined} />
+          <ResultCard
+            match={match}
+            state={state}
+            onUndo={canScore ? undo : undefined}
+            onPickMom={canScore ? setManOfTheMatch : undefined}
+          />
         )}
 
         {!canScore &&

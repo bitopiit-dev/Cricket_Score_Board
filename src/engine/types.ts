@@ -180,6 +180,8 @@ export interface Match {
   events: MatchEvent[];
   /** Fixture id (src/data/fixtures.ts) when the match was started from the fixture. */
   fixtureId?: string;
+  /** Player id of the Man of the Match, chosen by the scorer once the match is over. */
+  manOfTheMatch?: string;
 }
 
 /* ------------------------------- Derived state ------------------------------ */

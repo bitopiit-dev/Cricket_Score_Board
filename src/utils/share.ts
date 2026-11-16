@@ -1,7 +1,8 @@
 import type { TFunction } from 'i18next';
 import type { Match, MatchState } from '../engine/types';
 import type { Formatter } from './format';
-import { resultText } from './matchText';
+import { manOfTheMatchId } from '../engine/milestones';
+import { playerName, resultText } from './matchText';
 
 /** A short score message for WhatsApp, Messenger or SMS. */
 export function matchShareText(
@@ -17,9 +18,11 @@ export function matchShareText(
       `${inn.superOver ? `${t('scoring.superOver')} · ` : ''}${match.teams[inn.battingTeam].name}: ${f.num(inn.runs)}/${f.num(inn.wickets)} (${f.overs(inn.legalBalls)})`,
     );
   }
-  if (state.phase === 'completed' && state.result)
+  if (state.phase === 'completed' && state.result) {
     lines.push(resultText(state.result, match, t, f));
-  else if (match.events.length === 0) lines.push(t('home.notStarted'));
+    const mom = manOfTheMatchId(match);
+    if (mom) lines.push(`🏅 ${t('mom.title')}: ${playerName(match, mom)}`);
+  } else if (match.events.length === 0) lines.push(t('home.notStarted'));
   else lines.push(`🔴 ${t('homePage.live')}`);
   return lines.join('\n');
 }

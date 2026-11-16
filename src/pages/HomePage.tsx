@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import type { Fixture } from '../data/fixtures';
 import { findTeam, initials } from '../data/teams';
 import { runRate } from '../engine/rules';
+import { manOfTheMatchId } from '../engine/milestones';
 import { runsNeeded, ballsRemaining, requiredRunRate } from '../engine/stats';
 import type { BallSummary, InningsState, Match, MatchState } from '../engine/types';
 import { TeamAvatar } from '../components/common/TeamAvatar';
@@ -208,6 +209,14 @@ function Hero({ hero, now }: { hero: HomeHero; now: number }) {
           {hero.state.result && (
             <p className="text-center font-display text-2xl leading-tight font-bold text-bpl-yellow">
               {resultText(hero.state.result, hero.match, t, f)}
+            </p>
+          )}
+          {manOfTheMatchId(hero.match) && (
+            <p className="-mt-2 text-center text-sm text-white/85">
+              🏅 {t('mom.title')}:{' '}
+              <span className="font-semibold text-bpl-yellow">
+                {playerName(hero.match, manOfTheMatchId(hero.match)!)}
+              </span>
             </p>
           )}
           <InningsTotals match={hero.match} state={hero.state} />

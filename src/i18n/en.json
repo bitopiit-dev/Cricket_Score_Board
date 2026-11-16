@@ -520,5 +520,18 @@
     "noMatches": "No completed match yet. Numbers appear here after the player’s first match.",
     "didNotFeature": "Did not bat or bowl",
     "fieldingShort": "{{n}} fielding"
+  },
+  "badge": {
+    "fifty": "Fifty",
+    "hundred": "Hundred",
+    "haul": "{{n}}W",
+    "haulLong": "{{n}} wickets"
+  },
+  "mom": {
+    "title": "Man of the Match",
+    "short": "MoM",
+    "pick": "Choose the Man of the Match",
+    "none": "Not chosen yet",
+    "hint": "Shown to everyone following the match."
   }
 }

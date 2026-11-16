@@ -7,6 +7,8 @@ import { CreasePanel } from '../scoring/CreasePanel';
 import { MatchCharts } from './MatchCharts';
 import { MomentBurst } from './MomentBurst';
 import { BallChip, ThisOver } from '../scoring/ThisOver';
+import { BattingBadge, HaulBadge, MomBadge } from './Badges';
+import { manOfTheMatchId, playerFigures, teamOfPlayer } from '../../engine/milestones';
 import { findTeam } from '../../data/teams';
 import { buildCommentary, type CommentaryBall } from '../../engine/commentary';
 import { creditsBowler, runRate, strikeRate } from '../../engine/rules';
@@ -237,6 +239,7 @@ function Summary({ match, state }: { match: Match; state: MatchState }) {
     (state.phase === 'inPlay' || state.phase === 'needBatter' || state.phase === 'needBowler');
   return (
     <>
+      <ManOfTheMatchCard match={match} state={state} />
       {playing && (
         <Card>
           <CreasePanel match={match} inn={inn} />
@@ -328,6 +331,7 @@ function TopPerformers({ match, state }: { match: Match; state: MatchState }) {
                     <span className="tabular text-slate-600 dark:text-slate-400">
                       🏏 {f.num(bat.runs)}
                       {bat.dismissal ? '' : '*'} ({f.num(bat.balls)})
+                      <BattingBadge runs={bat.runs} />
                     </span>
                   </>
                 )}
@@ -341,6 +345,7 @@ function TopPerformers({ match, state }: { match: Match; state: MatchState }) {
                     <span className="tabular text-slate-600 dark:text-slate-400">
                       ● {f.num(bowl.wickets)}/{f.num(bowl.runsConceded)} ({f.overs(bowl.legalBalls)}
                       )
+                      <HaulBadge wickets={bowl.wickets} />
                     </span>
                   </>
                 )}
@@ -350,6 +355,51 @@ function TopPerformers({ match, state }: { match: Match; state: MatchState }) {
         ))}
       </ul>
     </Card>
+  );
+}
+
+/** The Man of the Match with their figures, once the scorer has chosen one. */
+export function ManOfTheMatchCard({ match, state }: { match: Match; state: MatchState }) {
+  const { t } = useTranslation();
+  const f = useFormat();
+  const id = manOfTheMatchId(match);
+  if (!id) return null;
+  const team = teamOfPlayer(match, id);
+  const { batting, bowling } = playerFigures(state, id);
+  const parts: string[] = [];
+  if (batting)
+    parts.push(`🏏 ${f.num(batting.runs)}${batting.out ? '' : '*'} (${f.num(batting.balls)})`);
+  if (bowling && bowling.legalBalls > 0)
+    parts.push(
+      `● ${f.num(bowling.wickets)}/${f.num(bowling.runs)} (${f.overs(bowling.legalBalls)})`,
+    );
+  return (
+    <section className="relative overflow-hidden rounded-2xl bg-night-900 p-4 text-white ring-1 ring-bpl-yellow/60 sm:rounded-2xl">
+      <div
+        aria-hidden
+        className="absolute inset-0 bg-[radial-gradient(70%_120%_at_0%_0%,rgb(245_158_11/0.28),transparent_70%)]"
+      />
+      <div className="relative flex items-center gap-3">
+        <span
+          aria-hidden
+          className="flex size-12 shrink-0 items-center justify-center rounded-full bg-bpl-yellow text-2xl shadow-[0_0_18px_rgb(245_158_11/0.55)]"
+        >
+          🏅
+        </span>
+        <div className="min-w-0">
+          <p className="text-xs font-bold tracking-wide text-bpl-yellow uppercase">
+            {t('mom.title')}
+          </p>
+          <p className="truncate font-display text-2xl leading-tight font-bold">
+            {playerName(match, id)}
+          </p>
+          <p className="tabular truncate text-sm text-white/75">
+            {team !== null && match.teams[team].name}
+            {parts.length > 0 && ` · ${parts.join(' · ')}`}
+          </p>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -370,13 +420,22 @@ function Scorecard({ match, state }: { match: Match; state: MatchState }) {
   return (
     <>
       {[...state.innings].reverse().map((inn) => (
-        <InningsCard key={inn.index} match={match} inn={inn} />
+        <InningsCard key={inn.index} match={match} inn={inn} mom={manOfTheMatchId(match)} />
       ))}
     </>
   );
 }
 
-function InningsCard({ match, inn }: { match: Match; inn: InningsState }) {
+function InningsCard({
+  match,
+  inn,
+  mom,
+}: {
+  match: Match;
+  inn: InningsState;
+  /** Man of the Match's player id, marked with a badge. */
+  mom: string | null;
+}) {
   const { t } = useTranslation();
   const f = useFormat();
   const th = 'px-1.5 py-2 text-right text-xs font-semibold text-slate-500 dark:text-slate-400';
@@ -421,6 +480,8 @@ function InningsCard({ match, inn }: { match: Match; inn: InningsState }) {
                   >
                     {playerName(match, b.playerId)}
                     {atCrease && b.playerId === inn.strikerId ? ' *' : ''}
+                    <BattingBadge runs={b.runs} />
+                    {mom === b.playerId && <MomBadge />}
                   </span>
                   <span className="block text-xs text-slate-500 dark:text-slate-400">
                     {dismissalText(b, match, inn, t)}
@@ -499,7 +560,11 @@ function InningsCard({ match, inn }: { match: Match; inn: InningsState }) {
           <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
             {bowlers.map((b) => (
               <tr key={b.playerId}>
-                <td className="py-2 pr-1.5 pl-4 font-semibold">{playerName(match, b.playerId)}</td>
+                <td className="py-2 pr-1.5 pl-4 font-semibold">
+                  {playerName(match, b.playerId)}
+                  <HaulBadge wickets={b.wickets} />
+                  {mom === b.playerId && <MomBadge />}
+                </td>
                 <td className={td}>{f.overs(b.legalBalls)}</td>
                 <td className={td}>{f.num(b.maidens)}</td>
                 <td className={td}>{f.num(b.runsConceded)}</td>
