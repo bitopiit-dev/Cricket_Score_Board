@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Header } from '../common/Header';
 import { Icon } from '../common/icons';
+import { toast } from '../common/Toast';
 import { TeamAvatar } from '../common/TeamAvatar';
 import { CreasePanel } from '../scoring/CreasePanel';
 import { MatchCharts } from './MatchCharts';
@@ -53,14 +54,17 @@ export function MatchCenter({
         title={title}
         backTo="/home"
         actions={
-          <button
-            type="button"
-            onClick={onShare}
-            aria-label={t('common.share')}
-            className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-white/10"
-          >
-            <Icon name="share" className="size-5" />
-          </button>
+          <>
+            {state.innings.length > 0 && <ScorecardImageButton match={match} state={state} />}
+            <button
+              type="button"
+              onClick={onShare}
+              aria-label={t('common.share')}
+              className="flex size-11 items-center justify-center rounded-full hover:bg-white/10"
+            >
+              <Icon name="share" className="size-5" />
+            </button>
+          </>
         }
       />
       <MatchHero match={match} state={state} />
@@ -728,5 +732,46 @@ function Card({ title, children }: { title?: string; children: React.ReactNode }
       )}
       {children}
     </section>
+  );
+}
+
+/** Draws the match as a picture and opens the share sheet (or downloads it). */
+function ScorecardImageButton({ match, state }: { match: Match; state: MatchState }) {
+  const { t } = useTranslation();
+  const f = useFormat();
+  const [busy, setBusy] = useState(false);
+  async function onClick() {
+    setBusy(true);
+    try {
+      const { drawScorecard, shareImage } = await import('../../utils/scorecardImage');
+      const blob = await drawScorecard(match, state, t, f);
+      const name = `BPL-2027-${match.teams[0].name}-vs-${match.teams[1].name}.png`.replace(
+        /[^\w.-]+/g,
+        '-',
+      );
+      const res = await shareImage(
+        blob,
+        name,
+        `${match.teams[0].name} ${t('common.vs')} ${match.teams[1].name}`,
+      );
+      if (res === 'downloaded') toast(t('scorecardImage.downloaded'));
+      else if (res === 'failed') toast(t('scorecardImage.failed'));
+    } catch {
+      toast(t('scorecardImage.failed'));
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <button
+      type="button"
+      onClick={() => void onClick()}
+      disabled={busy}
+      aria-label={t('scorecardImage.button')}
+      aria-busy={busy}
+      className="flex size-11 items-center justify-center rounded-full hover:bg-white/10 disabled:opacity-50"
+    >
+      <Icon name="image" className="size-5" />
+    </button>
   );
 }

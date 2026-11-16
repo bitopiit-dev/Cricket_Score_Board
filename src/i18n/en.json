@@ -554,5 +554,14 @@
     "pickHint": "Tap ☆ on a team's page and Home shows that team first.",
     "star": "(your favourite team)",
     "open": "Team page"
+  },
+  "scorecardImage": {
+    "button": "Share scorecard image",
+    "yetToBat": "Yet to bat",
+    "overs": "{{overs}} overs",
+    "bat": "Top batter",
+    "bowl": "Top bowler",
+    "downloaded": "Image downloaded",
+    "failed": "Couldn't make the image"
   }
 }

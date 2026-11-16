@@ -54,6 +54,13 @@ const PATHS = {
       <path {...stroke} d="m8.2 10.8 7.6-4.1M8.2 13.2l7.6 4.1" />
     </>
   ),
+  image: (
+    <>
+      <rect {...stroke} x="3.5" y="4.5" width="17" height="15" rx="2.5" />
+      <circle {...stroke} cx="9" cy="10" r="1.75" />
+      <path {...stroke} d="m4 17.5 4.5-4.5 3.5 3.5 2.5-2.5 5.5 5" />
+    </>
+  ),
   install: (
     <>
       <rect {...stroke} x="6.5" y="2.5" width="11" height="19" rx="2.5" />
