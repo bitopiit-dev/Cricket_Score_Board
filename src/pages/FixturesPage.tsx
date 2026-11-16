@@ -203,7 +203,9 @@ export default function FixturesPage() {
             {/* Stays at the top while its matches scroll past */}
             <h2
               className={`sticky top-[env(safe-area-inset-top)] z-10 -mx-4 mb-1 bg-slate-100/95 px-4 py-1.5 font-display text-lg font-bold tracking-wide backdrop-blur-sm dark:bg-slate-950/95 ${
-                date === today ? 'text-bpl-red' : 'text-slate-500 dark:text-slate-400'
+                date === today
+                  ? 'text-rose-700 dark:text-rose-400'
+                  : 'text-slate-500 dark:text-slate-400'
               }`}
             >
               {day(date)}
@@ -358,19 +360,17 @@ function FixtureCard({
     );
   };
 
+  // On the night-coloured card (the Today box) the light shades are used in both themes
+  const liveText = dark ? 'text-rose-400' : 'text-rose-700 dark:text-rose-400';
+  const doneText = dark ? 'text-emerald-400' : 'text-emerald-700 dark:text-emerald-400';
   const status =
     outcome.status === 'live' ? (
-      <span className="flex items-center gap-1.5 font-bold text-bpl-red dark:text-rose-400">
-        <span
-          aria-hidden
-          className="live-pulse size-2 rounded-full bg-bpl-red text-bpl-red dark:text-rose-400"
-        />
+      <span className={`flex items-center gap-1.5 font-bold ${liveText}`}>
+        <span aria-hidden className="live-pulse size-2 rounded-full bg-bpl-red text-bpl-red" />
         {t('fixtures.live')}
       </span>
     ) : outcome.status === 'completed' ? (
-      <span className="font-bold text-emerald-700 dark:text-emerald-400">
-        {t('fixtures.completed')}
-      </span>
+      <span className={`font-bold ${doneText}`}>{t('fixtures.completed')}</span>
     ) : (
       <span>{formatTime(fx.time, lang, f)}</span>
     );

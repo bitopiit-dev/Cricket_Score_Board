@@ -102,7 +102,9 @@ function MatchCard({ m, s }: { m: Match; s: MatchState }) {
             ? `${t('fixtures.matchNo', { n: f.num(fx.no) })} · ${stageLabel(fx.stage, t)}`
             : t('home.oversFormat', { overs: f.num(m.settings.overs), count: m.settings.overs })}
         </span>
-        <span className={`flex items-center gap-1.5 ${live ? 'font-bold text-bpl-red' : ''}`}>
+        <span
+          className={`flex items-center gap-1.5 ${live ? 'font-bold text-rose-700 dark:text-rose-400' : ''}`}
+        >
           {live && (
             <span
               aria-hidden

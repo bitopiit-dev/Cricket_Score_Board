@@ -689,7 +689,7 @@ function BallLine({ b, match }: { b: CommentaryBall; match: Match }) {
   const outcome = ballOutcome(ev, match, t, f);
 
   const accent = ev.wicket
-    ? 'text-bpl-red'
+    ? 'text-rose-700 dark:text-rose-400'
     : ev.boundary && ev.runs === 6
       ? 'text-amber-600 dark:text-bpl-yellow'
       : ev.boundary && ev.runs === 4
