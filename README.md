@@ -86,9 +86,12 @@ search. The text lives in [`src/data/rules.ts`](src/data/rules.ts) (source:
 
 ### Format and awards
 
-- Format (official fixture, 48 matches from Monday 16 November 2026, in
+- Format (official fixture, 48 matches from Tuesday 17 November to the final on
+  Saturday 19 December 2026, two a day at 12:00 PM and 1:00 PM, in
   [`src/data/fixtures.ts`](src/data/fixtures.ts), generated from
-  [`docs/fixture-bpl-2027.json`](docs/fixture-bpl-2027.json)):
+  [`docs/fixture-bpl-2027.json`](docs/fixture-bpl-2027.json)). A team's group
+  is read from the fixture list (`src/tournament/groups.ts`), so the points
+  tables always follow who actually plays whom:
   - Group A and Group B, 6 teams each, 15 matches each. The top 3 of each group
     go to the Super Six.
   - Super Six: points start again, 15 matches. The top 4 go to the semi-finals.

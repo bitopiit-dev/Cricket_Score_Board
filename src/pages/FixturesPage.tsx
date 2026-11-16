@@ -26,6 +26,7 @@ import { resultText } from '../utils/matchText';
 import fixturePdfUrl from '../assets/bpl-2027-fixture.pdf?url';
 import fixturePdfInfo from '../assets/bpl-2027-fixture.json';
 import { PageSkeleton } from '../components/common/Skeleton';
+import { groupOf } from '../tournament/groups';
 
 /** Download name carries the update date, so a new copy never overwrites or hides behind the old one. */
 const FIXTURE_PDF_NAME = `BPL-2027-Fixture-${fixturePdfInfo.updated}.pdf`;
@@ -246,7 +247,7 @@ function TeamRecord({
             {team.name}
           </h2>
           <p className="text-[13px] text-slate-600 dark:text-slate-400">
-            {t(`fixtures.filter_group${team.group}`)} ·{' '}
+            {t(`fixtures.filter_group${groupOf(team.id) ?? team.group}`)} ·{' '}
             {t('fixtures.teamMatches', { n: f.num(mine.length) })}
           </p>
         </div>

@@ -12,6 +12,7 @@ import { dataSource, resetData, saveData } from '../../sync/remoteData';
 import { assetUrl } from '../../utils/asset';
 import { squareImage, uploadMedia } from './media';
 import { small, StatusLine, useStatus } from './shared';
+import { groupOf } from '../../tournament/groups';
 
 const slug = (s: string) =>
   s
@@ -79,7 +80,7 @@ export function TeamsAdmin({ email }: { email: string }) {
       <select className={inputClass} value={teamId} onChange={(e) => setTeamId(e.target.value)}>
         {teams.map((t) => (
           <option key={t.id} value={t.id}>
-            {t.name} (গ্রুপ {t.group}, {t.players.length} জন)
+            {t.name} (গ্রুপ {groupOf(t.id) ?? t.group}, {t.players.length} জন)
           </option>
         ))}
       </select>
@@ -244,7 +245,12 @@ export function TeamsAdmin({ email }: { email: string }) {
           disabled={!dirty || status.busy || !!uploading}
           onClick={() =>
             void status.run(async () => {
-              await saveData('teams', teams, email);
+              // Groups always follow the fixture list
+              await saveData(
+                'teams',
+                teams.map((x) => ({ ...x, group: groupOf(x.id) ?? x.group })),
+                email,
+              );
               setDirty(false);
             })
           }

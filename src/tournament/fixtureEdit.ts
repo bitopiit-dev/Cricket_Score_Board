@@ -1,7 +1,7 @@
 import { isRestDay, type Fixture } from '../data/fixtures';
-import { findTeam } from '../data/teams';
 import { newId } from '../utils/id';
 import type { FixtureOutcome } from './standings';
+import { groupOf } from './groups';
 
 /**
  * Fixture editing for the admin, as pure functions on a fixture list.
@@ -126,7 +126,8 @@ export function validateFixture(fx: Fixture, list: readonly Fixture[]): FixtureW
   if (teams.some((t) => busy.has(t))) w.push('teamTwiceOnDay');
 
   const group = fx.stage === 'groupA' ? 'A' : fx.stage === 'groupB' ? 'B' : null;
-  if (group && teams.some((t) => findTeam(t)?.group !== group)) w.push('wrongGroup');
+  // A team's group is where it plays its other group matches
+  if (group && teams.some((t) => groupOf(t, others) !== group)) w.push('wrongGroup');
 
   if (validDate && isRestDay(fx.date)) w.push('restDay');
   if (others.some((f) => f.no === fx.no)) w.push('duplicateNo');

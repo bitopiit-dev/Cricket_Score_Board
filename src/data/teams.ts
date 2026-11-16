@@ -359,10 +359,6 @@ export const TOURNAMENT_TEAMS: readonly TournamentTeam[] = [
 
 export type GroupId = 'A' | 'B';
 
-export function teamsInGroup(group: GroupId): TournamentTeam[] {
-  return TOURNAMENT_TEAMS.filter((t) => t.group === group);
-}
-
 /** Team by its exact name (as written in the fixture). */
 export function teamByName(name: string): TournamentTeam | undefined {
   return TOURNAMENT_TEAMS.find((t) => t.name === name);

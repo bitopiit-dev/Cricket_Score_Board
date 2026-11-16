@@ -143,7 +143,7 @@ export function FixturesAdmin({ email }: { email: string }) {
     const b = TOURNAMENT_TEAMS[1].id;
     change(
       addFixture(list, {
-        date: last?.date ?? '2026-11-16',
+        date: last?.date ?? '2026-11-17',
         time: '12:00',
         stage: 'groupA',
         teamA: { kind: 'team', teamId: a },

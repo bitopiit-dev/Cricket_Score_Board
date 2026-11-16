@@ -4,6 +4,7 @@ import { BALLS_PER_OVER } from '../engine/rules';
 import { deriveMatchState } from '../engine/scoring';
 import type { InningsState, Match, MatchResult } from '../engine/types';
 import { LEAGUE_POINTS, QUALIFIERS } from './format';
+import { teamsOfGroup } from './groups';
 
 /**
  * Tournament progress worked out from the matches scored in the app:
@@ -195,7 +196,8 @@ export function tournamentState(
     final: stageDone('final'),
   };
 
-  const group = (g: 'A' | 'B') => TOURNAMENT_TEAMS.filter((t) => t.group === g).map((t) => t.id);
+  // Groups come from the fixture list, never a (possibly older) team list
+  const group = (g: 'A' | 'B') => teamsOfGroup(g, fixtures).map((t) => t.id);
   const groupA = leagueTable('groupA', group('A'), byFixture, fixtures);
   const groupB = leagueTable('groupB', group('B'), byFixture, fixtures);
 

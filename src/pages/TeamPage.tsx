@@ -32,6 +32,7 @@ import {
 import { captainMark } from '../utils/matchText';
 import { useFormat } from '../hooks/useFormat';
 import { playerPath } from '../tournament/playerLink';
+import { groupOf } from '../tournament/groups';
 
 export default function TeamPage() {
   const { t } = useTranslation();
@@ -226,7 +227,7 @@ function TeamHero({
           <span>
             {standing && standing.row.played > 0
               ? `${stageLabel(standing.stage, t)} · ${t('team.position', { pos: t(`slot.ord${standing.position}`) })}`
-              : t('points.group', { g: team.group })}
+              : t('points.group', { g: groupOf(team.id) ?? team.group })}
           </span>
           {team.players.length > 0 && (
             <span>

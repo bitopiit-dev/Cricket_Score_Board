@@ -2,7 +2,8 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { TeamAvatar } from '../components/common/TeamAvatar';
 import { PageTitle } from '../components/layout/AppShell';
-import { TOURNAMENT_TEAMS, teamsInGroup, type GroupId } from '../data/teams';
+import { TOURNAMENT_TEAMS, type GroupId } from '../data/teams';
+import { teamsOfGroup } from '../tournament/groups';
 import { useFormat } from '../hooks/useFormat';
 
 /** Teams tab: the 12 tournament teams; tap one for its squad. */
@@ -20,7 +21,7 @@ export default function TeamsPage() {
             {t('points.group', { g })}
           </h2>
           <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
-            {teamsInGroup(g).map((team) => (
+            {teamsOfGroup(g).map((team) => (
               <li key={team.id}>
                 <Link
                   to={`/team/${team.id}`}
