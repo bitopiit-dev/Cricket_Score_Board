@@ -28,6 +28,14 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
 
       # Browser tests: every public page in both themes (script errors, WCAG 2 AA
       # checks, no sideways scrolling at 320px) and the main flows. Run against a
@@ -45,10 +53,8 @@ jobs:
           name: playwright-report
           path: playwright-report
           retention-days: 7
-      - run: npm ci
-      - run: npm run lint
-      - run: npm test
-
+          
+      - name: Build
       - name: Build
         run: npm run build
         env:
