@@ -22,11 +22,12 @@ export default function CommitteePage() {
       <div className="mx-auto max-w-lg px-4 pt-4">
         <SubPageTitle title={t('committee.title')} parent="/more" />
       </div>
-      <section className="mx-4 mt-3 flex flex-col items-center gap-2 rounded-2xl bg-white px-4 py-6 text-center shadow-sm sm:mx-auto sm:max-w-lg dark:bg-slate-900">
+      {/* No card behind the logo: the PNG is transparent and sits on the page. */}
+      <section className="mx-4 mt-3 flex flex-col items-center gap-2 px-4 py-4 text-center sm:mx-auto sm:max-w-lg">
         <img
           src={assetUrl(COMMITTEE_LOGO)}
           alt={COMMITTEE_NAME}
-          className="h-44 w-auto rounded-xl bg-white p-1"
+          className="h-44 w-auto dark:drop-shadow-[0_0_10px_rgba(255,255,255,0.35)]"
         />
         <h2 lang="en" className="text-xl font-bold">
           {COMMITTEE_NAME}
