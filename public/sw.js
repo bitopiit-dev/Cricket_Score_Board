@@ -64,6 +64,11 @@ self.addEventListener('fetch', (event) => {
   if (url.pathname.endsWith('/sw.js')) return;
 
   if (req.mode === 'navigate') {
+    // Only the app's own page is kept for offline use. Any other page (demo.html)
+    // goes straight to the network, so it can never replace the saved app page.
+    const appPage =
+      url.pathname === scope.pathname || url.pathname === `${scope.pathname}index.html`;
+    if (!appPage) return;
     event.respondWith(
       fetch(req)
         .then((res) => {

@@ -84,6 +84,13 @@ All 34 tournament rules are in the **Rules** tab, in Bengali and English, with
 search. The text lives in [`src/data/rules.ts`](src/data/rules.ts) (source:
 [`docs/rules-bpl-2027.md`](docs/rules-bpl-2027.md)).
 
+### Demo for fans
+
+[`public/demo.html`](public/demo.html) (live at `…/Cricket_Score_Board/demo.html`)
+is a stand-alone page that plays a sample match ball by ball in the Match
+Center look, to show fans what the scorecard looks like on a phone. It uses
+sample data only and does not touch the app or Supabase.
+
 ### Format and awards
 
 - Format (official fixture, 48 matches from Tuesday 17 November to the final on
