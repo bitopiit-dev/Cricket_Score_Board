@@ -13,6 +13,12 @@ export interface Notice {
   body: LocalText;
   /** Optional link inside the app, e.g. '/fixtures'. */
   link?: { to: string; label: LocalText };
+  /** Pages it appears on; both Home and Live when left out. */
+  pages?: ('home' | 'live')[];
+  /** Not shown inside the installed app (it would be telling people to install it). */
+  hideWhenInstalled?: boolean;
+  /** Emoji before the title; 📢 when left out. */
+  icon?: string;
 }
 
 export const NOTICES: Notice[] = [
@@ -29,4 +35,37 @@ export const NOTICES: Notice[] = [
     },
     link: { to: '/fixtures', label: { bn: 'নতুন সূচি দেখুন', en: 'See the new schedule' } },
   },
+  {
+    id: 'install-app-2026-11',
+    until: '2026-12-19',
+    // Home already has the install card with a one-tap Install button
+    pages: ['live'],
+    hideWhenInstalled: true,
+    icon: '📲',
+    title: {
+      bn: 'অ্যাপটা ফোনে রেখে দিন',
+      en: 'Keep the app on your phone',
+    },
+    body: {
+      bn: 'ফোনে লিংকটা খুলে “Add to Home Screen” বা “Install” চাপলে অ্যাপের মতো আইকন তৈরি হবে। তখন প্রতিবার লিংক খুঁজতে হবে না।',
+      en: 'Open the link on your phone and tap “Add to Home Screen” or “Install” to get an app icon. Then you won’t have to look for the link every time.',
+    },
+  },
 ];
+
+/** The notices to show on a page today, leaving out closed ones and, inside the installed app, install tips. */
+export function noticesFor(
+  page: 'home' | 'live',
+  today: string,
+  closed: readonly string[],
+  installed: boolean,
+  list: readonly Notice[] = NOTICES,
+): Notice[] {
+  return list.filter(
+    (n) =>
+      n.until >= today &&
+      !closed.includes(n.id) &&
+      (!n.pages || n.pages.includes(page)) &&
+      !(n.hideWhenInstalled && installed),
+  );
+}

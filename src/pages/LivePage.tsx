@@ -55,7 +55,7 @@ export default function LivePage() {
           </Link>
         )}
       </div>
-      <NoticeBanner />
+      <NoticeBanner page="live" />
       {/* A match being played comes first, big; the countdown waits below it */}
       {live.map((row) => (
         <LiveMatchCard key={row.m.id} {...row} />

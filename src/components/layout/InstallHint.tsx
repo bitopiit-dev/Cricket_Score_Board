@@ -21,7 +21,8 @@ if (typeof window !== 'undefined') {
   });
 }
 
-function isStandalone() {
+/** True inside the installed app (opened from its home-screen icon). */
+export function isStandalone() {
   return (
     window.matchMedia?.('(display-mode: standalone)').matches ||
     (navigator as { standalone?: boolean }).standalone === true

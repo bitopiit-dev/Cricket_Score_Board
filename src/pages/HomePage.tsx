@@ -58,7 +58,7 @@ export default function HomePage() {
   return (
     <main className="mx-auto flex w-full max-w-lg flex-col gap-4 p-4 md:max-w-2xl">
       <h1 className="sr-only">{t('homePage.title')}</h1>
-      <NoticeBanner />
+      <NoticeBanner page="home" />
       <Hero hero={hero} now={now} />
       <InstallHint />
       <Progress ts={tour.ts} />
