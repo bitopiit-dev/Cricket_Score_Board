@@ -128,17 +128,39 @@ describe('fixture data', () => {
     }
   });
 
-  it('starts on Wednesday 18 November (opening moved from the 16th)', () => {
-    expect(FIXTURES[0].date).toBe('2026-11-18');
-    expect(new Date('2026-11-18T12:00:00Z').getUTCDay()).toBe(3);
+  it('starts on Tuesday 17 November, two matches a day at 12:00 and 13:00', () => {
+    expect(FIXTURES[0].date).toBe('2026-11-17');
+    expect(new Date('2026-11-17T12:00:00Z').getUTCDay()).toBe(2);
+    expect(new Set(FIXTURES.map((f) => f.time))).toEqual(new Set(['12:00', '13:00']));
+    const perDay = new Map<string, number>();
+    for (const f of FIXTURES) perDay.set(f.date, (perDay.get(f.date) ?? 0) + 1);
+    expect(Math.max(...perDay.values())).toBe(2);
+  });
+
+  it('never has a team play on two match days in a row in the group stage', () => {
+    const days = [...new Set(FIXTURES.map((f) => f.date))].sort();
+    for (const stage of ['groupA', 'groupB'] as const) {
+      const ms = FIXTURES.filter((f) => f.stage === stage);
+      const ids = new Set(
+        ms.flatMap((f) => [f.teamA, f.teamB]).map((s) => (s.kind === 'team' ? s.teamId : '')),
+      );
+      for (const id of ids) {
+        const idx = ms
+          .filter((f) => [f.teamA, f.teamB].some((s) => s.kind === 'team' && s.teamId === id))
+          .map((f) => days.indexOf(f.date))
+          .sort((a, b) => a - b);
+        expect(idx).toHaveLength(5);
+        for (let i = 1; i < idx.length; i++) expect(idx[i] - idx[i - 1], id).toBeGreaterThan(1);
+      }
+    }
   });
 });
 
 describe('tournament days', () => {
-  it('runs from 18 November to 21 December, and every day without a match is a rest day', () => {
+  it('runs from 17 November to 19 December, and every day without a match is a rest day', () => {
     const days = tournamentDays();
-    expect(days[0]).toBe('2026-11-18');
-    expect(days[days.length - 1]).toBe('2026-12-21');
+    expect(days[0]).toBe('2026-11-17');
+    expect(days[days.length - 1]).toBe('2026-12-19');
     const matchDays = new Set(FIXTURES.map((f) => f.date));
     const rest = days.filter((d) => !matchDays.has(d));
     expect(rest.every(isRestDay)).toBe(true);

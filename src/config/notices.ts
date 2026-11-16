@@ -17,15 +17,15 @@ export interface Notice {
 
 export const NOTICES: Notice[] = [
   {
-    id: 'opening-moved-2026-11-18',
-    until: '2026-11-18',
+    id: 'new-fixture-2026-11-17',
+    until: '2026-11-19',
     title: {
-      bn: 'উদ্বোধন পিছিয়েছে: ১৮ নভেম্বর',
-      en: 'Opening moved to 18 November',
+      bn: 'নতুন সূচি: উদ্বোধন ১৭ নভেম্বর',
+      en: 'New schedule: opening on 17 November',
     },
     body: {
-      bn: 'অনিবার্য কারণে টুর্নামেন্টের উদ্বোধন ১৬ নভেম্বরের বদলে বুধবার, ১৮ নভেম্বর ২০২৬ হবে। প্রতিটা ম্যাচ দুই খেলার দিন পিছিয়েছে; শুক্রবার আর ছুটির দিনে খেলা নেই, ফাইনাল ২১ ডিসেম্বর।',
-      en: 'Due to unforeseen circumstances, the tournament opens on Wednesday 18 November 2026 instead of 16 November. Every match moves two playing days later (still no matches on Fridays or holidays); the final is on 21 December.',
+      bn: 'টুর্নামেন্ট শুরু মঙ্গলবার, ১৭ নভেম্বর ২০২৬। প্রতিদিন দুটো ম্যাচ, দুপুর ১২টা আর ১টায়; শুক্রবার, ৩০ নভেম্বর, ১ ও ১৬ ডিসেম্বর খেলা নেই। Sky Warrior এখন গ্রুপ A-তে, Rainbow Cutting গ্রুপ B-তে। ফাইনাল শনিবার, ১৯ ডিসেম্বর।',
+      en: 'The tournament starts on Tuesday 17 November 2026. Two matches a day, at 12:00 PM and 1:00 PM; no matches on Fridays, 30 November, 1 or 16 December. Sky Warrior is now in Group A and Rainbow Cutting in Group B. The final is on Saturday 19 December.',
     },
     link: { to: '/fixtures', label: { bn: 'নতুন সূচি দেখুন', en: 'See the new schedule' } },
   },

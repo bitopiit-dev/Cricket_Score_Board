@@ -71,7 +71,7 @@ describe('editing the list', () => {
     expect(f2.teamB).toEqual(FIXTURES[1].teamB);
     expect(next.filter((f) => f.id !== 'f2')).toEqual(FIXTURES.filter((f) => f.id !== 'f2'));
     // The original list is not modified
-    expect(FIXTURES[1].date).toBe('2026-11-19');
+    expect(FIXTURES[1].date).toBe('2026-11-17');
   });
 
   it('adds a match with a new id and the next number, at the end or after another match', () => {
@@ -132,7 +132,7 @@ describe('editing the list', () => {
 });
 
 describe('checks before saving', () => {
-  const f1 = FIXTURES[0]; // Mon 16 Nov, MCD Super Stars v Quality Flying Fighter
+  const f1 = FIXTURES[0]; // Tue 17 Nov, Red Bulls Warriors v Rainbow Cutting (Group B)
 
   it('the official fixture has nothing to flag', () => {
     for (const f of FIXTURES) expect(validateFixture(f, FIXTURES), `match ${f.no}`).toEqual([]);
@@ -140,13 +140,15 @@ describe('checks before saving', () => {
 
   it('flags the same team on both sides and a team playing twice on one day', () => {
     expect(validateFixture({ ...f1, teamB: f1.teamA }, FIXTURES)).toContain('sameTeam');
-    // Match 2 is on 19 Nov; moving it to 18 Nov with MCD Super Stars clashes with match 1
-    const f2 = { ...FIXTURES[1], date: '2026-11-18', teamA: team('mcd-super-stars') };
-    expect(validateFixture(f2, FIXTURES)).toContain('teamTwiceOnDay');
+    // Match 3 is on 18 Nov; moving it to 17 Nov with Red Bulls Warriors clashes with match 1
+    const f3 = { ...FIXTURES[2], date: '2026-11-17', teamA: team('red-bulls-warriors') };
+    expect(validateFixture(f3, FIXTURES)).toContain('teamTwiceOnDay');
   });
 
   it('flags a team from the other group in a group match', () => {
-    expect(validateFixture({ ...f1, teamB: team('ddc') }, FIXTURES)).toContain('wrongGroup');
+    expect(validateFixture({ ...f1, teamB: team('mcd-super-stars') }, FIXTURES)).toContain(
+      'wrongGroup',
+    );
   });
 
   it('flags rest days, bad dates and times, and a match number used twice', () => {
@@ -167,8 +169,8 @@ describe('edits and the tournament tables', () => {
   it('a scored match stays linked after the list is reordered and edited', () => {
     const m = makeMatch(11, { overs: 1 });
     m.fixtureId = 'f1';
-    m.teams[0].teamId = 'mcd-super-stars';
-    m.teams[1].teamId = 'quality-flying-fighter';
+    m.teams[0].teamId = 'red-bulls-warriors';
+    m.teams[1].teamId = 'rainbow-cutting';
     const edited = moveFixture(updateFixture(FIXTURES, 'f1', { time: '14:00' }), 'f1', 1);
     expect(tournamentState([m], edited).outcomes.get('f1')!.status).toBe('live');
   });

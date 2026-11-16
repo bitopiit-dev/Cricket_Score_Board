@@ -48,7 +48,7 @@ describe('team view on the Fixtures page', () => {
   it('before the start: five group matches, no record, next is the first one', () => {
     const ts = tournamentState([]);
     const mine = teamFixtures(MCD, ts);
-    expect(mine.map((f) => f.no)).toEqual([1, 5, 11, 19, 27]);
+    expect(mine.map((f) => f.no)).toEqual([2, 8, 16, 24, 28]);
     expect(mine.every((f) => f.stage === 'groupA')).toBe(true);
     expect(teamRecord(MCD, ts, BEFORE_START)).toMatchObject({
       played: 0,
@@ -57,7 +57,7 @@ describe('team view on the Fixtures page', () => {
       tiedNr: 0,
       onlyGroupSoFar: true,
     });
-    expect(teamRecord(MCD, ts, BEFORE_START).next?.no).toBe(1);
+    expect(teamRecord(MCD, ts, BEFORE_START).next?.no).toBe(2);
   });
 
   it('every team has five group matches and only against its own group', () => {
@@ -76,44 +76,44 @@ describe('team view on the Fixtures page', () => {
   });
 
   it('counts a win for the winner and a loss for the other side', () => {
-    const ts = tournamentState([play(1, 6, 3)]);
-    expect(teamRecord(MCD, ts, '2026-11-18')).toMatchObject({ played: 1, won: 1, lost: 0 });
-    expect(teamRecord(QFF, ts, '2026-11-18')).toMatchObject({ played: 1, won: 0, lost: 1 });
+    const ts = tournamentState([play(2, 6, 3)]);
+    expect(teamRecord(MCD, ts, '2026-11-17')).toMatchObject({ played: 1, won: 1, lost: 0 });
+    expect(teamRecord(QFF, ts, '2026-11-17')).toMatchObject({ played: 1, won: 0, lost: 1 });
   });
 
   it('a win batting second counts for the chasing side', () => {
-    const ts = tournamentState([play(1, 3, 6)]);
-    expect(teamRecord(QFF, ts, '2026-11-18')).toMatchObject({ won: 1, lost: 0 });
-    expect(teamRecord(MCD, ts, '2026-11-18')).toMatchObject({ won: 0, lost: 1 });
+    const ts = tournamentState([play(2, 3, 6)]);
+    expect(teamRecord(QFF, ts, '2026-11-17')).toMatchObject({ won: 1, lost: 0 });
+    expect(teamRecord(MCD, ts, '2026-11-17')).toMatchObject({ won: 0, lost: 1 });
   });
 
   it('a tie counts as tied / no result for both sides', () => {
-    const ts = tournamentState([play(1, 3, 3)]);
+    const ts = tournamentState([play(2, 3, 3)]);
     for (const id of [MCD, QFF]) {
-      expect(teamRecord(id, ts, '2026-11-18')).toMatchObject({ played: 1, tiedNr: 1, won: 0 });
+      expect(teamRecord(id, ts, '2026-11-17')).toMatchObject({ played: 1, tiedNr: 1, won: 0 });
     }
   });
 
   it('adds up over several matches and moves the next match on', () => {
-    // Match 1: MCD beat QFF. Match 5: Power (Printing & Washing) chase down MCD.
-    const ts = tournamentState([play(1, 6, 3), play(5, 3, 6)]);
+    // Match 2: MCD beat QFF. Match 8: Power (Printing & Washing) bat first and beat MCD.
+    const ts = tournamentState([play(2, 6, 3), play(8, 6, 3)]);
     const r = teamRecord(MCD, ts, '2026-11-22');
     expect(r).toMatchObject({ played: 2, won: 1, lost: 1, tiedNr: 0 });
-    expect(r.next?.no).toBe(11);
+    expect(r.next?.no).toBe(16);
   });
 
   it('a live match is not counted and stays the next match', () => {
     const live = makeMatch(11, { overs: 1 });
-    live.fixtureId = 'f1';
+    live.fixtureId = 'f2';
     const ts = tournamentState([live]);
-    const r = teamRecord(MCD, ts, '2026-11-18');
+    const r = teamRecord(MCD, ts, '2026-11-17');
     expect(r.played).toBe(0);
-    expect(r.next?.no).toBe(1);
+    expect(r.next?.no).toBe(2);
   });
 
   it('an unplayed match from an earlier day is not shown as next', () => {
     const r = teamRecord(MCD, tournamentState([]), '2026-11-22');
-    expect(r.next?.no).toBe(11);
+    expect(r.next?.no).toBe(16);
   });
 
   it('Super Six matches join once the groups are decided', () => {
@@ -139,28 +139,28 @@ describe('team view on the Fixtures page', () => {
 
 describe('team page: results, form and standing', () => {
   it('lists results newest first with W / L / T for this team', () => {
-    const ts = tournamentState([play(1, 6, 3), play(5, 3, 6)]);
+    const ts = tournamentState([play(2, 6, 3), play(8, 6, 3)]);
     const r = teamResults(MCD, ts);
     expect(r.map((x) => [x.fixture.no, x.outcome])).toEqual([
-      [5, 'L'],
-      [1, 'W'],
+      [8, 'L'],
+      [2, 'W'],
     ]);
     expect(r[1].opponentId).toBe(QFF);
     expect(teamResults(QFF, ts).map((x) => x.outcome)).toEqual(['L']);
   });
 
   it('a tie is T for both sides', () => {
-    const ts = tournamentState([play(1, 3, 3)]);
+    const ts = tournamentState([play(2, 3, 3)]);
     expect(teamResults(MCD, ts)[0].outcome).toBe('T');
     expect(teamResults(QFF, ts)[0].outcome).toBe('T');
   });
 
   it('finds the live fixture and the group position', () => {
     const live = makeMatch(11, { overs: 1 });
-    live.fixtureId = 'f1';
+    live.fixtureId = 'f2';
     const g = new Game(live).start('a1', 'a2', 'b1').ball(1);
-    const ts = tournamentState([g.match, play(5, 3, 6)]);
-    expect(teamLiveFixture(MCD, ts)?.no).toBe(1);
+    const ts = tournamentState([g.match, play(8, 6, 3)]);
+    expect(teamLiveFixture(MCD, ts)?.no).toBe(2);
     const s = teamStanding(MCD, ts);
     expect(s?.stage).toBe('groupA');
     expect(s?.row.lost).toBe(1);

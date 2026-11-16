@@ -81,7 +81,7 @@ describe('fixture import', () => {
     const scored = new Map<string, FixtureOutcome>([['f1', { status: 'completed', innings: [] }]]);
     const r = parseFixtureRows(
       committeeSheet((row) => {
-        if (row[0] === 1) row[6] = 'Rainbow Cutting';
+        if (row[0] === 1) row[6] = 'DDC';
       }),
       FIXTURES,
       scored,

@@ -15,14 +15,14 @@ import {
 import { tournamentState } from '../standings';
 
 const at = (iso: string) => Date.parse(iso);
-const M1_START = at('2026-11-18T13:00:00+06:00');
+const M1_START = at('2026-11-17T12:00:00+06:00');
 
-/** A 1-over match for fixture f1 (FV v RC). `finish` plays it to the end. */
+/** A 1-over match for fixture f1 (Red Bulls Warriors v Rainbow Cutting). `finish` plays it to the end. */
 function fixtureMatch(finish: boolean, updatedAt: number, fixtureId = 'f1'): Match {
   const m = makeMatch(11, { overs: 1 });
   m.id = `${fixtureId}-${updatedAt}`;
   m.fixtureId = fixtureId;
-  m.teams[0].teamId = 'finishing-victorians';
+  m.teams[0].teamId = 'red-bulls-warriors';
   m.teams[1].teamId = 'rainbow-cutting';
   const g = new Game(m);
   g.start('a1', 'a2', 'b1').balls(4, 1);
@@ -35,7 +35,7 @@ function fixtureMatch(finish: boolean, updatedAt: number, fixtureId = 'f1'): Mat
 
 describe('fixture start time', () => {
   it('reads the fixture date and time as Bangladesh time', () => {
-    expect(new Date(fixtureStart(FIXTURES[0])).toISOString()).toBe('2026-11-18T07:00:00.000Z');
+    expect(new Date(fixtureStart(FIXTURES[0])).toISOString()).toBe('2026-11-17T06:00:00.000Z');
   });
 });
 
@@ -45,8 +45,8 @@ describe('hero', () => {
     const hero = pickHero([], tournamentState([]), now);
     expect(hero).toMatchObject({ kind: 'upcoming', fixture: { id: 'f1' } });
     expect(countdown(M1_START, now)).toEqual({
-      days: 3,
-      hours: 3,
+      days: 2,
+      hours: 2,
       minutes: 0,
       seconds: 0,
       due: false,
@@ -80,7 +80,7 @@ describe('hero', () => {
   it('a match set up but with no ball yet is not live', () => {
     const m = makeMatch(11, { overs: 1 });
     m.fixtureId = 'f1';
-    const hero = pickHero([m], tournamentState([m]), at('2026-11-18T12:00:00+06:00'));
+    const hero = pickHero([m], tournamentState([m]), at('2026-11-17T11:00:00+06:00'));
     expect(hero.kind).toBe('upcoming');
   });
 
@@ -98,9 +98,10 @@ describe('hero', () => {
   it('the result gives way to the next countdown after a while', () => {
     const done = fixtureMatch(true, M1_START + 3_600_000);
     const later = M1_START + 3_600_000 + RESULT_HOLD_MS + 1;
+    // By then match 2 (13:00 the same day) is past its grace too: the next day's first match
     expect(pickHero([done], tournamentState([done]), later)).toMatchObject({
       kind: 'upcoming',
-      fixture: { id: 'f2' },
+      fixture: { id: 'f3' },
     });
   });
 
@@ -108,7 +109,8 @@ describe('hero', () => {
     const ts = tournamentState([]);
     expect(nextFixture(ts, M1_START + 60 * 60_000)?.id).toBe('f1');
     expect(countdown(M1_START, M1_START + 60_000).due).toBe(true);
-    expect(nextFixture(ts, at('2026-11-18T20:00:00+06:00'))?.id).toBe('f2');
+    // f1 (12:00) is past its grace by 15:30; f2 (13:00) is not yet
+    expect(nextFixture(ts, at('2026-11-17T15:30:00+06:00'))?.id).toBe('f2');
   });
 
   it('after the final: nothing left', () => {

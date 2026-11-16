@@ -19,7 +19,7 @@ describe('tournament teams', () => {
       'MCD Super Stars',
       'Power (Printing & Washing)',
       'Quality Flying Fighter',
-      'Rainbow Cutting',
+      'Sky Warrior',
     ]);
     expect(names('B')).toEqual([
       'Engineer Warrior',
@@ -27,7 +27,7 @@ describe('tournament teams', () => {
       'Power Player',
       'DDC',
       'Red Bulls Warriors',
-      'Sky Warrior',
+      'Rainbow Cutting',
     ]);
     expect(TOURNAMENT_TEAMS).toHaveLength(12);
   });

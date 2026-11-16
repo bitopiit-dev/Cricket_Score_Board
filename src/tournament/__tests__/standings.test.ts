@@ -47,23 +47,23 @@ describe('standings', () => {
     expect(ts.tables.groupA.map((r) => r.teamId).sort()).toEqual(groupIds('A').sort());
     expect(ts.tables.groupA.every((r) => r.played === 0 && r.points === 0)).toBe(true);
     expect(ts.tables.superSix).toEqual([]);
-    expect(ts.outcomes.get('f1')).toEqual({ status: 'scheduled' });
+    expect(ts.outcomes.get('f2')).toEqual({ status: 'scheduled' });
   });
 
   it('gives 2 points for a win and works out net run rate', () => {
-    // Match 1: MCD Super Stars 6/0 (1 ov) beat Quality Flying Fighter 3/0 (1 ov)
-    const ts = tournamentState([play(1, 6, 3)]);
+    // Match 2: MCD Super Stars 6/0 (1 ov) beat Quality Flying Fighter 3/0 (1 ov)
+    const ts = tournamentState([play(2, 6, 3)]);
     const fv = ts.tables.groupA[0];
     expect(fv).toMatchObject({ teamId: 'mcd-super-stars', played: 1, won: 1, points: 2 });
     expect(fv.nrr).toBeCloseTo(3);
     const rc = ts.tables.groupA.find((r) => r.teamId === 'quality-flying-fighter')!;
     expect(rc).toMatchObject({ lost: 1, points: 0 });
     expect(rc.nrr).toBeCloseTo(-3);
-    expect(ts.outcomes.get('f1')!.status).toBe('completed');
+    expect(ts.outcomes.get('f2')!.status).toBe('completed');
   });
 
   it('a tie is 1 point each', () => {
-    const ts = tournamentState([play(1, 3, 3)]);
+    const ts = tournamentState([play(2, 3, 3)]);
     const rows = ts.tables.groupA.filter((r) => r.played === 1);
     expect(rows.map((r) => [r.tiedNr, r.points])).toEqual([
       [1, 1],
@@ -73,16 +73,16 @@ describe('standings', () => {
 
   it('a started but unfinished match is live and not counted', () => {
     const m = makeMatch(11, { overs: 1 });
-    m.fixtureId = 'f1';
+    m.fixtureId = 'f2';
     const ts = tournamentState([m]);
-    expect(ts.outcomes.get('f1')!.status).toBe('live');
+    expect(ts.outcomes.get('f2')!.status).toBe('live');
     expect(ts.tables.groupA.every((r) => r.played === 0)).toBe(true);
   });
 
   it('a completed match wins over an unfinished duplicate of the same fixture', () => {
-    const done = play(1, 6, 3);
-    const later = { ...makeMatch(11, { overs: 1 }), id: 'dup', fixtureId: 'f1', updatedAt: 1e12 };
-    expect(tournamentState([later, done]).outcomes.get('f1')!.status).toBe('completed');
+    const done = play(2, 6, 3);
+    const later = { ...makeMatch(11, { overs: 1 }), id: 'dup', fixtureId: 'f2', updatedAt: 1e12 };
+    expect(tournamentState([later, done]).outcomes.get('f2')!.status).toBe('completed');
   });
 
   it('fills "Group A – 1st" places only when the whole group is done', () => {
@@ -136,10 +136,10 @@ describe('standings', () => {
 
 describe('fixture ids', () => {
   it('a match keeps its fixture when the match number is edited', () => {
-    const m = play(1, 6, 3);
-    const edited = FIXTURES.map((f) => (f.id === 'f1' ? { ...f, no: 99 } : f));
+    const m = play(2, 6, 3);
+    const edited = FIXTURES.map((f) => (f.id === 'f2' ? { ...f, no: 99 } : f));
     const ts = tournamentState([m], edited);
-    expect(ts.outcomes.get('f1')!.status).toBe('completed');
+    expect(ts.outcomes.get('f2')!.status).toBe('completed');
     expect(ts.tables.groupA[0]).toMatchObject({ teamId: 'mcd-super-stars', points: 2 });
   });
 });
