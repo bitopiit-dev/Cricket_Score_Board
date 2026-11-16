@@ -16,7 +16,7 @@ export function MatchesAdmin({ scorerOnly = false }: { scorerOnly?: boolean }) {
 
   return (
     <Card className="flex flex-col gap-3">
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-500 dark:text-slate-400">
         লগইন করা অবস্থায় যে ফোনে স্কোর তোলা হয়, প্রতিটা বল নিজে থেকেই সবার ফোনে যায়। লগইনের আগে তোলা
         ম্যাচ পাঠাতে নিচের বোতাম চাপুন।
         {waiting > 0 && ` এই ফোন থেকে ${waiting}টা ম্যাচ নেট পেলেই আপলোড হবে।`}
@@ -52,7 +52,7 @@ export function MatchesAdmin({ scorerOnly = false }: { scorerOnly?: boolean }) {
                 <p className="font-semibold">
                   {m.teams[0].name} বনাম {m.teams[1].name}
                 </p>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   {fx ? `ফিক্সচার ম্যাচ ${fx.no}` : 'ফিক্সচারের বাইরে'} ·{' '}
                   {s.phase === 'completed' ? 'শেষ' : 'চলছে / শুরু হয়নি'} ·{' '}
                   {new Date(m.updatedAt).toLocaleString()}
@@ -81,7 +81,9 @@ export function MatchesAdmin({ scorerOnly = false }: { scorerOnly?: boolean }) {
           );
         })}
       </ul>
-      {tour?.matches.length === 0 && <p className="text-sm text-slate-500">এখনো কোনো ম্যাচ নেই।</p>}
+      {tour?.matches.length === 0 && (
+        <p className="text-sm text-slate-500 dark:text-slate-400">এখনো কোনো ম্যাচ নেই।</p>
+      )}
     </Card>
   );
 }

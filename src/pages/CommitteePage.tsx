@@ -18,7 +18,7 @@ export default function CommitteePage() {
   const members = COMMITTEE_MEMBERS.filter((m) => m.name);
 
   return (
-    <div>
+    <main>
       <div className="mx-auto max-w-lg px-4 pt-4">
         <SubPageTitle title={t('committee.title')} parent="/more" />
       </div>
@@ -40,7 +40,7 @@ export default function CommitteePage() {
       </section>
 
       {members.length > 0 && (
-        <main className="mx-auto w-full max-w-lg p-4">
+        <div className="mx-auto w-full max-w-lg p-4">
           <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {members.map((m) => {
               const name = m.name!;
@@ -63,8 +63,8 @@ export default function CommitteePage() {
               );
             })}
           </ul>
-        </main>
+        </div>
       )}
-    </div>
+    </main>
   );
 }

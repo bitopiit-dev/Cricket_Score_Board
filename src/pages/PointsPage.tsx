@@ -124,7 +124,7 @@ function Table({
                   className={`${td} font-bold ${
                     q
                       ? 'text-emerald-700 shadow-[inset_3px_0_0_var(--color-emerald-500)] dark:text-emerald-400'
-                      : 'text-slate-400'
+                      : 'text-slate-500 dark:text-slate-400'
                   }`}
                 >
                   {started ? f.num(i + 1) : '–'}
@@ -158,7 +158,7 @@ function Table({
                       ? 'text-emerald-700 dark:text-emerald-400'
                       : r.nrr < 0
                         ? 'text-red-600'
-                        : 'text-slate-400'
+                        : 'text-slate-500 dark:text-slate-400'
                   }`}
                 >
                   {nrr(r.nrr)}

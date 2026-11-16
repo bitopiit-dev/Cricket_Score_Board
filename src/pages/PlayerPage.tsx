@@ -46,7 +46,9 @@ export default function PlayerPage() {
     return (
       <main className="mx-auto w-full max-w-lg p-4">
         <SubPageTitle title={t('tabs.teams')} parent="/teams" />
-        <p className="p-10 text-center text-slate-500">{t('player.notFound')}</p>
+        <p className="p-10 text-center text-slate-500 dark:text-slate-400">
+          {t('player.notFound')}
+        </p>
       </main>
     );
   }
@@ -188,7 +190,7 @@ export default function PlayerPage() {
                             {parts.length > 0 ? parts.join('  ') : t('player.didNotFeature')}
                           </span>
                         </span>
-                        <span aria-hidden className="text-slate-400">
+                        <span aria-hidden className="text-slate-500 dark:text-slate-400">
                           ›
                         </span>
                       </Link>

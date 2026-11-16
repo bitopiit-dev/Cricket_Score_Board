@@ -35,7 +35,7 @@ export default function MorePage() {
                   {t(`more.${i.key}Hint`)}
                 </span>
               </span>
-              <span aria-hidden className="text-xl text-slate-400">
+              <span aria-hidden className="text-xl text-slate-500 dark:text-slate-400">
                 ›
               </span>
             </Link>

@@ -50,7 +50,7 @@ export default function TeamPage() {
     return (
       <main className="mx-auto w-full max-w-lg p-4">
         <SubPageTitle title={t('tabs.teams')} parent="/teams" />
-        <p className="p-10 text-center text-slate-500">{t('team.notFound')}</p>
+        <p className="p-10 text-center text-slate-500 dark:text-slate-400">{t('team.notFound')}</p>
       </main>
     );
   }
@@ -59,10 +59,10 @@ export default function TeamPage() {
   const subs = team.players.filter((p) => p.substitute);
 
   return (
-    <div>
+    <main>
       <TeamHero team={team} tour={tour} />
 
-      <main className="mx-auto flex w-full max-w-lg flex-col gap-5 p-4">
+      <div className="mx-auto flex w-full max-w-lg flex-col gap-5 p-4">
         {tour && <TeamMatches team={team} ts={tour.ts} />}
         {squadWarnings(team, SQUAD_LIMITS).length > 0 && (
           <div
@@ -85,7 +85,7 @@ export default function TeamPage() {
           </div>
         )}
         {team.players.length === 0 ? (
-          <p className="rounded-2xl bg-white py-10 text-center text-slate-500 dark:bg-slate-900">
+          <p className="rounded-2xl bg-white py-10 text-center text-slate-500 dark:text-slate-400 dark:bg-slate-900">
             {t('team.noPlayers')}
           </p>
         ) : (
@@ -96,8 +96,8 @@ export default function TeamPage() {
             )}
           </>
         )}
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }
 
@@ -309,7 +309,9 @@ function TeamMatches({ team, ts }: { team: TournamentTeam; ts: TournamentState }
                   </span>
                 )}
               </span>
-              <span className="text-sm font-semibold text-bpl-red">{t('live.details')} ›</span>
+              <span className="text-sm font-semibold text-bpl-red dark:text-rose-400">
+                {t('live.details')} ›
+              </span>
             </Link>
           );
         })()}
@@ -384,7 +386,7 @@ function TeamMatches({ team, ts }: { team: TournamentTeam; ts: TournamentState }
                       {st?.result && o.match ? ` · ${resultText(st.result, o.match, t, f)}` : ''}
                     </span>
                   </span>
-                  <span className="shrink-0 text-xs text-slate-500">
+                  <span className="shrink-0 text-xs text-slate-500 dark:text-slate-400">
                     {when(r.fixture).split(' · ')[0]}
                   </span>
                 </>

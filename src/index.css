@@ -16,6 +16,8 @@
   --color-slate-900: #1e293b;
   --color-slate-800: #2a3a52;
   --color-slate-700: #3b4b66;
+  /* Muted text: a shade darker than stock so it passes 4.5:1 on the light page in sunlight mode */
+  --color-slate-500: #56657c;
 
   /* Night palette for the header, tab bar and scoreboards */
   --color-night-950: #0b1120;

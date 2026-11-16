@@ -73,7 +73,7 @@ export function TeamsAdmin({ email }: { email: string }) {
 
   return (
     <Card className="flex flex-col gap-3">
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-500 dark:text-slate-400">
         এখন চালু: {dataSource('teams') === 'built-in' ? 'কোডের আসল তালিকা' : 'আপনার সেভ করা তালিকা'}।
         একটা দল বদলে অন্য দলে গেলেও বদল থাকবে, শেষে একবার সেভ করলেই হবে।
       </p>

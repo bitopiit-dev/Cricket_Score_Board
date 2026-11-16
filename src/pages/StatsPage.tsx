@@ -210,7 +210,7 @@ function Row({ row, rank, board }: { row: PlayerTotals; rank: number; board: Boa
   const { value, detail } = valueOf(row, board);
   const body = (
     <>
-      <span className="tabular w-5 shrink-0 text-center font-bold text-slate-500">
+      <span className="tabular w-5 shrink-0 text-center font-bold text-slate-500 dark:text-slate-400">
         {f.num(rank)}
       </span>
       <PlayerAvatar name={row.name} color={team?.color} photo={player?.photo} size="md" />

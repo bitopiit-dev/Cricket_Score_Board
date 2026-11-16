@@ -34,7 +34,7 @@ export function JsonAdmin({ email }: { email: string }) {
 
   return (
     <Card className="flex flex-col gap-3">
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-500 dark:text-slate-400">
         সাবধানে ব্যবহার করুন: এখানে পুরো তালিকা লেখা আকারে বদলানো যায়। সেভ করার আগে "ব্যাকআপ" নিয়ে রাখুন।
         ভুল লেখা হলে সেভ হবে না।
       </p>

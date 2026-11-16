@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 /** A placeholder block with a light sweeping across it while data loads. */
@@ -25,39 +26,55 @@ export function PageSkeleton({
 }) {
   const { t } = useTranslation();
   return (
-    <div
-      role="status"
-      aria-busy="true"
-      aria-label={t('common.loading')}
-      className={inline ? 'flex flex-col gap-3' : 'mx-auto flex w-full max-w-lg flex-col gap-3 p-4'}
-    >
-      {variant !== 'hero' && !inline && <Bone className="h-9 w-40" />}
-      {variant === 'hero' && (
-        <div className="flex flex-col gap-4 rounded-3xl bg-night-950 p-5 ring-1 ring-night-line">
-          <div className="flex items-center justify-between">
-            <Bone className="size-16 !rounded-full !bg-night-800" />
-            <Bone className="h-6 w-12 !bg-night-800" />
-            <Bone className="size-16 !rounded-full !bg-night-800" />
-          </div>
-          <Bone className="mx-auto h-12 w-3/4 !bg-night-800" />
-          <Bone className="mx-auto h-3 w-1/2 !bg-night-800" />
-        </div>
-      )}
-      {Array.from({ length: variant === 'table' ? 2 : 3 }, (_, i) => (
-        <div
-          key={i}
-          className="flex flex-col gap-3 rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900"
-        >
-          <Bone className="h-5 w-1/3" />
-          {Array.from({ length: variant === 'table' ? 6 : 2 }, (_, j) => (
-            <div key={j} className="flex items-center gap-3">
-              <Bone className="size-8 shrink-0 !rounded-full" />
-              <Bone className="h-4 flex-1" />
-              <Bone className="h-4 w-10" />
+    <Wrapper inline={inline}>
+      <div
+        role="status"
+        aria-busy="true"
+        aria-label={t('common.loading')}
+        className={
+          inline ? 'flex flex-col gap-3' : 'mx-auto flex w-full max-w-lg flex-col gap-3 p-4'
+        }
+      >
+        {variant !== 'hero' && !inline && <Bone className="h-9 w-40" />}
+        {variant === 'hero' && (
+          <div className="flex flex-col gap-4 rounded-3xl bg-night-950 p-5 ring-1 ring-night-line">
+            <div className="flex items-center justify-between">
+              <Bone className="size-16 !rounded-full !bg-night-800" />
+              <Bone className="h-6 w-12 !bg-night-800" />
+              <Bone className="size-16 !rounded-full !bg-night-800" />
             </div>
-          ))}
-        </div>
-      ))}
-    </div>
+            <Bone className="mx-auto h-12 w-3/4 !bg-night-800" />
+            <Bone className="mx-auto h-3 w-1/2 !bg-night-800" />
+          </div>
+        )}
+        {Array.from({ length: variant === 'table' ? 2 : 3 }, (_, i) => (
+          <div
+            key={i}
+            className="flex flex-col gap-3 rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900"
+          >
+            <Bone className="h-5 w-1/3" />
+            {Array.from({ length: variant === 'table' ? 6 : 2 }, (_, j) => (
+              <div key={j} className="flex items-center gap-3">
+                <Bone className="size-8 shrink-0 !rounded-full" />
+                <Bone className="h-4 flex-1" />
+                <Bone className="h-4 w-10" />
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </Wrapper>
+  );
+}
+
+/** A full-page placeholder is still the page: keep its main landmark and heading. */
+function Wrapper({ inline, children }: { inline: boolean; children: ReactNode }) {
+  const { t } = useTranslation();
+  if (inline) return <>{children}</>;
+  return (
+    <main>
+      <h1 className="sr-only">{t('common.loading')}</h1>
+      {children}
+    </main>
   );
 }

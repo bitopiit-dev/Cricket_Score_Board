@@ -101,7 +101,7 @@ export function InstallHint() {
         type="button"
         onClick={close}
         aria-label={t('common.close')}
-        className="-my-2 -mr-2 flex size-11 shrink-0 items-center justify-center rounded-full text-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"
+        className="-my-2 -mr-2 flex size-11 shrink-0 items-center justify-center rounded-full text-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
       >
         ×
       </button>

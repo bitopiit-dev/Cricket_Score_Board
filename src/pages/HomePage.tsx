@@ -481,7 +481,7 @@ function LiveTicker({ match, state }: { match: Match; state: MatchState }) {
         <TeamEdge a={batting.color} b={bowling.color} />
         <span
           aria-hidden
-          className="live-pulse size-2 shrink-0 rounded-full bg-bpl-red text-bpl-red"
+          className="live-pulse size-2 shrink-0 rounded-full bg-bpl-red text-bpl-red dark:text-rose-400"
         />
         <TeamAvatar name={batting.name} color={batting.color} logo={batting.logo} size="sm" />
         <span className="flex min-w-0 flex-col leading-tight">
@@ -563,7 +563,7 @@ function NextMatches({ fixtures, ts }: { fixtures: Fixture[]; ts: TournamentStat
         <h2 className="font-display text-xl font-bold tracking-wide">{t('homePage.upcoming')}</h2>
         <Link
           to="/fixtures"
-          className="-my-3 inline-flex min-h-11 items-center text-sm font-semibold text-bpl-red"
+          className="-my-3 inline-flex min-h-11 items-center text-sm font-semibold text-bpl-red dark:text-rose-400"
         >
           {t('homePage.allFixtures')} →
         </Link>

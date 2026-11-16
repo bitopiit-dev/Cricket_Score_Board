@@ -24,7 +24,7 @@ function InningsLines({ match, state }: { match: Match; state: MatchState }) {
               {f.num(inn.runs)}/{f.num(inn.wickets)}
             </span>
           </div>
-          <div className="tabular flex justify-between text-sm text-slate-500">
+          <div className="tabular flex justify-between text-sm text-slate-500 dark:text-slate-400">
             <span>{inn.endReason && t(`endReason.${inn.endReason}`)}</span>
             <span>
               {t('scoring.oversOf', {
@@ -97,7 +97,7 @@ export function ResultCard({
   const mom = manOfTheMatchId(match);
   return (
     <div className="flex flex-col gap-4 p-4">
-      <h2 className="text-center text-sm font-semibold tracking-wide text-slate-500 uppercase">
+      <h2 className="text-center text-sm font-semibold tracking-wide text-slate-500 dark:text-slate-400 uppercase">
         {t('scoring.matchOver')}
       </h2>
       {state.result && (

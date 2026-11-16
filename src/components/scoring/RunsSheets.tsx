@@ -73,7 +73,9 @@ export function ExtrasSheet({
       <p className="mb-3 text-sm text-slate-600 dark:text-slate-400">{prompt}</p>
       <RunChoices options={options} onPick={(o) => onPick(o.runs, o.boundary)} />
       {extra === 'noBall' && (
-        <p className="mt-3 text-xs text-slate-500">▣ = {t('scoring.boundary')}</p>
+        <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
+          ▣ = {t('scoring.boundary')}
+        </p>
       )}
     </Sheet>
   );

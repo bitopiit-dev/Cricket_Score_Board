@@ -1,27 +1,32 @@
 import { HashRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
-import { lazy, Suspense, type ReactNode } from 'react';
+import { lazy, Suspense, useEffect, type ReactNode } from 'react';
 import { AppShell } from './components/layout/AppShell';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { ConflictNotice } from './components/layout/ConflictNotice';
 import { useApplyTheme } from './hooks/useApplyTheme';
-import AwardsPage from './pages/AwardsPage';
-import CommitteePage from './pages/CommitteePage';
 import HomePage from './pages/HomePage';
-import LivePage from './pages/LivePage';
-import MorePage from './pages/MorePage';
-import NewMatchPage from './pages/NewMatchPage';
-import RulesPage from './pages/RulesPage';
-import ScoringPage from './pages/ScoringPage';
-import PointsPage from './pages/PointsPage';
-import FixturesPage from './pages/FixturesPage';
-import { MediaPage } from './pages/SoonPages';
-import StatsPage from './pages/StatsPage';
-import PlayerPage from './pages/PlayerPage';
-import TeamPage from './pages/TeamPage';
-import TeamsPage from './pages/TeamsPage';
 import { useCanScore } from './sync/auth';
+import { lazyPage, preloadPages } from './utils/lazyPage';
+import { PageSkeleton } from './components/common/Skeleton';
 
-// Only the admin downloads the admin screens
+// Home is the first screen, so it ships in the main bundle; every other page loads on demand
+const AwardsPage = lazyPage(() => import('./pages/AwardsPage'));
+const CommitteePage = lazyPage(() => import('./pages/CommitteePage'));
+const LivePage = lazyPage(() => import('./pages/LivePage'));
+const MorePage = lazyPage(() => import('./pages/MorePage'));
+const NewMatchPage = lazyPage(() => import('./pages/NewMatchPage'));
+const RulesPage = lazyPage(() => import('./pages/RulesPage'));
+const ScoringPage = lazyPage(() => import('./pages/ScoringPage'));
+const PointsPage = lazyPage(() => import('./pages/PointsPage'));
+const FixturesPage = lazyPage(() => import('./pages/FixturesPage'));
+const StatsPage = lazyPage(() => import('./pages/StatsPage'));
+const PlayerPage = lazyPage(() => import('./pages/PlayerPage'));
+const TeamPage = lazyPage(() => import('./pages/TeamPage'));
+const TeamsPage = lazyPage(() => import('./pages/TeamsPage'));
+const MediaPage = lazyPage(() =>
+  import('./pages/SoonPages').then((m) => ({ default: m.MediaPage })),
+);
+// Only the admin downloads the admin screens (not preloaded)
 const AdminPage = lazy(() => import('./pages/admin/AdminPage'));
 
 /**
@@ -30,46 +35,49 @@ const AdminPage = lazy(() => import('./pages/admin/AdminPage'));
  */
 export default function App() {
   useApplyTheme();
+  useEffect(preloadPages, []);
   return (
     <HashRouter>
       <ConflictNotice />
       <RouteBoundary>
-        <Routes>
-          <Route element={<AppShell />}>
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/live" element={<LivePage />} />
-            <Route path="/fixtures" element={<FixturesPage />} />
-            <Route path="/points" element={<PointsPage />} />
-            <Route path="/stats" element={<StatsPage />} />
-            <Route path="/awards" element={<AwardsPage />} />
-            <Route path="/teams" element={<TeamsPage />} />
-            <Route path="/team/:id" element={<TeamPage />} />
-            <Route path="/player/:teamId/:playerId" element={<PlayerPage />} />
-            <Route path="/more" element={<MorePage />} />
+        <Suspense fallback={<PageSkeleton />}>
+          <Routes>
+            <Route element={<AppShell />}>
+              <Route path="/home" element={<HomePage />} />
+              <Route path="/live" element={<LivePage />} />
+              <Route path="/fixtures" element={<FixturesPage />} />
+              <Route path="/points" element={<PointsPage />} />
+              <Route path="/stats" element={<StatsPage />} />
+              <Route path="/awards" element={<AwardsPage />} />
+              <Route path="/teams" element={<TeamsPage />} />
+              <Route path="/team/:id" element={<TeamPage />} />
+              <Route path="/player/:teamId/:playerId" element={<PlayerPage />} />
+              <Route path="/more" element={<MorePage />} />
+              <Route
+                path="/admin"
+                element={
+                  <Suspense fallback={null}>
+                    <AdminPage />
+                  </Suspense>
+                }
+              />
+              <Route path="/rules" element={<RulesPage />} />
+              <Route path="/committee" element={<CommitteePage />} />
+              <Route path="/media" element={<MediaPage />} />
+            </Route>
+            {/* Full-screen pages without the tab bar */}
             <Route
-              path="/admin"
+              path="/new"
               element={
-                <Suspense fallback={null}>
-                  <AdminPage />
-                </Suspense>
+                <ScorerOnly>
+                  <NewMatchPage />
+                </ScorerOnly>
               }
             />
-            <Route path="/rules" element={<RulesPage />} />
-            <Route path="/committee" element={<CommitteePage />} />
-            <Route path="/media" element={<MediaPage />} />
-          </Route>
-          {/* Full-screen pages without the tab bar */}
-          <Route
-            path="/new"
-            element={
-              <ScorerOnly>
-                <NewMatchPage />
-              </ScorerOnly>
-            }
-          />
-          <Route path="/match/:id" element={<ScoringPage />} />
-          <Route path="*" element={<Navigate to="/home" replace />} />
-        </Routes>
+            <Route path="/match/:id" element={<ScoringPage />} />
+            <Route path="*" element={<Navigate to="/home" replace />} />
+          </Routes>
+        </Suspense>
       </RouteBoundary>
     </HashRouter>
   );

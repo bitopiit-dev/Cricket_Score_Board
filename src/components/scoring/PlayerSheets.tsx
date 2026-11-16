@@ -28,7 +28,9 @@ function PlayerList({ options, onPick }: { options: PickOption[]; onPick: (id: s
           >
             <span className="truncate">{o.name}</span>
             {o.note && (
-              <span className="shrink-0 text-xs font-normal text-slate-500">{o.note}</span>
+              <span className="shrink-0 text-xs font-normal text-slate-500 dark:text-slate-400">
+                {o.note}
+              </span>
             )}
           </button>
         </li>

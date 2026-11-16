@@ -34,7 +34,7 @@ export default function AdminPage() {
   if (!auth.ready)
     return (
       <Wrap>
-        <p className="text-slate-500">লোড হচ্ছে…</p>
+        <p className="text-slate-500 dark:text-slate-400">লোড হচ্ছে…</p>
       </Wrap>
     );
   if (!auth.email)
@@ -49,7 +49,7 @@ export default function AdminPage() {
       <Card className="flex flex-wrap items-center justify-between gap-2">
         <div className="min-w-0">
           <p className="truncate font-semibold">{auth.email}</p>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
             {auth.role === 'super'
               ? 'সুপার অ্যাডমিন: সব বদলাতে পারবেন'
               : auth.role === 'scorer'

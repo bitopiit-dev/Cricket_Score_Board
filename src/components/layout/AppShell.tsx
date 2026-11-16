@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+import { PageSkeleton } from '../common/Skeleton';
 import { useTranslation } from 'react-i18next';
 import { assetUrl } from '../../utils/asset';
 import { Link, Outlet, useLocation } from 'react-router-dom';
@@ -26,6 +28,8 @@ export function AppShell() {
               <Link to="/home" className="inline-block max-w-full shrink-0 active:scale-95">
                 <img
                   src={assetUrl(BPL_LOGO)}
+                  width={331}
+                  height={200}
                   alt={`${APP_TITLE} | ${APP_SUBTITLE}`}
                   className="h-11 w-auto max-w-full object-contain sm:h-[56px] md:h-16"
                 />
@@ -45,7 +49,13 @@ export function AppShell() {
               aria-label={COMMITTEE_NAME}
               className="hidden min-h-11 min-w-11 shrink-0 items-center justify-center active:scale-95 sm:flex"
             >
-              <img src={assetUrl(COMMITTEE_LOGO)} alt="" className="h-10 w-auto sm:h-12" />
+              <img
+                src={assetUrl(COMMITTEE_LOGO)}
+                alt=""
+                width={429}
+                height={540}
+                className="h-10 w-auto sm:h-12"
+              />
             </Link>
             <div className="flex shrink-0 flex-col items-end gap-1.5 sm:flex-row sm:items-center sm:gap-3">
               {/* No room on phones; the language button stays */}
@@ -62,7 +72,10 @@ export function AppShell() {
         </div>
       </header>
       <ErrorBoundary resetKey={pathname}>
-        <Outlet />
+        {/* Pages load on demand; the header and tab bar stay put meanwhile */}
+        <Suspense fallback={<PageSkeleton />}>
+          <Outlet />
+        </Suspense>
         <ToastHost />
       </ErrorBoundary>
       {/* Credit line, bottom right; the page padding keeps it above the phone tab bar */}
@@ -93,7 +106,7 @@ export function SubPageTitle({ title, parent }: { title: string; parent: string 
         type="button"
         onClick={goBack}
         aria-label={t('common.back')}
-        className="-ml-2 flex size-10 shrink-0 items-center justify-center rounded-full text-3xl text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-800"
+        className="-ml-2 flex size-10 shrink-0 items-center justify-center rounded-full text-3xl text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800"
       >
         ‹
       </button>

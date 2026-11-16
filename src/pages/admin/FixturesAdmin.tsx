@@ -163,7 +163,7 @@ export function FixturesAdmin({ email }: { email: string }) {
 
   return (
     <Card className="flex flex-col gap-3">
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-500 dark:text-slate-400">
         এখন চালু:{' '}
         {dataSource('fixtures') === 'built-in'
           ? 'কোডের আসল ফিক্সচার'
@@ -172,7 +172,7 @@ export function FixturesAdmin({ email }: { email: string }) {
       </p>
       <div className="rounded-xl border border-dashed border-slate-300 p-3 dark:border-slate-700">
         <p className="text-sm font-semibold">Excel ফাইল থেকে পুরো ফিক্সচার</p>
-        <p className="mb-2 text-xs text-slate-500">
+        <p className="mb-2 text-xs text-slate-500 dark:text-slate-400">
           কমিটির Excel (Match No, Date, Time, Team A, Team B, Stage কলামসহ) দিন। আগে নিচে দেখাবে,
           সেভ চাপলে তবেই সবার জন্য চালু হবে। ম্যাচ নম্বর একই থাকলে আগের স্কোর সেই ম্যাচেই থাকবে।
         </p>
@@ -290,7 +290,7 @@ export function FixturesAdmin({ email }: { email: string }) {
                   disabled={lockTeams}
                   onChange={(s) => askTeams() && set({ teamA: s })}
                 />
-                <span className="text-xs text-slate-500">বনাম</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400">বনাম</span>
                 <SlotPicker
                   value={fx.teamB}
                   disabled={lockTeams}
@@ -341,7 +341,7 @@ export function FixturesAdmin({ email }: { email: string }) {
         </button>
       </div>
       <StatusLine msg={status.msg} />
-      <p className="text-xs text-slate-500">
+      <p className="text-xs text-slate-500 dark:text-slate-400">
         PDF ফাইলটা আলাদা: ফিক্সচার বদলালে নতুন PDF বানাতে হবে (python scripts/build-fixture-pdf.py)।
       </p>
     </Card>

@@ -16,10 +16,10 @@ export interface CommitteeMember {
   photo?: string;
 }
 
-export const COMMITTEE_LOGO = 'images/bgl-sports-committee-logo.png';
+export const COMMITTEE_LOGO = 'images/bgl-sports-committee-logo.webp';
 
 /** Official BPL-2027 logo (transparent background). */
-export const BPL_LOGO = 'images/bpl-2027-logo.png';
+export const BPL_LOGO = 'images/bpl-2027-logo.webp';
 export const COMMITTEE_NAME = 'BGL Sports Committee';
 
 const member = (id: string, name: string): CommitteeMember => ({

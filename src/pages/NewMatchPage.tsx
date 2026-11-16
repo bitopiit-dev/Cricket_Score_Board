@@ -241,15 +241,15 @@ export default function NewMatchPage() {
             )}
             {fixture && (
               <dl className="grid grid-cols-2 gap-x-3 gap-y-1 rounded-xl bg-sky-50 p-3 text-sm dark:bg-sky-950/40">
-                <dt className="text-slate-500">{t('newMatch.matchNo')}</dt>
+                <dt className="text-slate-500 dark:text-slate-400">{t('newMatch.matchNo')}</dt>
                 <dd className="font-semibold">{f.num(fixture.no)}</dd>
-                <dt className="text-slate-500">{t('newMatch.stage')}</dt>
+                <dt className="text-slate-500 dark:text-slate-400">{t('newMatch.stage')}</dt>
                 <dd className="font-semibold">{stageLabel(fixture.stage, t)}</dd>
-                <dt className="text-slate-500">{t('newMatch.startTime')}</dt>
+                <dt className="text-slate-500 dark:text-slate-400">{t('newMatch.startTime')}</dt>
                 <dd className="font-semibold">{formatTime(fixture.time, lang, f)}</dd>
-                <dt className="text-slate-500">{t('newMatch.venue')}</dt>
+                <dt className="text-slate-500 dark:text-slate-400">{t('newMatch.venue')}</dt>
                 <dd className="font-semibold">{fixture.venue ?? t('newMatch.venueTbd')}</dd>
-                <dt className="text-slate-500">{t('newMatch.overs')}</dt>
+                <dt className="text-slate-500 dark:text-slate-400">{t('newMatch.overs')}</dt>
                 <dd className="font-semibold">{f.num(FIXTURE_OVERS)}</dd>
               </dl>
             )}
@@ -453,7 +453,9 @@ export default function NewMatchPage() {
             >
               <summary className="flex cursor-pointer list-none items-center justify-between py-1 font-semibold">
                 {t('newMatch.playersOf', { team: displayName(ti) })}
-                <span className="text-slate-400 transition group-open:rotate-90">›</span>
+                <span className="text-slate-500 dark:text-slate-400 transition group-open:rotate-90">
+                  ›
+                </span>
               </summary>
               {squadOf(ti).length > 0 ? (
                 <div className="mt-2">
@@ -493,7 +495,7 @@ export default function NewMatchPage() {
                               {captainMark(p)}
                             </span>
                             {p.substitute && (
-                              <span className="text-xs text-slate-500">
+                              <span className="text-xs text-slate-500 dark:text-slate-400">
                                 {t('team.substitutes')}
                               </span>
                             )}
@@ -507,7 +509,7 @@ export default function NewMatchPage() {
                 <ol className="mt-2 flex flex-col gap-2">
                   {Array.from({ length: playersPerSide }, (_, j) => (
                     <li key={j} className="flex items-center gap-2">
-                      <span className="tabular w-6 text-right text-sm text-slate-400">
+                      <span className="tabular w-6 text-right text-sm text-slate-500 dark:text-slate-400">
                         {f.num(j + 1)}
                       </span>
                       <input

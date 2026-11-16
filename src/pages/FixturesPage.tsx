@@ -164,7 +164,7 @@ export default function FixturesPage() {
       {team && <TeamRecord team={team} ts={tour.ts} onClear={() => setTeam('')} />}
 
       {team && list.length === 0 && (
-        <p className="rounded-2xl bg-white p-4 text-sm text-slate-500 shadow-sm dark:bg-slate-900">
+        <p className="rounded-2xl bg-white p-4 text-sm text-slate-500 dark:text-slate-400 shadow-sm dark:bg-slate-900">
           {t('fixtures.teamNoMatches')}
         </p>
       )}
@@ -187,7 +187,10 @@ export default function FixturesPage() {
         if (!fxs) {
           // A day off inside the tournament
           return (
-            <p key={date} className="flex items-center gap-2 px-1 text-xs text-slate-500">
+            <p
+              key={date}
+              className="flex items-center gap-2 px-1 text-xs text-slate-500 dark:text-slate-400"
+            >
               <span aria-hidden className="h-px flex-1 bg-slate-200 dark:bg-slate-800" />
               {day(date)} · {t('fixtures.restDay')}
               {HOLIDAYS.includes(date) && ` (${t('fixtures.holiday')})`}
@@ -334,7 +337,7 @@ function FixtureCard({
         ) : (
           <span
             aria-hidden
-            className="flex size-8 shrink-0 items-center justify-center rounded-full border border-dashed border-slate-400 text-xs text-slate-400"
+            className="flex size-8 shrink-0 items-center justify-center rounded-full border border-dashed border-slate-400 text-xs text-slate-500 dark:text-slate-400"
           >
             ?
           </span>
@@ -357,8 +360,11 @@ function FixtureCard({
 
   const status =
     outcome.status === 'live' ? (
-      <span className="flex items-center gap-1.5 font-bold text-bpl-red">
-        <span aria-hidden className="live-pulse size-2 rounded-full bg-bpl-red text-bpl-red" />
+      <span className="flex items-center gap-1.5 font-bold text-bpl-red dark:text-rose-400">
+        <span
+          aria-hidden
+          className="live-pulse size-2 rounded-full bg-bpl-red text-bpl-red dark:text-rose-400"
+        />
         {t('fixtures.live')}
       </span>
     ) : outcome.status === 'completed' ? (

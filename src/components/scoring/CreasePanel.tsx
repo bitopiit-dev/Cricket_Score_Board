@@ -45,7 +45,7 @@ export function CreasePanel({ match, inn }: { match: Match; inn: InningsState })
                   )}
                   {playerName(match, b.playerId)}
                   {inn.loneBatter && (
-                    <span className="ml-1 text-xs font-normal text-slate-500">
+                    <span className="ml-1 text-xs font-normal text-slate-500 dark:text-slate-400">
                       ({t('scoring.loneBatter')})
                     </span>
                   )}

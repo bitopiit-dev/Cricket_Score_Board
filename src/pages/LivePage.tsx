@@ -63,7 +63,7 @@ export default function LivePage() {
       {live.length === 0 && <NextMatchCountdown />}
       {matches === null && <PageSkeleton variant="hero" inline />}
       {matches?.length === 0 && (
-        <p className="rounded-2xl bg-white py-10 text-center text-slate-500 dark:bg-slate-900">
+        <p className="rounded-2xl bg-white py-10 text-center text-slate-500 dark:text-slate-400 dark:bg-slate-900">
           {canScore ? t('home.noMatches') : t('home.noMatchesViewer')}
         </p>
       )}
@@ -96,7 +96,7 @@ function MatchCard({ m, s }: { m: Match; s: MatchState }) {
         live ? 'ring-2 ring-bpl-red/70' : ''
       }`}
     >
-      <div className="flex items-center justify-between text-xs text-slate-500">
+      <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
         <span>
           {fx
             ? `${t('fixtures.matchNo', { n: f.num(fx.no) })} · ${stageLabel(fx.stage, t)}`

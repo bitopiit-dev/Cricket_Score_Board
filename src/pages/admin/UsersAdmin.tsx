@@ -59,7 +59,7 @@ export function UsersAdmin() {
 
   return (
     <Card className="flex flex-col gap-3">
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-500 dark:text-slate-400">
         স্কোরার শুধু স্কোর তুলতে পারেন, সুপার অ্যাডমিন সব বদলাতে পারেন। নতুন কাউকে যোগ করার পর Supabase-এ
         একই ইমেইলে তাঁর লগইন বানাতে হবে।
       </p>

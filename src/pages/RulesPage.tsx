@@ -34,7 +34,9 @@ export default function RulesPage() {
         />
 
         {sections.length === 0 && (
-          <p className="py-10 text-center text-slate-500">{t('rules.noResults')}</p>
+          <p className="py-10 text-center text-slate-500 dark:text-slate-400">
+            {t('rules.noResults')}
+          </p>
         )}
 
         {sections.map((s, i) => (
@@ -49,8 +51,13 @@ export default function RulesPage() {
                 {f.num(RULE_SECTIONS.findIndex((x) => x.id === s.id) + 1)}
               </span>
               <span className="flex-1 font-semibold">{s.title[lang]}</span>
-              <span className="text-xs text-slate-400">{f.num(s.rules.length)}</span>
-              <span aria-hidden className="text-slate-400 transition group-open:rotate-90">
+              <span className="text-xs text-slate-500 dark:text-slate-400">
+                {f.num(s.rules.length)}
+              </span>
+              <span
+                aria-hidden
+                className="text-slate-500 dark:text-slate-400 transition group-open:rotate-90"
+              >
                 ›
               </span>
             </summary>

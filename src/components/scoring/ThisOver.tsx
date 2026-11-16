@@ -9,7 +9,7 @@ export function ThisOver({ inn }: { inn: InningsState }) {
   if (!over) return null;
   return (
     <section className="flex items-center gap-2 overflow-x-auto bg-slate-50 px-3 py-2 dark:bg-slate-900/60">
-      <span className="shrink-0 text-xs text-slate-500">
+      <span className="shrink-0 text-xs text-slate-500 dark:text-slate-400">
         {t('scoring.over', { n: f.num(over.number) })}
       </span>
       <div className="flex gap-1.5">

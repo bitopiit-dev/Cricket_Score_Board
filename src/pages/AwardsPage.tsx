@@ -33,7 +33,7 @@ export default function AwardsPage() {
         <SubPageTitle title={t('awards.title')} parent="/more" />
         {!totals && <PageSkeleton inline />}
         {totals && totals.length === 0 && (
-          <p className="rounded-2xl bg-white py-10 text-center text-slate-500 dark:bg-slate-900">
+          <p className="rounded-2xl bg-white py-10 text-center text-slate-500 dark:text-slate-400 dark:bg-slate-900">
             {t('awards.empty')}
           </p>
         )}
@@ -96,7 +96,8 @@ function Ranking({
 }) {
   const { t } = useTranslation();
   const f = useFormat();
-  if (rows.length === 0) return <p className="text-sm text-slate-500">{t('awards.none')}</p>;
+  if (rows.length === 0)
+    return <p className="text-sm text-slate-500 dark:text-slate-400">{t('awards.none')}</p>;
   return (
     <ol className="flex flex-col gap-2">
       {rows.map((r, i) => {
@@ -108,7 +109,9 @@ function Ranking({
               i === 0 ? 'bg-amber-50 dark:bg-amber-950/30' : ''
             }`}
           >
-            <span className="tabular w-5 text-center font-bold text-slate-400">{f.num(i + 1)}</span>
+            <span className="tabular w-5 text-center font-bold text-slate-500 dark:text-slate-400">
+              {f.num(i + 1)}
+            </span>
             <TeamAvatar name={r.teamName} color={team?.color} logo={team?.logo} size="sm" />
             <div className="min-w-0 flex-1">
               <div className="truncate font-semibold">{r.name}</div>
