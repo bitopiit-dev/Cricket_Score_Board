@@ -29,6 +29,22 @@ jobs:
           node-version: 22
           cache: npm
 
+      # Browser tests: every public page in both themes (script errors, WCAG 2 AA
+      # checks, no sideways scrolling at 320px) and the main flows. Run against a
+      # build without Supabase keys, so they never depend on live data.
+      - name: Install test browser
+        run: npx playwright install --with-deps chromium
+      - name: Build for browser tests
+        run: npm run build
+      - name: Browser tests
+        run: npm run test:e2e
+      - name: Keep the test report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7
       - run: npm ci
       - run: npm run lint
       - run: npm test
