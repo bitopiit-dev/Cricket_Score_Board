@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next';
 
-/** A grey placeholder block that gently pulses while data loads. */
+/** A placeholder block with a light sweeping across it while data loads. */
 export function Bone({ className = '' }: { className?: string }) {
   return (
     <span
       aria-hidden
-      className={`block animate-pulse rounded-lg bg-slate-200 motion-reduce:animate-none dark:bg-slate-800 ${className}`}
+      className={`shimmer block rounded-lg bg-slate-200 dark:bg-slate-800 ${className}`}
     />
   );
 }

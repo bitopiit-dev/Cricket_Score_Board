@@ -7,16 +7,87 @@
   /* Condensed display face for big titles and scores */
   --font-display: 'Barlow Condensed', 'Hind Siliguri', 'Arial Narrow', sans-serif;
 
-  /* Night palette for the app header and tab bar */
-  --color-night-950: #05060f;
-  --color-night-900: #0b0e24;
-  --color-night-800: #0f1330;
-  --color-night-line: #1e2547;
-  --color-night-muted: #8a93b8;
-  /* BPL-2027 brand colours, from the official logo. Text on yellow is always dark. */
-  --color-bpl-red: #e10a14;
-  --color-bpl-green: #00914a;
-  --color-bpl-yellow: #f5e400;
+  /*
+   * Sports broadcast theme (the app is always dark).
+   * Page #0B1120, raised surfaces #1E293B with a 1px line, readable in daylight.
+   * The slate scale is shifted so every existing `dark:bg-slate-*` lands on it.
+   */
+  --color-slate-950: #0b1120;
+  --color-slate-900: #1e293b;
+  --color-slate-800: #2a3a52;
+  --color-slate-700: #3b4b66;
+
+  /* Night palette for the header, tab bar and scoreboards */
+  --color-night-950: #0b1120;
+  --color-night-900: #0f172a;
+  --color-night-800: #1e293b;
+  --color-night-line: #334155;
+  --color-night-muted: #94a3b8;
+  /* Accents. The names stay so every screen picks them up; text on gold is always dark. */
+  --color-bpl-red: #e11d48; /* crimson: wickets, LIVE */
+  --color-bpl-green: #10b981; /* electric emerald */
+  --color-bpl-yellow: #f59e0b; /* championship gold */
+  --color-bpl-cyan: #06b6d4; /* broadcast cyan: fours */
+}
+
+/* Raised cards get a hairline edge instead of a shadow. Outline: no layout shift. */
+.dark [class~='dark:bg-slate-900'][class*='rounded'] {
+  outline: 1px solid rgb(148 163 184 / 0.14);
+  outline-offset: -1px;
+}
+
+/* Skeleton shimmer: a soft band of light sweeps across the placeholder */
+.shimmer {
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgb(255 255 255 / 0.07) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  animation: shimmer 1.3s linear infinite;
+}
+@keyframes shimmer {
+  from {
+    background-position: 150% 0;
+  }
+  to {
+    background-position: -50% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shimmer {
+    animation: none;
+  }
+}
+
+/* LIVE dot: a soft ring that grows and fades */
+.live-pulse {
+  position: relative;
+}
+.live-pulse::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: currentColor;
+  animation: live-ring 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+@keyframes live-ring {
+  from {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  to {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .live-pulse::after {
+    animation: none;
+  }
 }
 
 html,
@@ -51,8 +122,8 @@ body {
 .digit-in {
   font-size: calc(var(--cell) * 1.2);
   text-shadow:
-    0 0 10px rgb(245 228 0 / 0.55),
-    0 0 26px rgb(245 228 0 / 0.25);
+    0 0 10px rgb(245 158 11 / 0.55),
+    0 0 26px rgb(245 158 11 / 0.25);
   animation: digit-drop 420ms cubic-bezier(0.2, 1.4, 0.4, 1);
 }
 @keyframes digit-drop {
@@ -72,7 +143,7 @@ body {
   animation: colon-blink 1s steps(1) infinite;
 }
 .countdown-colon > span {
-  box-shadow: 0 0 8px rgb(225 10 20 / 0.9);
+  box-shadow: 0 0 8px rgb(225 29 72 / 0.9);
 }
 @keyframes colon-blink {
   50% {

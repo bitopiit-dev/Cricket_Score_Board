@@ -46,8 +46,10 @@ export function BallChip({ ball }: { ball: BallSummary }) {
       : ball.boundary && ball.runs === 6
         ? 'bg-bpl-yellow text-night-950'
         : ball.boundary && ball.runs === 4
-          ? 'bg-bpl-green text-white'
-          : 'bg-white text-slate-800 ring-1 ring-slate-300 dark:bg-slate-800 dark:text-slate-100 dark:ring-slate-700';
+          ? 'bg-bpl-cyan text-night-950'
+          : ball.runs === 0
+            ? 'bg-transparent text-slate-500 ring-1 ring-slate-300 dark:text-slate-400 dark:ring-slate-700'
+            : 'bg-white text-slate-800 ring-1 ring-slate-300 dark:bg-slate-800 dark:text-slate-100 dark:ring-slate-700';
 
   return (
     <span

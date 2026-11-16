@@ -339,10 +339,12 @@ function HeroBall({ ball }: { ball: BallSummary }) {
   const style = ball.wicket
     ? 'bg-bpl-red text-white'
     : ball.boundary && ball.runs === 4
-      ? 'bg-bpl-green text-white'
+      ? 'bg-bpl-cyan text-night-950'
       : ball.boundary && ball.runs === 6
         ? 'bg-bpl-yellow text-night-950'
-        : 'border border-night-line bg-night-900 text-white';
+        : ball.runs === 0 && ball.extra === null
+          ? 'border border-night-line text-white/50'
+          : 'border border-night-line bg-night-900 text-white';
   return (
     <span
       className={`flex size-8 items-center justify-center rounded-full text-xs font-bold ${style}`}

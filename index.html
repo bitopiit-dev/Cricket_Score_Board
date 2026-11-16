@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="bn">
+<html lang="bn" class="dark" style="color-scheme: dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#05060f" />
+    <meta name="theme-color" content="#0b1120" />
     <title>BPL-2027 | Baridhi Premier League-2027</title>
     <link rel="icon" type="image/png" sizes="48x48" href="/icons/favicon-48.png" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
@@ -12,48 +12,105 @@
   </head>
   <body>
     <div id="root">
-      <!-- Start-up splash: visible before the app's script has loaded; React replaces it -->
-      <div
-        style="
-          position: fixed;
-          inset: 0;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 20px;
-          background: #05060f;
-        "
-      >
-        <img
-          src="/images/bpl-2027-logo.png"
-          alt="BPL-2027"
-          width="200"
-          style="
-            width: 200px;
-            height: auto;
-            animation: bpl-splash 1.4s ease-in-out infinite alternate;
-          "
-        />
-        <span
-          style="
-            width: 120px;
-            height: 4px;
-            border-radius: 4px;
-            background: linear-gradient(90deg, #e10a14, #f5e400);
-          "
-        ></span>
+      <!--
+        Start-up skeleton: shown before the app's script has loaded, shaped like
+        the Home page (header, scoreboard card, two cards, tab bar) so nothing
+        jumps when React replaces it.
+      -->
+      <div class="boot">
+        <div class="boot-head">
+          <img src="/images/bpl-2027-logo.png" alt="BPL-2027" width="72" height="44" />
+          <span class="boot-bone" style="width: 150px; height: 18px"></span>
+          <span class="boot-bone" style="width: 44px; height: 32px; border-radius: 999px"></span>
+        </div>
+        <div class="boot-body">
+          <div class="boot-card boot-hero">
+            <span class="boot-bone" style="width: 40%; height: 12px"></span>
+            <div class="boot-row">
+              <span class="boot-bone boot-round"></span>
+              <span class="boot-bone" style="width: 40px; height: 20px"></span>
+              <span class="boot-bone boot-round"></span>
+            </div>
+            <span class="boot-bone" style="height: 52px"></span>
+          </div>
+          <div class="boot-card">
+            <span class="boot-bone" style="width: 55%; height: 18px"></span>
+            <span class="boot-bone" style="height: 10px"></span>
+            <span class="boot-bone" style="width: 80%; height: 10px"></span>
+          </div>
+          <div class="boot-card">
+            <span class="boot-bone" style="width: 45%; height: 18px"></span>
+            <span class="boot-bone" style="height: 10px"></span>
+          </div>
+        </div>
       </div>
       <style>
-        @keyframes bpl-splash {
+        .boot {
+          position: fixed;
+          inset: 0;
+          background: #0b1120;
+          display: flex;
+          flex-direction: column;
+        }
+        .boot-head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          padding: calc(10px + env(safe-area-inset-top)) 16px 10px;
+        }
+        .boot-head img {
+          width: 72px;
+          height: auto;
+        }
+        .boot-body {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          width: 100%;
+          max-width: 32rem;
+          margin: 0 auto;
+          padding: 16px;
+          box-sizing: border-box;
+        }
+        .boot-card {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          padding: 20px;
+          border-radius: 16px;
+          background: #1e293b;
+          outline: 1px solid rgb(148 163 184 / 0.14);
+        }
+        .boot-hero {
+          border-radius: 24px;
+          background: #0f172a;
+          gap: 18px;
+        }
+        .boot-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .boot-round {
+          width: 64px;
+          height: 64px;
+          border-radius: 999px !important;
+        }
+        .boot-bone {
+          display: block;
+          border-radius: 8px;
+          background: linear-gradient(90deg, #2a3a52 0%, #3b4b66 50%, #2a3a52 100%) 0 0 / 200% 100%;
+          animation: boot-shimmer 1.3s linear infinite;
+        }
+        @keyframes boot-shimmer {
           to {
-            transform: scale(1.04);
-            opacity: 0.85;
+            background-position: -200% 0;
           }
         }
         @media (prefers-reduced-motion: reduce) {
-          #root img {
-            animation: none !important;
+          .boot-bone {
+            animation: none;
           }
         }
       </style>
