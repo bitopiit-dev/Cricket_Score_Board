@@ -57,7 +57,9 @@ function Table({
   const { t } = useTranslation();
   const f = useFormat();
   const nrr = (n: number) => `${n > 0 ? '+' : n < 0 ? '−' : ''}${f.dec(Math.abs(n), 3)}`;
-  const th = 'px-1 py-2 text-center font-semibold';
+  // Before the first match the order is only the fixture order, not a ranking
+  const started = rows.some((r) => r.played > 0);
+  const th = 'px-0.5 py-2 text-center font-semibold';
   const td = 'tabular px-1 py-2 text-center';
 
   return (
@@ -70,10 +72,26 @@ function Table({
           n: f.num(qualify),
         })}
       </p>
-      <table className="mt-2 w-full text-sm">
+      {!started && (
+        <p className="mx-4 mt-2 rounded-lg bg-slate-100 px-3 py-2 text-[13px] text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+          {t('points.notStarted')}
+        </p>
+      )}
+      {/* Fixed column widths so every table on the page lines up */}
+      <table className="mt-2 w-full table-fixed text-sm">
+        <colgroup>
+          <col className="w-5" />
+          <col />
+          <col className="w-6 md:w-14" />
+          <col className="w-6 md:w-14" />
+          <col className="w-6 md:w-14" />
+          <col className="w-6 md:w-14" />
+          <col className="w-9 md:w-16" />
+          <col className="w-11 md:w-20" />
+        </colgroup>
         <thead className="border-b border-slate-200 text-xs text-slate-500 dark:border-slate-800 dark:text-slate-400">
           <tr>
-            <th className={`${th} w-6`}>#</th>
+            <th className={th}>#</th>
             <th className={`${th} text-left`}>{t('points.team')}</th>
             <th className={th} title={t('points.playedLong')}>
               {t('points.played')}
@@ -94,7 +112,7 @@ function Table({
         <tbody>
           {rows.map((r, i) => {
             const team = findTeam(r.teamId);
-            const q = i < qualify;
+            const q = started && i < qualify;
             return (
               <tr
                 key={r.teamId}
@@ -109,9 +127,9 @@ function Table({
                       : 'text-slate-400'
                   }`}
                 >
-                  {f.num(i + 1)}
+                  {started ? f.num(i + 1) : '–'}
                 </td>
-                <td className="px-1.5 py-2">
+                <td className="min-w-0 py-2 pr-1 pl-0.5">
                   <span className="flex items-center gap-2">
                     <TeamAvatar
                       name={team?.name ?? r.teamId}
@@ -119,7 +137,7 @@ function Table({
                       logo={team?.logo}
                       size="sm"
                     />
-                    <span lang="en" className="leading-tight font-semibold">
+                    <span lang="en" className="min-w-0 leading-tight font-semibold break-words">
                       {team?.name ?? r.teamId}
                     </span>
                     {q && <span className="sr-only">{t('points.qualifiedMark')}</span>}

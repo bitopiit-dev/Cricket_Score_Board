@@ -57,7 +57,7 @@ export default function StatsPage() {
             role="tab"
             aria-selected={board === id}
             onClick={() => setBoard(id)}
-            className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-semibold whitespace-nowrap ${
+            className={`flex min-h-11 shrink-0 items-center rounded-full px-4 text-sm font-semibold whitespace-nowrap ${
               board === id
                 ? 'bg-bpl-yellow text-night-950'
                 : 'bg-white text-slate-700 shadow-sm dark:bg-slate-900 dark:text-slate-300'

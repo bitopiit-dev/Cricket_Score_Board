@@ -299,7 +299,9 @@
     "awards": "Awards",
     "awardsHint": "Man of the Series and Best Wicket-Taker",
     "admin": "Admin",
-    "adminHint": "Sign in to edit fixtures, teams and scores"
+    "adminHint": "Sign in to edit fixtures, teams and scores",
+    "sunlight": "Sunlight mode",
+    "sunlightHint": "A light theme that's easier to read in bright sun"
   },
   "comingSoon": {
     "badge": "Coming soon",
@@ -326,7 +328,8 @@
     "qualifySemis": "Top {{n}} go to the semi-finals",
     "qualifiedMark": "(in a qualifying place)",
     "superSixPending": "When every group match is finished, the six Super Six teams appear here, starting again from zero points.",
-    "legend": "Win {{win}}, tie/no result {{tie}}, loss {{loss}} points. Teams level on points are split by net run rate (NRR). Worked out from the fixture matches scored in the app."
+    "legend": "Win {{win}}, tie/no result {{tie}}, loss {{loss}} points. Teams level on points are split by net run rate (NRR). Worked out from the fixture matches scored in the app.",
+    "notStarted": "No matches played yet. Positions appear here after the first match."
   },
   "fixtures": {
     "downloadPdf": "Download PDF",

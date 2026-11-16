@@ -561,7 +561,10 @@ function NextMatches({ fixtures, ts }: { fixtures: Fixture[]; ts: TournamentStat
     <section className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-900">
       <div className="flex items-baseline justify-between gap-2">
         <h2 className="font-display text-xl font-bold tracking-wide">{t('homePage.upcoming')}</h2>
-        <Link to="/fixtures" className="text-sm font-semibold text-bpl-red">
+        <Link
+          to="/fixtures"
+          className="-my-3 inline-flex min-h-11 items-center text-sm font-semibold text-bpl-red"
+        >
           {t('homePage.allFixtures')} →
         </Link>
       </div>

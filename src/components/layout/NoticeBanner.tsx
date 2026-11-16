@@ -52,7 +52,7 @@ export function NoticeBanner({ page }: { page: 'home' | 'live' }) {
           {n.link && (
             <Link
               to={n.link.to}
-              className="mt-2 inline-block text-sm font-semibold text-amber-800 underline underline-offset-2 dark:text-amber-300"
+              className="-mb-2 inline-flex min-h-11 items-center text-sm font-semibold text-amber-800 underline underline-offset-2 dark:text-amber-300"
             >
               {n.link.label[lang]} ›
             </Link>
@@ -61,7 +61,7 @@ export function NoticeBanner({ page }: { page: 'home' | 'live' }) {
             type="button"
             onClick={() => close(n.id)}
             aria-label={t('common.close')}
-            className="absolute top-2 right-2 flex size-9 items-center justify-center rounded-full text-xl text-amber-900/70 hover:bg-amber-100 dark:text-amber-200 dark:hover:bg-amber-900/40"
+            className="absolute top-1 right-1 flex size-11 items-center justify-center rounded-full text-xl text-amber-900/70 hover:bg-amber-100 dark:text-amber-200 dark:hover:bg-amber-900/40"
           >
             ×
           </button>

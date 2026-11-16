@@ -130,7 +130,7 @@ export default function FixturesPage() {
             type="button"
             aria-pressed={filter === fl}
             onClick={() => setFilter(fl)}
-            className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-semibold whitespace-nowrap ${
+            className={`flex min-h-11 shrink-0 items-center rounded-full px-4 text-sm font-semibold whitespace-nowrap ${
               filter === fl
                 ? 'bg-bpl-yellow text-night-950'
                 : 'bg-white text-slate-600 shadow-sm dark:bg-slate-900 dark:text-slate-300'

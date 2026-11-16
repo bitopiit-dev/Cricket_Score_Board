@@ -29,7 +29,7 @@ export function ConflictNotice() {
         type="button"
         onClick={() => setShown(false)}
         aria-label={t('common.close')}
-        className="-mt-1 -mr-1 flex size-9 shrink-0 items-center justify-center rounded-full text-xl hover:bg-amber-300"
+        className="-my-2 -mr-2 flex size-11 shrink-0 items-center justify-center rounded-full text-xl hover:bg-amber-300"
       >
         ×
       </button>
