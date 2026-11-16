@@ -1,0 +1,6 @@
+*.mp4
+*.wav
+stills/
+render.log
+__pycache__/
+parts/
