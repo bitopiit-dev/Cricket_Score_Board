@@ -54,7 +54,8 @@ export function LanguageToggle() {
       type="button"
       onClick={() => setLang(lang === 'bn' ? 'en' : 'bn')}
       className="flex min-h-11 min-w-11 items-center justify-center rounded-full border border-white/40 px-3 text-sm font-semibold hover:bg-white/10"
-      aria-label="Language / ভাষা"
+      // The spoken name starts with the visible text (WCAG 2.5.3, label in name)
+      aria-label={lang === 'bn' ? 'EN, switch to English' : 'বাং, বাংলায় দেখুন'}
     >
       {lang === 'bn' ? 'EN' : 'বাং'}
     </button>

@@ -12,3 +12,7 @@ coverage
 
 # Original player photos (cropped copies live in public/players/)
 Pictures/
+
+# Playwright
+/test-results/
+/playwright-report/

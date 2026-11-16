@@ -34,15 +34,21 @@ export default function TeamsPage() {
                   style={{ borderTop: `4px solid ${team.color}` }}
                 >
                   {team.id === favoriteTeam && (
-                    <span className="absolute top-2 right-2 text-lg leading-none text-bpl-yellow">
-                      <span aria-hidden>★</span>
-                      <span className="sr-only">{t('favorite.star')}</span>
+                    <span
+                      aria-hidden
+                      className="absolute top-2 right-2 text-lg leading-none text-bpl-yellow"
+                    >
+                      ★
                     </span>
                   )}
                   <TeamAvatar name={team.name} color={team.color} logo={team.logo} size="lg" />
                   <span lang="en" className="text-sm leading-tight font-semibold break-words">
                     {team.name}
                   </span>
+                  {/* After the name, so a screen reader says "DDC (your favourite team)" */}
+                  {team.id === favoriteTeam && (
+                    <span className="sr-only">{t('favorite.star')}</span>
+                  )}
                 </Link>
               </li>
             ))}
