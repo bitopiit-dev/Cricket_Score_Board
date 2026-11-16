@@ -83,8 +83,6 @@ export function NextMatchCountdown() {
           </div>
         )}
 
-        {!c.due && <SecondsSweep seconds={c.seconds} />}
-
         <p className="text-center text-sm text-white/85">
           {formatDate(fx.date, lang, bengaliDigits)}, {formatTime(fx.time, lang, f)}
           {fx.venue && <span className="text-night-muted">, {fx.venue}</span>}
@@ -116,23 +114,6 @@ function Colon() {
       <span className="size-1.5 rounded-full bg-bpl-red" />
       <span className="size-1.5 rounded-full bg-bpl-red" />
     </span>
-  );
-}
-
-/** A bar that fills once a minute, red to yellow, under the clock. */
-function SecondsSweep({ seconds }: { seconds: number }) {
-  // Counting down: full at :59, empty at :00
-  const pct = ((seconds + 1) / 60) * 100;
-  return (
-    <div
-      aria-hidden
-      className="mx-auto h-1 w-full max-w-xs overflow-hidden rounded-full bg-night-800"
-    >
-      <div
-        className="h-full rounded-full bg-gradient-to-r from-bpl-red to-bpl-yellow transition-[width] duration-1000 ease-linear motion-reduce:transition-none"
-        style={{ width: `${pct}%` }}
-      />
-    </div>
   );
 }
 

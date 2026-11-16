@@ -39,10 +39,11 @@ export function AppShell() {
                 {APP_SUBTITLE}
               </span>
             </div>
+            {/* Phones have no room for it; the committee is one tap away under More */}
             <Link
               to="/committee"
               aria-label={COMMITTEE_NAME}
-              className="flex min-h-11 min-w-11 shrink-0 items-center justify-center active:scale-95"
+              className="hidden min-h-11 min-w-11 shrink-0 items-center justify-center active:scale-95 sm:flex"
             >
               <img src={assetUrl(COMMITTEE_LOGO)} alt="" className="h-10 w-auto sm:h-12" />
             </Link>
@@ -67,7 +68,7 @@ export function AppShell() {
       {/* Credit line, bottom right; the page padding keeps it above the phone tab bar */}
       <footer
         lang="en"
-        className="mx-auto mt-auto w-full max-w-5xl px-4 pt-6 pb-2 text-right text-xs text-slate-500 dark:text-slate-500"
+        className="mx-auto mt-auto w-full max-w-5xl px-4 pt-6 pb-2 text-right text-xs text-slate-600 dark:text-slate-400"
       >
         © 2026 K A Rahman
       </footer>

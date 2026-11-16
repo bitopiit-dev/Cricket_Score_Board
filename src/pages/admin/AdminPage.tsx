@@ -1,4 +1,5 @@
 import { useState, type FormEvent, type ReactNode } from 'react';
+import { useEdgeFade } from '../../hooks/useEdgeFade';
 import { btn, Card, inputClass } from '../../components/common/controls';
 import { PageTitle } from '../../components/layout/AppShell';
 import { signIn, signOut, useAuth } from '../../sync/auth';
@@ -22,6 +23,7 @@ const TABS: [Tab, string][] = [
 export default function AdminPage() {
   const auth = useAuth();
   const [tab, setTab] = useState<Tab>('fixtures');
+  const chipRow = useEdgeFade<HTMLDivElement>();
 
   if (!supabase)
     return (
@@ -61,7 +63,7 @@ export default function AdminPage() {
       </Card>
       {auth.role === 'super' && (
         <>
-          <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
+          <div ref={chipRow} className="edge-fade -mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
             {TABS.map(([id, label]) => (
               <button
                 key={id}

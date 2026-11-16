@@ -352,7 +352,10 @@
     "live": "Live",
     "completed": "Completed",
     "restDay": "Rest day",
-    "holiday": "holiday"
+    "holiday": "holiday",
+    "showPast_one": "Show the previous day's matches and results",
+    "showPast_other": "Show matches and results from the previous {{n}} days",
+    "hidePast": "Hide earlier days"
   },
   "stage": {
     "groupA": "Group A",

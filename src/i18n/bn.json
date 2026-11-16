@@ -347,7 +347,9 @@
     "live": "চলছে",
     "completed": "সম্পন্ন",
     "restDay": "বিরতি",
-    "holiday": "ছুটি"
+    "holiday": "ছুটি",
+    "showPast": "আগের {{n}} দিনের খেলা ও ফলাফল দেখুন",
+    "hidePast": "আগের দিনগুলো লুকান"
   },
   "stage": {
     "groupA": "গ্রুপ A",

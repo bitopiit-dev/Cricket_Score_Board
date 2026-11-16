@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useEdgeFade } from '../hooks/useEdgeFade';
 import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router-dom';
 import { TeamAvatar } from '../components/common/TeamAvatar';
@@ -44,21 +45,16 @@ export default function FixturesPage() {
   const lang = usePrefs((s) => s.lang);
   const bengaliDigits = usePrefs((s) => s.bengaliDigits);
   const tour = useTournament();
+  const f = useFormat();
   const [filter, setFilter] = useState<Filter>('all');
+  const chipRow = useEdgeFade<HTMLDivElement>();
   // The chosen team lives in the link (#/fixtures?team=ddc) so it can be shared or bookmarked.
   const [params, setParams] = useSearchParams();
   const teamId = findTeam(params.get('team') ?? undefined)?.id ?? '';
   const setTeam = (id: string) => setParams(id ? { team: id } : {}, { replace: true });
-  const loaded = tour !== null;
 
-  // Open the list at the next match day (today's, or the next one), once loaded.
-  useEffect(() => {
-    if (!loaded || teamId) return;
-    const today = todayInDhaka();
-    const target = FIXTURES.find((fx) => fx.date >= today)?.date;
-    if (!target || target === FIXTURES[0].date) return;
-    document.getElementById(`day-${target}`)?.scrollIntoView({ block: 'start' });
-  }, [loaded, teamId]);
+  // Days already played fold away, so the list opens at today or the next match day
+  const [showPast, setShowPast] = useState(false);
 
   if (!tour) return <PageSkeleton />;
 
@@ -72,6 +68,11 @@ export default function FixturesPage() {
   const day = (d: string) => formatDate(d, lang, bengaliDigits);
   const team = findTeam(teamId || undefined);
   const showRestDays = filter === 'all' && !team;
+  // A chosen team's own list stays whole: its results are the point of choosing it
+  const foldPast = !team;
+  const allDates = showRestDays ? tournamentDays() : [...byDate.keys()];
+  const pastCount = foldPast ? [...byDate.keys()].filter((d) => d < today).length : 0;
+  const dates = foldPast && !showPast ? allDates.filter((d) => d >= today) : allDates;
 
   return (
     <main className="mx-auto flex w-full max-w-lg flex-col gap-4 p-4 md:max-w-3xl">
@@ -80,7 +81,7 @@ export default function FixturesPage() {
         <a
           href={fixturePdfUrl}
           download={FIXTURE_PDF_NAME}
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-bpl-red px-3.5 py-2 text-sm font-semibold text-white shadow-sm active:scale-95"
+          className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-xl bg-bpl-red px-3.5 text-sm font-semibold text-white shadow-sm active:scale-95"
         >
           <svg
             aria-hidden
@@ -122,7 +123,8 @@ export default function FixturesPage() {
       <div
         role="group"
         aria-label={t('fixtures.filter')}
-        className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1"
+        ref={chipRow}
+        className="edge-fade -mx-4 flex gap-2 overflow-x-auto px-4 pb-1"
       >
         {FILTERS.map((fl) => (
           <button
@@ -148,7 +150,7 @@ export default function FixturesPage() {
         <select
           value={teamId}
           onChange={(e) => setTeam(e.target.value)}
-          className="min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-800 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+          className="min-h-11 min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-800 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
         >
           <option value="">{t('fixtures.allTeams')}</option>
           {TOURNAMENT_TEAMS.map((tm) => (
@@ -167,7 +169,20 @@ export default function FixturesPage() {
         </p>
       )}
 
-      {(showRestDays ? tournamentDays() : [...byDate.keys()]).map((date) => {
+      {pastCount > 0 && (
+        <button
+          type="button"
+          aria-expanded={showPast}
+          onClick={() => setShowPast((v) => !v)}
+          className="min-h-11 rounded-xl border border-dashed border-slate-300 px-4 text-sm font-semibold text-slate-600 dark:border-slate-700 dark:text-slate-300"
+        >
+          {showPast
+            ? t('fixtures.hidePast')
+            : t('fixtures.showPast', { n: f.num(pastCount), count: pastCount })}
+        </button>
+      )}
+
+      {dates.map((date) => {
         const fxs = byDate.get(date);
         if (!fxs) {
           // A day off inside the tournament
@@ -182,9 +197,10 @@ export default function FixturesPage() {
         }
         return (
           <section key={date} id={`day-${date}`} aria-label={day(date)} className="scroll-mt-4">
+            {/* Stays at the top while its matches scroll past */}
             <h2
-              className={`mb-2 font-display text-lg font-bold tracking-wide ${
-                date === today ? 'text-bpl-red' : 'text-slate-500'
+              className={`sticky top-[env(safe-area-inset-top)] z-10 -mx-4 mb-1 bg-slate-100/95 px-4 py-1.5 font-display text-lg font-bold tracking-wide backdrop-blur-sm dark:bg-slate-950/95 ${
+                date === today ? 'text-bpl-red' : 'text-slate-500 dark:text-slate-400'
               }`}
             >
               {day(date)}
@@ -254,7 +270,7 @@ function TeamRecord({
         <button
           type="button"
           onClick={onClear}
-          className="shrink-0 rounded-full px-3 py-1 text-xs font-semibold text-slate-500 ring-1 ring-slate-200 dark:text-slate-300 dark:ring-slate-700"
+          className="flex min-h-11 shrink-0 items-center rounded-full px-3 text-xs font-semibold text-slate-500 ring-1 ring-slate-200 dark:text-slate-300 dark:ring-slate-700"
         >
           {t('fixtures.clearTeam')}
         </button>

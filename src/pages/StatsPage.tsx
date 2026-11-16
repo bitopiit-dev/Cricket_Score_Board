@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useEdgeFade } from '../hooks/useEdgeFade';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { PlayerAvatar, TeamAvatar } from '../components/common/TeamAvatar';
@@ -28,6 +29,7 @@ export default function StatsPage() {
   const f = useFormat();
   const tour = useTournament(15000);
   const [board, setBoard] = useState<BoardId>('runs');
+  const chipRow = useEdgeFade<HTMLDivElement>();
   const totals = useMemo(() => (tour ? playerTotals(tour.matches) : null), [tour]);
   const played = useMemo(
     () =>
@@ -49,7 +51,11 @@ export default function StatsPage() {
         </p>
       </div>
 
-      <div role="tablist" className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
+      <div
+        role="tablist"
+        ref={chipRow}
+        className="edge-fade -mx-4 flex gap-2 overflow-x-auto px-4 pb-1"
+      >
         {BOARDS.map((id) => (
           <button
             key={id}

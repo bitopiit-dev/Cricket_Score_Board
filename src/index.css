@@ -343,3 +343,20 @@ table,
     animation: none;
   }
 }
+
+/* Sideways chip rows: the edge with more chips past it fades out (see useEdgeFade) */
+.edge-fade {
+  --fade-l: 0px;
+  --fade-r: 0px;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 var(--fade-l),
+    #000 calc(100% - var(--fade-r)),
+    transparent
+  );
+  scrollbar-width: none;
+}
+.edge-fade::-webkit-scrollbar {
+  display: none;
+}
