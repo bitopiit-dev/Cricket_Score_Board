@@ -55,12 +55,12 @@ export default function LivePage() {
           </Link>
         )}
       </div>
-      <NoticeBanner page="live" />
       {/* A match being played comes first, big; the countdown waits below it */}
       {live.map((row) => (
         <LiveMatchCard key={row.m.id} {...row} />
       ))}
       {live.length === 0 && <NextMatchCountdown />}
+      <NoticeBanner page="live" />
       {matches === null && <PageSkeleton variant="hero" inline />}
       {matches?.length === 0 && (
         <p className="rounded-2xl bg-white py-10 text-center text-slate-500 dark:text-slate-400 dark:bg-slate-900">

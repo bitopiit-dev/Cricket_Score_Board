@@ -572,5 +572,11 @@
     "bowl": "Top bowler",
     "downloaded": "Image downloaded",
     "failed": "Couldn't make the image"
+  },
+  "notice": {
+    "label": "Announcement",
+    "more": "Details",
+    "less": "Less",
+    "close": "Close this announcement"
   }
 }

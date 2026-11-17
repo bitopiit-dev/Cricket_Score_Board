@@ -109,3 +109,23 @@ async function optionLabel(select: import('@playwright/test').Locator, prefix: s
     prefix,
   );
 }
+
+test('announcements are one line until opened, and stay closed once closed', async ({ page }) => {
+  await open(page, 'home');
+  const toggle = page
+    .getByRole('region', { name: 'ঘোষণা' })
+    .getByRole('button', { expanded: false });
+  // Each announcement has a last day; nothing to test once they have all expired
+  test.skip((await toggle.count()) === 0, 'no announcement is current');
+  const notice = page.getByRole('region', { name: 'ঘোষণা' }).first();
+  const details = notice.locator('[id^="notice-"]');
+  await expect(details).toBeHidden();
+  await notice.getByRole('button', { expanded: false }).click();
+  await expect(details).toBeVisible();
+  const before = await page.getByRole('region', { name: 'ঘোষণা' }).count();
+  await notice.getByRole('button', { name: 'ঘোষণাটা বন্ধ করুন' }).click();
+  await expect(page.getByRole('region', { name: 'ঘোষণা' })).toHaveCount(before - 1);
+  await page.reload();
+  await expect(page.locator('main h1').first()).toBeAttached();
+  await expect(page.getByRole('region', { name: 'ঘোষণা' })).toHaveCount(before - 1);
+});
