@@ -1,8 +1,14 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Icon, type IconName } from '../components/common/icons';
+import { Sheet } from '../components/common/Sheet';
+import { toast } from '../components/common/Toast';
+import { btn } from '../components/common/controls';
 import { PageTitle } from '../components/layout/AppShell';
 import { usePrefs } from '../store/prefsStore';
+import { assetUrl } from '../utils/asset';
+import { shareText } from '../utils/share';
 
 const ITEMS: { to: string; icon: IconName; key: string }[] = [
   { to: '/stats', icon: 'stats', key: 'stats' },
@@ -19,6 +25,7 @@ export default function MorePage() {
   return (
     <main className="mx-auto flex w-full max-w-lg flex-col gap-3 p-4">
       <PageTitle>{t('tabs.more')}</PageTitle>
+      <ShareApp />
       <ul className="flex flex-col gap-2">
         {ITEMS.map((i) => (
           <li key={i.to}>
@@ -76,5 +83,74 @@ export default function MorePage() {
         {t('more.adminLink')}
       </Link>
     </main>
+  );
+}
+
+/** The QR code points at the live site; regenerate it if the address changes. */
+const QR = 'images/bpl-2027-qr.png';
+const POSTER = 'downloads/bpl-2027-qr-poster.jpg';
+
+/**
+ * "Share the app": a QR code a friend can scan straight off this screen,
+ * the phone's share sheet for the link, and the printable QR poster.
+ */
+function ShareApp() {
+  const { t } = useTranslation();
+  const [open, setOpen] = useState(false);
+
+  async function onShareLink() {
+    const url = window.location.href.split('#')[0];
+    const res = await shareText(t('shareApp.title'), t('shareApp.message'), url);
+    if (res === 'copied') toast(t('shareApp.copied'));
+    else if (res === 'failed') toast(t('share.failed'));
+  }
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="flex items-center gap-4 rounded-2xl bg-night-950 p-4 text-left text-white shadow-sm active:bg-night-900"
+      >
+        <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white text-night-950">
+          <Icon name="share" />
+        </span>
+        <span className="flex-1">
+          <span className="block font-semibold">{t('shareApp.title')}</span>
+          <span className="block text-sm text-white/70">{t('shareApp.hint')}</span>
+        </span>
+        <span aria-hidden className="text-xl text-white/70">
+          ›
+        </span>
+      </button>
+
+      <Sheet
+        open={open}
+        title={t('shareApp.title')}
+        onClose={() => setOpen(false)}
+        footer={
+          <>
+            <a href={assetUrl(POSTER)} download className={`${btn.secondary} flex-1 text-center`}>
+              {t('shareApp.poster')}
+            </a>
+            <button type="button" onClick={onShareLink} className={`${btn.primary} flex-1`}>
+              {t('shareApp.shareLink')}
+            </button>
+          </>
+        }
+      >
+        <div className="flex flex-col items-center gap-3 pb-1 text-center">
+          <p className="text-slate-600 dark:text-slate-300">{t('shareApp.scan')}</p>
+          <img
+            src={assetUrl(QR)}
+            alt={t('shareApp.qrAlt')}
+            width={900}
+            height={900}
+            className="aspect-square w-full max-w-72 rounded-2xl bg-white p-2 shadow-sm ring-1 ring-slate-200 dark:ring-0"
+          />
+          <p className="text-sm text-slate-500 dark:text-slate-400">{t('shareApp.install')}</p>
+        </div>
+      </Sheet>
+    </>
   );
 }

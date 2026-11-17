@@ -500,6 +500,17 @@
     "chart": "Win chance swing",
     "chartHint": "After every ball. Above the line the first-batting team is ahead. Worked out from runs, balls and wickets left only."
   },
+  "shareApp": {
+    "title": "Share the app",
+    "hint": "Show a friend the QR code or send the link",
+    "scan": "Ask your friend to scan this code with their phone camera.",
+    "qrAlt": "QR code for the BPL-2027 app",
+    "install": "Once it opens, tap “Add to Home screen” to keep it like an app.",
+    "shareLink": "Send link",
+    "poster": "Get poster",
+    "copied": "Link copied: paste it into WhatsApp",
+    "message": "🏏 Live scores, fixtures and the points table for BPL-2027:"
+  },
   "live": {
     "details": "Full match"
   },
