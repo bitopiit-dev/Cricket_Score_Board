@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { btn, Card } from '../../components/common/controls';
 import { fixtureById } from '../../data/fixtures';
 import { matchRepository } from '../../db/repository';
@@ -58,6 +59,15 @@ export function MatchesAdmin({ scorerOnly = false }: { scorerOnly?: boolean }) {
                   {new Date(m.updatedAt).toLocaleString()}
                 </p>
               </div>
+              {s.phase === 'completed' && (
+                <Link
+                  to={`/report/${m.id}`}
+                  className={`${btn.secondary} px-3 py-1.5 text-sm`}
+                  aria-label={`${m.teams[0].name} বনাম ${m.teams[1].name}: রিপোর্ট PDF`}
+                >
+                  PDF
+                </Link>
+              )}
               {!scorerOnly && (
                 <button
                   type="button"

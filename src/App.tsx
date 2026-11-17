@@ -28,6 +28,7 @@ const MediaPage = lazyPage(() =>
 );
 // Only the admin downloads the admin screens (not preloaded)
 const AdminPage = lazy(() => import('./pages/admin/AdminPage'));
+const MatchReportPage = lazy(() => import('./pages/MatchReportPage'));
 
 /**
  * HashRouter so the app works from any static host (and offline) without
@@ -75,6 +76,14 @@ export default function App() {
               }
             />
             <Route path="/match/:id" element={<ScoringPage />} />
+            <Route
+              path="/report/:id"
+              element={
+                <ScorerOnly>
+                  <MatchReportPage />
+                </ScorerOnly>
+              }
+            />
             <Route path="*" element={<Navigate to="/home" replace />} />
           </Routes>
         </Suspense>

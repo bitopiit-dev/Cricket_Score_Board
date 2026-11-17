@@ -12,7 +12,7 @@ import { BattingBadge, HaulBadge, MomBadge } from './Badges';
 import { manOfTheMatchId, playerFigures, teamOfPlayer } from '../../engine/milestones';
 import { findTeam } from '../../data/teams';
 import { buildCommentary, type CommentaryBall } from '../../engine/commentary';
-import { creditsBowler, runRate, strikeRate } from '../../engine/rules';
+import { runRate, strikeRate } from '../../engine/rules';
 import {
   ballsRemaining,
   didNotBat,
@@ -21,10 +21,10 @@ import {
   requiredRunRate,
   runsNeeded,
 } from '../../engine/stats';
-import type { BatterStats, InningsState, Match, MatchState, TeamIndex } from '../../engine/types';
+import type { InningsState, Match, MatchState, TeamIndex } from '../../engine/types';
 import { useFormat } from '../../hooks/useFormat';
 import { ballOutcome } from '../../utils/ballText';
-import { inningsLabel, playerName, resultText } from '../../utils/matchText';
+import { dismissalText, inningsLabel, playerName, resultText } from '../../utils/matchText';
 
 type Tab = 'summary' | 'scorecard' | 'overs' | 'charts';
 
@@ -583,25 +583,6 @@ function InningsCard({
       )}
     </section>
   );
-}
-
-function dismissalText(
-  b: BatterStats,
-  match: Match,
-  inn: InningsState,
-  t: ReturnType<typeof useTranslation>['t'],
-): string {
-  if (!b.dismissal) {
-    if (b.retiredHurt) return t('dismissal.retiredHurt');
-    return inn.ended ? t('dismissal.notOut') : t('matchCenter.batting');
-  }
-  const d = b.dismissal;
-  const parts = [t(`dismissal.${d.kind}`)];
-  if (d.fielderId) parts[0] += ` (${playerName(match, d.fielderId)})`;
-  if (d.bowlerId && creditsBowler(d.kind)) {
-    parts.push(t('matchCenter.bowledBy', { name: playerName(match, d.bowlerId) }));
-  }
-  return parts.join(' · ');
 }
 
 /* ---------------------------------- Overs --------------------------------- */
