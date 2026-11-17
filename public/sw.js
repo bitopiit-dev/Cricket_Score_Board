@@ -3,8 +3,9 @@
  * the ground reopening it). Scores themselves live in IndexedDB and Supabase;
  * this only caches the app's own files.
  *
- * - The page (index.html): network first, so a new version arrives as soon as
- *   there is signal; the cached copy is used offline.
+ * - The page (index.html): network first, always checked with the server (not
+ *   the browser's HTTP cache), so a new version arrives as soon as there is
+ *   signal; the cached copy is used offline.
  * - Built files (assets/, hashed names never change): cache first.
  * - Logos, photos and other files: the cached copy at once, refreshed in the
  *   background (a replaced logo shows on the next visit).
@@ -70,7 +71,10 @@ self.addEventListener('fetch', (event) => {
       url.pathname === scope.pathname || url.pathname === `${scope.pathname}index.html`;
     if (!appPage) return;
     event.respondWith(
-      fetch(req)
+      // no-cache: ask the server every time (a cheap "has it changed?" check)
+      // instead of reusing the browser's copy, which GitHub Pages lets live for
+      // 10 minutes; otherwise a new version only shows up after that wait
+      fetch(req, { cache: 'no-cache' })
         .then((res) => {
           if (res.ok) {
             const copy = res.clone();
