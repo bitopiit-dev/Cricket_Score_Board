@@ -7,6 +7,7 @@ import { TeamAvatar } from '../common/TeamAvatar';
 import { CreasePanel } from '../scoring/CreasePanel';
 import { MatchCharts } from './MatchCharts';
 import { MomentBurst } from './MomentBurst';
+import { WinnerCelebration } from './WinnerCelebration';
 import { BallChip, ThisOver } from '../scoring/ThisOver';
 import { BattingBadge, HaulBadge, MomBadge } from './Badges';
 import { manOfTheMatchId, playerFigures, teamOfPlayer } from '../../engine/milestones';
@@ -69,6 +70,7 @@ export function MatchCenter({
       />
       <MatchHero match={match} state={state} />
       <MomentBurst match={match} />
+      <WinnerCelebration match={match} state={state} />
 
       <div
         role="tablist"

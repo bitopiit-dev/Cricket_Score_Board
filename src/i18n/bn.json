@@ -615,5 +615,9 @@
     "signUmpire": "আম্পায়ার",
     "signCommittee": "টুর্নামেন্ট কমিটি",
     "generated": "রিপোর্ট তৈরি: {{when}}"
+  },
+  "trophy": {
+    "congrats": "অভিনন্দন!",
+    "close": "বন্ধ করুন"
   }
 }

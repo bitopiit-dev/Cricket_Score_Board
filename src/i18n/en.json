@@ -621,5 +621,9 @@
     "signUmpire": "Umpire",
     "signCommittee": "Tournament committee",
     "generated": "Report made {{when}}"
+  },
+  "trophy": {
+    "congrats": "Congratulations!",
+    "close": "Close"
   }
 }

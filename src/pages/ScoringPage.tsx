@@ -29,6 +29,7 @@ import { useCanScore } from '../sync/auth';
 import { Icon } from '../components/common/icons';
 import { useShareMatch } from '../hooks/useShareMatch';
 import { MatchCenter } from '../components/match/MatchCenter';
+import { WinnerCelebration } from '../components/match/WinnerCelebration';
 import { SyncStatus } from '../components/scoring/SyncStatus';
 import { ballOutcome } from '../utils/ballText';
 import { PageSkeleton } from '../components/common/Skeleton';
@@ -161,6 +162,7 @@ export default function ScoringPage() {
 
   return (
     <div className="flex min-h-dvh flex-col">
+      <WinnerCelebration match={match} state={state} />
       <Header
         title={title}
         backTo="/home"
