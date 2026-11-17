@@ -495,6 +495,11 @@
     "worm": "Run race",
     "wormHint": "Total after every ball; circles are wickets."
   },
+  "winChance": {
+    "title": "Win chance",
+    "chart": "Win chance swing",
+    "chartHint": "After every ball. Above the line the first-batting team is ahead. Worked out from runs, balls and wickets left only."
+  },
   "live": {
     "details": "Full match"
   },

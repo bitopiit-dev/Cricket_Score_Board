@@ -7,6 +7,7 @@ import { TeamAvatar } from '../common/TeamAvatar';
 import { CreasePanel } from '../scoring/CreasePanel';
 import { MatchCharts } from './MatchCharts';
 import { MomentBurst } from './MomentBurst';
+import { WinChanceMeter } from './WinChance';
 import { BallChip, ThisOver } from '../scoring/ThisOver';
 import { BattingBadge, HaulBadge, MomBadge } from './Badges';
 import { manOfTheMatchId, playerFigures, teamOfPlayer } from '../../engine/milestones';
@@ -191,6 +192,8 @@ export function MatchHero({ match, state }: { match: Match; state: MatchState })
             )}
           </div>
         )}
+
+        <WinChanceMeter match={match} state={state} />
       </div>
     </section>
   );

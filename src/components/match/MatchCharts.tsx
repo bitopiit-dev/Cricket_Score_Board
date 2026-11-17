@@ -3,6 +3,7 @@ import { findTeam } from '../../data/teams';
 import { overBars, wormPoints } from '../../engine/charts';
 import type { InningsState, Match, MatchState } from '../../engine/types';
 import { useFormat } from '../../hooks/useFormat';
+import { WinChanceChart } from './WinChance';
 
 const FALLBACK = ['#e10a14', '#2563eb'];
 
@@ -36,6 +37,11 @@ export function MatchCharts({ match, state }: { match: Match; state: MatchState 
         <Legend match={match} main={main} colors={colors} />
         <Worm match={match} main={main} colors={colors} overs={overs} />
       </ChartCard>
+      {match.events.some((e) => e.type === 'ball') && (
+        <ChartCard title={t('winChance.chart')} hint={t('winChance.chartHint')}>
+          <WinChanceChart match={match} />
+        </ChartCard>
+      )}
     </>
   );
 }
