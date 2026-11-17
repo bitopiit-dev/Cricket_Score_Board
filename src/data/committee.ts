@@ -18,8 +18,11 @@ export interface CommitteeMember {
 
 export const COMMITTEE_LOGO = 'images/bgl-sports-committee-logo.webp';
 
-/** Official BPL-2027 logo (transparent background). */
-export const BPL_LOGO = 'images/bpl-2027-logo.webp';
+/**
+ * Official BPL-2027 logo (transparent background). Give the file a new name
+ * whenever the logo changes: phones keep showing a cached copy of the old one.
+ */
+export const BPL_LOGO = 'images/bpl-2027-logo-v2.webp';
 export const COMMITTEE_NAME = 'BGL Sports Committee';
 
 const member = (id: string, name: string): CommitteeMember => ({
