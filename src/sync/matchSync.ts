@@ -23,6 +23,43 @@ const BACKUP = 'bpl:conflict-backup:';
 const QUEUE = 'bpl:upload-queue';
 const notify = () => window.dispatchEvent(new Event(MATCHES_CHANGED));
 
+/** Fired when this device's link to the shared scores changes (header status). */
+export const SYNC_CHANGED = 'bpl:sync';
+/** null until the first download has been tried. */
+let connected: boolean | null = null;
+function setConnected(v: boolean) {
+  if (connected === v) return;
+  connected = v;
+  if (typeof window !== 'undefined') window.dispatchEvent(new Event(SYNC_CHANGED));
+}
+
+export type AppSync = 'local' | 'connecting' | 'synced' | 'pending' | 'offline';
+/**
+ * Whether what this device shows is what everyone sees:
+ * local = no server set up, connecting = first download not back yet,
+ * synced = downloaded and listening, pending = this device has changes
+ * still to upload, offline = no connection (showing the last saved copy).
+ */
+export function syncStatusFrom(s: {
+  server: boolean;
+  online: boolean;
+  queued: number;
+  connected: boolean | null;
+}): AppSync {
+  if (!s.server) return 'local';
+  if (!s.online) return 'offline';
+  if (s.queued > 0) return 'pending';
+  if (s.connected === null) return 'connecting';
+  return s.connected ? 'synced' : 'offline';
+}
+export const appSyncStatus = (): AppSync =>
+  syncStatusFrom({
+    server: !!supabase,
+    online: typeof navigator === 'undefined' || navigator.onLine,
+    queued: readQueue().length,
+    connected,
+  });
+
 export interface Row {
   id: string;
   data: Match;
@@ -196,12 +233,14 @@ export function startMatchSync(): void {
   const client = supabase;
   const pull = async () => {
     try {
-      const { data } = await withTimeout(client.from('matches').select('*'), 10000);
+      const { data, error } = await withTimeout(client.from('matches').select('*'), 10000);
+      if (error) throw error;
+      setConnected(true);
       let changed = false;
       for (const row of (data ?? []) as Row[]) changed = (await mergeRow(row)) || changed;
       if (changed) notify();
     } catch {
-      /* offline: try again later */
+      setConnected(false); /* offline: try again later */
     }
   };
   void pull();
@@ -214,6 +253,7 @@ export function startMatchSync(): void {
     .subscribe((status) => {
       // After a dropped connection, catch up on anything missed
       if (status === 'SUBSCRIBED') void pull();
+      else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') setConnected(false);
     });
   window.addEventListener('online', () => {
     void flushUploads();

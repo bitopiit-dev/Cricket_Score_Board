@@ -63,15 +63,21 @@ export default function HomePage() {
   const next3 = upcomingFixtures(tour.ts, now, 3, inHero);
 
   return (
-    <main className="mx-auto flex w-full max-w-lg flex-col gap-4 p-4 md:max-w-2xl">
+    // One column on phones and tablets; on desktop the match stays on the left
+    // (pinned while scrolling) and the rest sits beside it, as wide as the header
+    <main className="mx-auto grid w-full max-w-lg grid-cols-1 gap-4 p-4 md:max-w-2xl lg:max-w-5xl lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start lg:gap-5">
       <h1 className="sr-only">{t('homePage.title')}</h1>
       {/* The match (countdown, live score or result) comes first; announcements under it */}
-      <Hero hero={hero} now={now} />
-      <NoticeBanner page="home" />
-      <FavoriteTeamCard ts={tour.ts} />
-      <InstallHint />
-      <Progress ts={tour.ts} />
-      {next3.length > 0 && <NextMatches fixtures={next3} ts={tour.ts} />}
+      <div className="flex min-w-0 flex-col gap-4 lg:sticky lg:top-4">
+        <Hero hero={hero} now={now} />
+        <NoticeBanner page="home" />
+      </div>
+      <div className="flex min-w-0 flex-col gap-4">
+        <FavoriteTeamCard ts={tour.ts} />
+        <InstallHint />
+        <Progress ts={tour.ts} />
+        {next3.length > 0 && <NextMatches fixtures={next3} ts={tour.ts} />}
+      </div>
     </main>
   );
 }
@@ -563,7 +569,7 @@ function LiveTicker({ match, state }: { match: Match; state: MatchState }) {
       tabIndex={-1}
       className="block border-b border-night-line bg-night-950/95 pt-[env(safe-area-inset-top)] text-white shadow-lg backdrop-blur"
     >
-      <div className="relative mx-auto flex max-w-lg items-center gap-2.5 overflow-hidden px-4 py-2 md:max-w-2xl">
+      <div className="relative mx-auto flex max-w-lg items-center gap-2.5 overflow-hidden px-4 py-2 md:max-w-2xl lg:max-w-5xl">
         <TeamEdge a={batting.color} b={bowling.color} />
         <span
           aria-hidden

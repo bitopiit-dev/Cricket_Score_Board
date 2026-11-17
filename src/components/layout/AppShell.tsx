@@ -8,6 +8,7 @@ import { APP_SUBTITLE, APP_TITLE } from '../../config/app';
 import { ToastHost } from '../common/Toast';
 import { BPL_LOGO, COMMITTEE_LOGO, COMMITTEE_NAME } from '../../data/committee';
 import { LanguageToggle, useGoBack } from '../common/Header';
+import { AppSyncStatus } from './AppSyncStatus';
 import { TabBar } from './TabBar';
 import { DataUpdatedBar } from './DataUpdatedBar';
 
@@ -17,7 +18,6 @@ import { DataUpdatedBar } from './DataUpdatedBar';
  * current tab's page.
  */
 export function AppShell() {
-  const { t } = useTranslation();
   const { pathname } = useLocation();
   return (
     <div className="flex min-h-dvh flex-col pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:pb-8">
@@ -59,10 +59,7 @@ export function AppShell() {
             </Link>
             <div className="flex shrink-0 flex-col items-end gap-1.5 sm:flex-row sm:items-center sm:gap-3">
               {/* No room on phones; the language button stays */}
-              <span className="hidden items-center gap-1.5 text-xs whitespace-nowrap text-night-muted sm:flex">
-                <span aria-hidden className="size-2 rounded-full bg-night-muted" />
-                {t('app.savedOnDevice')}
-              </span>
+              <AppSyncStatus />
               <LanguageToggle />
             </div>
           </div>

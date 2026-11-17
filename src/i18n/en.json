@@ -273,7 +273,18 @@
     }
   },
   "app": {
-    "savedOnDevice": "Saved on this device",
+    "sync": {
+      "synced": "Synced with everyone",
+      "pending": "Uploads waiting",
+      "connecting": "Connecting…",
+      "offline": "Offline · last saved copy",
+      "local": "Saved on this device",
+      "syncedLong": "Scores, results and fixtures here are the same everyone sees.",
+      "pendingLong": "Some changes from this device haven’t reached everyone yet. They upload as soon as the signal allows.",
+      "connectingLong": "Checking for the latest scores.",
+      "offlineLong": "No connection. You’re seeing what was last saved on this device; it updates when you’re back online.",
+      "localLong": "Everything is kept on this device only."
+    },
     "dataUpdated": "The fixture or teams were just updated.",
     "refresh": "Refresh"
   },
