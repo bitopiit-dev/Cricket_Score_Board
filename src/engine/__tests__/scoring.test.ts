@@ -409,3 +409,37 @@ describe('revision number', () => {
     expect(g.match.rev).toBe(4);
   });
 });
+
+describe('swapping strike by hand', () => {
+  it('swaps striker and non-striker, and undo puts them back', () => {
+    const g = new Game(makeMatch()).start('a1', 'a2', 'b1');
+    g.ball(1);
+    expect([g.inn.strikerId, g.inn.nonStrikerId]).toEqual(['a2', 'a1']);
+    g.do({ type: 'swapStrike' });
+    expect([g.inn.strikerId, g.inn.nonStrikerId]).toEqual(['a1', 'a2']);
+    g.undo();
+    expect([g.inn.strikerId, g.inn.nonStrikerId]).toEqual(['a2', 'a1']);
+  });
+
+  it('works at the end of an over, before the next bowler is chosen', () => {
+    const g = new Game(makeMatch()).start('a1', 'a2', 'b1');
+    g.balls(0, 0, 0, 0, 0, 0);
+    const before = [g.inn.strikerId, g.inn.nonStrikerId];
+    expect(g.tryDo({ type: 'swapStrike' })).toBeNull();
+    expect([g.inn.strikerId, g.inn.nonStrikerId]).toEqual([before[1], before[0]]);
+  });
+
+  it('is refused while a batter slot is empty after a wicket', () => {
+    const g = new Game(makeMatch()).start('a1', 'a2', 'b1');
+    g.out('bowled');
+    expect(g.tryDo({ type: 'swapStrike' })).toBe('wrongPhase');
+  });
+
+  it('does not change the score or the balls bowled', () => {
+    const g = new Game(makeMatch()).start('a1', 'a2', 'b1');
+    g.balls(4, 1);
+    const { runs, legalBalls } = g.inn;
+    g.do({ type: 'swapStrike' });
+    expect([g.inn.runs, g.inn.legalBalls]).toEqual([runs, legalBalls]);
+  });
+});

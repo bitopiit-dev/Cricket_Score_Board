@@ -92,6 +92,9 @@ export default function ScoringPage() {
       buzz(input.type === 'ball' && input.wicket ? [30, 60, 30] : 15);
       if (input.type === 'ball')
         setDone({ key: Date.now(), text: ballOutcome(input, match, t, f) });
+      // So the undo chip names what it will undo
+      else if (input.type === 'swapStrike')
+        setDone({ key: Date.now(), text: t('scoring.strikeSwapped') });
     }
     return ok;
   };
@@ -236,7 +239,13 @@ export default function ScoringPage() {
 
         {inn && !between && phase !== 'completed' && (
           <>
-            <CreasePanel match={match} inn={inn} />
+            <CreasePanel
+              match={match}
+              inn={inn}
+              onSwapStrike={
+                canScore && moreEnabled.swapStrike ? () => send({ type: 'swapStrike' }) : undefined
+              }
+            />
             <ThisOver inn={inn} />
             {canScore && (
               <div className="mt-auto">

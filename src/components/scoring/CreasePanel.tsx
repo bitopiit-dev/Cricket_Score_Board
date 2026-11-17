@@ -5,8 +5,20 @@ import type { InningsState, Match } from '../../engine/types';
 import { useFormat } from '../../hooks/useFormat';
 import { playerName } from '../../utils/matchText';
 
-/** Current batters, bowler and partnership. */
-export function CreasePanel({ match, inn }: { match: Match; inn: InningsState }) {
+/**
+ * Current batters, bowler and partnership.
+ * With onSwapStrike (scorers only), a button beside the batters swaps who is
+ * on strike, for when the batters crossed or a ball was scored at the wrong end.
+ */
+export function CreasePanel({
+  match,
+  inn,
+  onSwapStrike,
+}: {
+  match: Match;
+  inn: InningsState;
+  onSwapStrike?: () => void;
+}) {
   const { t } = useTranslation();
   const f = useFormat();
   const batters = [inn.strikerId, inn.nonStrikerId]
@@ -60,6 +72,21 @@ export function CreasePanel({ match, inn }: { match: Match; inn: InningsState })
           })}
         </tbody>
       </table>
+
+      {onSwapStrike && (
+        <div className="flex justify-end">
+          <button
+            type="button"
+            onClick={onSwapStrike}
+            className="flex min-h-11 items-center gap-1.5 rounded-full px-3 text-sm font-semibold text-emerald-700 active:scale-95 active:bg-emerald-50 dark:text-emerald-400 dark:active:bg-emerald-950"
+          >
+            <span aria-hidden className="text-base leading-none">
+              ⇅
+            </span>
+            {t('scoring.swapStrike')}
+          </button>
+        </div>
+      )}
 
       <table className="mt-1 w-full border-t border-slate-200 dark:border-slate-800">
         <thead>
