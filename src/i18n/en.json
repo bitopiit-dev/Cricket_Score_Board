@@ -637,5 +637,26 @@
     "signUmpire": "Umpire",
     "signCommittee": "Tournament committee",
     "generated": "Report made {{when}}"
+  },
+  "reschedule": {
+    "change": "Change time",
+    "title": "Match {{n}} start time",
+    "now": "Current time: {{time}}",
+    "newTime": "New time",
+    "save": "Save new time",
+    "saving": "Saving…",
+    "swapTitle": "Or swap times with another match that day",
+    "swap": "Swap",
+    "noSwap": "No other match that day.",
+    "started": "started",
+    "savedOne": "Match {{n}} now starts at {{time}}",
+    "savedSwap": "Matches {{a}} and {{b}} swapped times",
+    "note": "Everyone sees the new time once it is saved. A match that has started cannot be moved here.",
+    "error_offline": "Could not reach the server. Check the connection and try again.",
+    "error_notPublished": "Ask the super admin to save the fixtures once from the admin page; then scorers can change times.",
+    "error_stale": "Someone changed the fixtures meanwhile. The new list is loaded; check it and try again.",
+    "error_notAllowed": "This account may not change match times.",
+    "error_onlyTime": "Only the start time can be changed here.",
+    "error_failed": "Not saved. Try again."
   }
 }

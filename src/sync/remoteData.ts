@@ -1,4 +1,5 @@
 import { FIXTURES, type Fixture } from '../data/fixtures';
+import { onlyTimesChanged } from '../tournament/fixtureEdit';
 import { TOURNAMENT_TEAMS, type TournamentTeam } from '../data/teams';
 import { supabase, withTimeout } from './supabase';
 
@@ -136,6 +137,52 @@ export async function saveData(key: DocKey, value: unknown, email: string): Prom
   const doc = { value, updatedAt };
   apply(key, doc);
   writeCache(key, doc);
+}
+
+export type RescheduleError =
+  'offline' | 'notPublished' | 'stale' | 'notAllowed' | 'onlyTime' | 'failed';
+
+export class RescheduleFailure extends Error {
+  constructor(public readonly code: RescheduleError) {
+    super(code);
+  }
+}
+
+/**
+ * Super admin or scorer: save new start times (and the day's new order).
+ * The server checks that nothing else changed, so a scorer cannot edit teams
+ * this way. When someone else saved in the meantime, the newer list is loaded
+ * and 'stale' is thrown so the person can check and try again.
+ */
+export async function rescheduleFixtures(next: Fixture[]): Promise<void> {
+  if (!supabase) throw new RescheduleFailure('offline');
+  const base = applied.fixtures;
+  if (!base) throw new RescheduleFailure('notPublished');
+  if (!onlyTimesChanged(FIXTURES, next)) throw new RescheduleFailure('onlyTime');
+  let res: { data: unknown; error: { message: string } | null; status?: number };
+  try {
+    res = await withTimeout(
+      supabase.rpc('reschedule_fixtures', { next, base_updated_at: base }),
+      10000,
+    );
+  } catch {
+    throw new RescheduleFailure('offline');
+  }
+  if (res.error) {
+    const m = res.error.message;
+    if (/stale_fixtures/.test(m)) {
+      await loadData(5000);
+      throw new RescheduleFailure('stale');
+    }
+    if (/no_published_fixtures/.test(m)) throw new RescheduleFailure('notPublished');
+    if (/not_allowed/.test(m)) throw new RescheduleFailure('notAllowed');
+    if (/only_time|bad_time/.test(m)) throw new RescheduleFailure('onlyTime');
+    if (!res.status) throw new RescheduleFailure('offline');
+    throw new RescheduleFailure('failed');
+  }
+  const doc = { value: next, updatedAt: String(res.data) };
+  apply('fixtures', doc);
+  writeCache('fixtures', doc);
 }
 
 /** Super admin: drop the published version so every phone uses the one in the code. */

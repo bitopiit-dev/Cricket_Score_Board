@@ -40,7 +40,7 @@ export function editLevel(outcome: FixtureOutcome | undefined, action: EditActio
 }
 
 export class FixtureEditError extends Error {
-  constructor(public readonly code: 'notFound' | 'scored') {
+  constructor(public readonly code: 'notFound' | 'scored' | 'otherDay') {
     super(code);
   }
 }
@@ -132,4 +132,65 @@ export function validateFixture(fx: Fixture, list: readonly Fixture[]): FixtureW
   if (validDate && isRestDay(fx.date)) w.push('restDay');
   if (others.some((f) => f.no === fx.no)) w.push('duplicateNo');
   return w;
+}
+
+/**
+ * Puts one day's matches in time order. Only the places that day's matches
+ * already hold are reused, so other days and match numbers stay where they are.
+ */
+function sortDay(list: readonly Fixture[], date: string): Fixture[] {
+  const slots = list.flatMap((f, i) => (f.date === date ? [i] : []));
+  // Array.prototype.sort is stable: equal times keep their order
+  const ordered = slots.map((i) => list[i]).sort((a, b) => a.time.localeCompare(b.time));
+  const next = [...list];
+  slots.forEach((at, k) => (next[at] = ordered[k]));
+  return next;
+}
+
+/** Moves one match to a new start time on the same day. */
+export function changeFixtureTime(list: readonly Fixture[], id: string, time: string): Fixture[] {
+  const fx = list[indexOf(list, id)];
+  return sortDay(updateFixture(list, id, { time }), fx.date);
+}
+
+/**
+ * Two matches on the same day trade start times (12:00 <-> 13:00).
+ * Matches on different days cannot swap here.
+ */
+export function swapFixtureTimes(list: readonly Fixture[], idA: string, idB: string): Fixture[] {
+  const a = list[indexOf(list, idA)];
+  const b = list[indexOf(list, idB)];
+  if (a.id === b.id) return [...list];
+  if (a.date !== b.date) throw new FixtureEditError('otherDay');
+  const swapped = updateFixture(updateFixture(list, a.id, { time: b.time }), b.id, {
+    time: a.time,
+  });
+  return sortDay(swapped, a.date);
+}
+
+/** True when `next` differs from `prev` only in start times and order. */
+export function onlyTimesChanged(prev: readonly Fixture[], next: readonly Fixture[]): boolean {
+  if (prev.length !== next.length) return false;
+  const byId = new Map(prev.map((f) => [f.id, f]));
+  // Key order does not matter (the server compares JSON values the same way)
+  const canon = (v: unknown): unknown =>
+    v && typeof v === 'object' && !Array.isArray(v)
+      ? Object.fromEntries(
+          Object.keys(v)
+            .sort()
+            .map((k) => [k, canon((v as Record<string, unknown>)[k])]),
+        )
+      : v;
+  const strip = (f: Fixture) => {
+    const rest: Partial<Fixture> = { ...f };
+    delete rest.time;
+    return JSON.stringify(canon(rest));
+  };
+  return (
+    new Set(next.map((f) => f.id)).size === next.length &&
+    next.every((f) => {
+      const old = byId.get(f.id);
+      return !!old && strip(old) === strip(f);
+    })
+  );
 }
