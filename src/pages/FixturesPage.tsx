@@ -28,6 +28,8 @@ import fixturePdfUrl from '../assets/bpl-2027-fixture.pdf?url';
 import fixturePdfInfo from '../assets/bpl-2027-fixture.json';
 import { PageSkeleton } from '../components/common/Skeleton';
 import { groupOf } from '../tournament/groups';
+import { roleCanScore, useAuth } from '../sync/auth';
+import { RescheduleSheet } from '../components/fixtures/RescheduleSheet';
 
 /** Download name carries the update date, so a new copy never overwrites or hides behind the old one. */
 const FIXTURE_PDF_NAME = `BPL-2027-Fixture-${fixturePdfInfo.updated}.pdf`;
@@ -55,6 +57,11 @@ export default function FixturesPage() {
 
   // Days already played fold away, so the list opens at today or the next match day
   const [showPast, setShowPast] = useState(false);
+
+  // A super admin or a scorer can move a match that has not started
+  const auth = useAuth();
+  const [moving, setMoving] = useState<Fixture | null>(null);
+  const onMove = roleCanScore(auth.role) ? setMoving : undefined;
 
   if (!tour) return <PageSkeleton />;
 
@@ -108,7 +115,7 @@ export default function FixturesPage() {
           <ul className="mt-3 flex flex-col gap-2">
             {todays.map((fx) => (
               <li key={fx.id}>
-                <FixtureCard fx={fx} ts={tour.ts} dark />
+                <FixtureCard fx={fx} ts={tour.ts} dark onMove={onMove} />
               </li>
             ))}
           </ul>
@@ -214,13 +221,23 @@ export default function FixturesPage() {
             <ul className="flex flex-col gap-2">
               {fxs.map((fx) => (
                 <li key={fx.id}>
-                  <FixtureCard fx={fx} ts={tour.ts} highlight={date === today} />
+                  <FixtureCard fx={fx} ts={tour.ts} highlight={date === today} onMove={onMove} />
                 </li>
               ))}
             </ul>
           </section>
         );
       })}
+
+      {moving && (
+        <RescheduleSheet
+          fx={moving}
+          ts={tour.ts}
+          onClose={() => setMoving(null)}
+          // FIXTURES was updated in place; closing the sheet re-renders the list
+          onSaved={() => setMoving(null)}
+        />
+      )}
     </main>
   );
 }
@@ -314,11 +331,14 @@ function FixtureCard({
   ts,
   dark,
   highlight,
+  onMove,
 }: {
   fx: Fixture;
   ts: TournamentState;
   dark?: boolean;
   highlight?: boolean;
+  /** Set for a super admin or a scorer: opens the change-time sheet. */
+  onMove?: (fx: Fixture) => void;
 }) {
   const { t } = useTranslation();
   const f = useFormat();
@@ -394,6 +414,32 @@ function FixtureCard({
         {side(0)}
         {side(1)}
       </div>
+      {onMove && outcome.status === 'scheduled' && (
+        <div className="mt-1 flex justify-end">
+          <button
+            type="button"
+            onClick={() => onMove(fx)}
+            className={`-mr-1 -mb-1 flex min-h-11 items-center gap-1.5 rounded-lg px-2 text-sm font-semibold ${
+              dark ? 'text-bpl-yellow' : 'text-bpl-red dark:text-rose-400'
+            }`}
+          >
+            <svg
+              aria-hidden
+              viewBox="0 0 24 24"
+              className="size-4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 7v5l3 2" />
+            </svg>
+            {t('reschedule.change')}
+          </button>
+        </div>
+      )}
       {outcome.status === 'completed' && outcome.result && match && (
         <p
           className={`mt-2 text-sm font-semibold ${dark ? 'text-bpl-yellow' : 'text-emerald-700 dark:text-emerald-400'}`}
