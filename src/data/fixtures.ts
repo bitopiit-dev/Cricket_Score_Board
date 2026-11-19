@@ -44,6 +44,11 @@ export interface Fixture {
   abandoned?: boolean;
 }
 
+/** True when the match belongs to a fixture the admin declared abandoned. */
+export function isAbandonedMatch(m: { fixtureId?: string }): boolean {
+  return !!fixtureById(m.fixtureId)?.abandoned;
+}
+
 /** Only league matches can be declared abandoned (knockouts need a winner). */
 export const canAbandon = (stage: StageId) =>
   stage === 'groupA' || stage === 'groupB' || stage === 'superSix';

@@ -11,6 +11,7 @@ import { WinChanceMeter } from './WinChance';
 import { BallChip, ThisOver } from '../scoring/ThisOver';
 import { BattingBadge, HaulBadge, MomBadge } from './Badges';
 import { manOfTheMatchId, playerFigures, teamOfPlayer } from '../../engine/milestones';
+import { isAbandonedMatch } from '../../data/fixtures';
 import { findTeam } from '../../data/teams';
 import { buildCommentary, type CommentaryBall } from '../../engine/commentary';
 import { runRate, strikeRate } from '../../engine/rules';
@@ -117,14 +118,17 @@ export function MatchHero({ match, state }: { match: Match; state: MatchState })
   const { t } = useTranslation();
   const f = useFormat();
   const inn = state.current;
-  const live = match.events.length > 0 && state.phase !== 'completed';
+  const abandoned = isAbandonedMatch(match);
+  const live = !abandoned && match.events.length > 0 && state.phase !== 'completed';
   const color = (i: TeamIndex) =>
     findTeam(match.teams[i].teamId)?.color ?? 'var(--color-night-line)';
   const need = inn ? runsNeeded(inn) : null;
   const rrr = inn ? requiredRunRate(inn) : null;
 
   let status: string;
-  if (state.phase === 'completed' && state.result) status = resultText(state.result, match, t, f);
+  if (abandoned) status = t('fixtures.abandonedResult');
+  else if (state.phase === 'completed' && state.result)
+    status = resultText(state.result, match, t, f);
   else if (match.events.length === 0) status = t('home.notStarted');
   else if (state.phase === 'inningsBreak') status = t('scoring.inningsBreak');
   else if (state.phase === 'superOverBreak') status = t('scoring.scoresLevel');
@@ -164,13 +168,17 @@ export function MatchHero({ match, state }: { match: Match; state: MatchState })
 
         <p
           className={`text-center font-display text-xl leading-tight font-bold ${
-            state.phase === 'completed' ? 'text-bpl-yellow' : 'text-white'
+            abandoned
+              ? 'text-amber-300'
+              : state.phase === 'completed'
+                ? 'text-bpl-yellow'
+                : 'text-white'
           }`}
         >
           {status}
         </p>
 
-        {inn && !inn.ended && match.events.length > 0 && (
+        {!abandoned && inn && !inn.ended && match.events.length > 0 && (
           <div className="tabular flex flex-wrap justify-center gap-x-4 text-xs text-white/80">
             <span>
               {t('scoring.crr')} {f.dec(runRate(inn.runs, inn.legalBalls))}
@@ -193,7 +201,7 @@ export function MatchHero({ match, state }: { match: Match; state: MatchState })
           </div>
         )}
 
-        <WinChanceMeter match={match} state={state} />
+        {!abandoned && <WinChanceMeter match={match} state={state} />}
       </div>
     </section>
   );
