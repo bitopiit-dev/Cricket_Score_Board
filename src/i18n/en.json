@@ -660,5 +660,16 @@
     "error_notAllowed": "This account may not change match times.",
     "error_onlyTime": "Only the start time can be changed here.",
     "error_failed": "Not saved. Try again."
+  },
+  "playerCard": {
+    "title": "Player cards",
+    "hint": "A picture for a status or story, in one tap.",
+    "fifty": "Fifty",
+    "hundred": "Hundred",
+    "haul": "{{n}} wickets",
+    "batDetail": "{{balls}} balls, {{fours}} fours, {{sixes}} sixes",
+    "bowlDetail": "in {{overs}} overs",
+    "batting": "Batting",
+    "bowling": "Bowling"
   }
 }

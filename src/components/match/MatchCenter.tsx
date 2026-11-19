@@ -7,6 +7,7 @@ import { TeamAvatar } from '../common/TeamAvatar';
 import { CreasePanel } from '../scoring/CreasePanel';
 import { MatchCharts } from './MatchCharts';
 import { MomentBurst } from './MomentBurst';
+import { PlayerCards } from './PlayerCards';
 import { WinChanceMeter } from './WinChance';
 import { BallChip, ThisOver } from '../scoring/ThisOver';
 import { BattingBadge, HaulBadge, MomBadge } from './Badges';
@@ -275,6 +276,7 @@ function Summary({ match, state }: { match: Match; state: MatchState }) {
       )}
       {inn && inn.overs.length > 0 && <RecentOvers match={match} inn={inn} />}
       {state.innings.length > 0 && <TopPerformers match={match} state={state} />}
+      {state.innings.length > 0 && <PlayerCards match={match} state={state} />}
     </>
   );
 }
