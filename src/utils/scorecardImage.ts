@@ -20,12 +20,26 @@ const GOLD = '#f59e0b';
 const SANS = '"Hind Siliguri", system-ui, sans-serif';
 const DISPLAY = '"Barlow Condensed", "Hind Siliguri", sans-serif';
 
+/**
+ * Loads a picture for drawing on a canvas. Photos and logos the admin uploads
+ * live on Supabase (another site), so they are requested with CORS: without it
+ * the browser marks the canvas as "tainted" and refuses to turn it into a PNG,
+ * which made every card with an uploaded photo fail. If the CORS request fails
+ * (e.g. a copy cached without CORS), try once more past the cache; if that
+ * fails too, draw without the picture rather than not at all.
+ */
 export const loadImage = (src: string) =>
   new Promise<HTMLImageElement | null>((resolve) => {
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = () => resolve(null);
-    img.src = src;
+    const remote = /^https?:/i.test(src) && !src.startsWith(location.origin);
+    const attempt = (url: string, last: boolean) => {
+      const img = new Image();
+      if (remote) img.crossOrigin = 'anonymous';
+      img.onload = () => resolve(img);
+      img.onerror = () =>
+        last ? resolve(null) : attempt(`${url}${url.includes('?') ? '&' : '?'}cors=1`, true);
+      img.src = url;
+    };
+    attempt(src, !remote);
   });
 
 /** Largest font size (down to `min`) at which `text` fits in `maxWidth`. */
