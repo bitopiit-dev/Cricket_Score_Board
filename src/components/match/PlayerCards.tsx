@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../common/icons';
 import { toast } from '../common/Toast';
+import { ImageShareSheet, type ImageJob } from './ImageShareSheet';
 import type { Match, MatchState } from '../../engine/types';
 import { useFormat } from '../../hooks/useFormat';
 import { playerName } from '../../utils/matchText';
@@ -9,13 +10,13 @@ import { playerMoments, type PlayerMoment } from '../../utils/playerMoments';
 
 /**
  * One tap per standout player (Man of the Match, fifty, hundred, 3+ wickets):
- * draws a 9:16 story card and opens the share sheet, or downloads it.
+ * draws a 9:16 story card and shows it with Share and Save buttons.
  */
 export function PlayerCards({ match, state }: { match: Match; state: MatchState }) {
   const { t } = useTranslation();
   const f = useFormat();
   const moments = useMemo(() => playerMoments(match, state), [match, state]);
-  const [busy, setBusy] = useState<string | null>(null);
+  const [job, setJob] = useState<ImageJob | null>(null);
   if (moments.length === 0) return null;
 
   const label = (m: PlayerMoment) =>
@@ -28,21 +29,17 @@ export function PlayerCards({ match, state }: { match: Match; state: MatchState 
           : t('playerCard.haul', { n: f.num(m.bowling?.wickets ?? 0) });
 
   async function share(m: PlayerMoment) {
-    setBusy(m.playerId);
+    const title = `${playerName(match, m.playerId)}: ${label(m)}`;
+    const fileName = `BPL-2027-${playerName(match, m.playerId)}.png`.replace(/[^\w.-]+/g, '-');
+    setJob({ title, fileName, blob: null });
     try {
-      const [{ drawPlayerCard }, { shareImage }] = await Promise.all([
-        import('../../utils/playerCardImage'),
-        import('../../utils/scorecardImage'),
-      ]);
+      const { drawPlayerCard } = await import('../../utils/playerCardImage');
       const blob = await drawPlayerCard(match, state, m, t, f);
-      const name = `BPL-2027-${playerName(match, m.playerId)}.png`.replace(/[^\w.-]+/g, '-');
-      const res = await shareImage(blob, name, `${playerName(match, m.playerId)}: ${label(m)}`);
-      if (res === 'downloaded') toast(t('scorecardImage.downloaded'));
-      else if (res === 'failed') toast(t('scorecardImage.failed'));
+      // Only if the sheet is still open for this card
+      setJob((j) => (j && j.title === title ? { ...j, blob } : j));
     } catch {
+      setJob(null);
       toast(t('scorecardImage.failed'));
-    } finally {
-      setBusy(null);
     }
   }
 
@@ -58,9 +55,7 @@ export function PlayerCards({ match, state }: { match: Match; state: MatchState 
             <button
               type="button"
               onClick={() => void share(m)}
-              disabled={busy !== null}
-              aria-busy={busy === m.playerId}
-              className="flex min-h-11 items-center gap-2 rounded-full bg-slate-100 py-1.5 pr-4 pl-1.5 text-left disabled:opacity-60 dark:bg-slate-800"
+              className="flex min-h-11 items-center gap-2 rounded-full bg-slate-100 py-1.5 pr-4 pl-1.5 text-left dark:bg-slate-800"
             >
               <span className="flex size-8 items-center justify-center rounded-full bg-bpl-yellow text-night-950">
                 <Icon name="share" className="size-4" />
@@ -73,6 +68,7 @@ export function PlayerCards({ match, state }: { match: Match; state: MatchState 
           </li>
         ))}
       </ul>
+      <ImageShareSheet job={job} onClose={() => setJob(null)} />
     </section>
   );
 }

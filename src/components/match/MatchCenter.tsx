@@ -8,6 +8,7 @@ import { CreasePanel } from '../scoring/CreasePanel';
 import { MatchCharts } from './MatchCharts';
 import { MomentBurst } from './MomentBurst';
 import { PlayerCards } from './PlayerCards';
+import { ImageShareSheet, type ImageJob } from './ImageShareSheet';
 import { WinChanceMeter } from './WinChance';
 import { BallChip, ThisOver } from '../scoring/ThisOver';
 import { BattingBadge, HaulBadge, MomBadge } from './Badges';
@@ -733,39 +734,34 @@ function Card({ title, children }: { title?: string; children: React.ReactNode }
 function ScorecardImageButton({ match, state }: { match: Match; state: MatchState }) {
   const { t } = useTranslation();
   const f = useFormat();
-  const [busy, setBusy] = useState(false);
+  const [job, setJob] = useState<ImageJob | null>(null);
   async function onClick() {
-    setBusy(true);
+    const title = `${match.teams[0].name} ${t('common.vs')} ${match.teams[1].name}`;
+    const fileName = `BPL-2027-${match.teams[0].name}-vs-${match.teams[1].name}.png`.replace(
+      /[^\w.-]+/g,
+      '-',
+    );
+    setJob({ title, fileName, blob: null });
     try {
-      const { drawScorecard, shareImage } = await import('../../utils/scorecardImage');
+      const { drawScorecard } = await import('../../utils/scorecardImage');
       const blob = await drawScorecard(match, state, t, f);
-      const name = `BPL-2027-${match.teams[0].name}-vs-${match.teams[1].name}.png`.replace(
-        /[^\w.-]+/g,
-        '-',
-      );
-      const res = await shareImage(
-        blob,
-        name,
-        `${match.teams[0].name} ${t('common.vs')} ${match.teams[1].name}`,
-      );
-      if (res === 'downloaded') toast(t('scorecardImage.downloaded'));
-      else if (res === 'failed') toast(t('scorecardImage.failed'));
+      setJob((j) => (j ? { ...j, blob } : j));
     } catch {
+      setJob(null);
       toast(t('scorecardImage.failed'));
-    } finally {
-      setBusy(false);
     }
   }
   return (
-    <button
-      type="button"
-      onClick={() => void onClick()}
-      disabled={busy}
-      aria-label={t('scorecardImage.button')}
-      aria-busy={busy}
-      className="flex size-11 items-center justify-center rounded-full hover:bg-white/10 disabled:opacity-50"
-    >
-      <Icon name="image" className="size-5" />
-    </button>
+    <>
+      <button
+        type="button"
+        onClick={() => void onClick()}
+        aria-label={t('scorecardImage.button')}
+        className="flex size-11 items-center justify-center rounded-full hover:bg-white/10"
+      >
+        <Icon name="image" className="size-5" />
+      </button>
+      <ImageShareSheet job={job} onClose={() => setJob(null)} />
+    </>
   );
 }
