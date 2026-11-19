@@ -170,6 +170,9 @@ export function parseFixtureRows(
       teamA,
       teamB,
       ...(old?.venue ? { venue: old.venue } : {}),
+      ...(old?.abandoned && sameSlot(old.teamA, teamA) && sameSlot(old.teamB, teamB)
+        ? { abandoned: true }
+        : {}),
     });
   }
 

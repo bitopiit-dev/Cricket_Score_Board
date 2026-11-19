@@ -389,6 +389,12 @@ function FixtureCard({
         <span aria-hidden className="live-pulse size-2 rounded-full bg-bpl-red text-bpl-red" />
         {t('fixtures.live')}
       </span>
+    ) : outcome.abandoned ? (
+      <span
+        className={`font-bold ${dark ? 'text-amber-300' : 'text-amber-700 dark:text-amber-300'}`}
+      >
+        {t('fixtures.abandoned')}
+      </span>
     ) : outcome.status === 'completed' ? (
       <span className={`font-bold ${doneText}`}>{t('fixtures.completed')}</span>
     ) : (
@@ -440,6 +446,13 @@ function FixtureCard({
           </button>
         </div>
       )}
+      {outcome.abandoned && (
+        <p
+          className={`mt-2 text-sm font-semibold ${dark ? 'text-amber-300' : 'text-amber-700 dark:text-amber-300'}`}
+        >
+          {t('fixtures.abandonedResult')}
+        </p>
+      )}
       {outcome.status === 'completed' && outcome.result && match && (
         <p
           className={`mt-2 text-sm font-semibold ${dark ? 'text-bpl-yellow' : 'text-emerald-700 dark:text-emerald-400'}`}
@@ -456,7 +469,7 @@ function FixtureCard({
       : `bg-white shadow-sm dark:bg-slate-900 ${highlight ? 'ring-2 ring-sky-400' : ''}`
   } ${outcome.status === 'live' ? 'ring-2 ring-bpl-red/70' : ''}`;
 
-  return match ? (
+  return match && !outcome.abandoned ? (
     <Link to={`/match/${match.id}`} className={`${cls} active:opacity-80`}>
       {body}
     </Link>

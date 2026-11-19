@@ -364,6 +364,8 @@
     "filter_knockout": "Semis & Final",
     "live": "Live",
     "completed": "Completed",
+    "abandoned": "Abandoned",
+    "abandonedResult": "No result (abandoned) · 1 point each",
     "restDay": "Rest day",
     "holiday": "holiday",
     "showPast_one": "Show the previous day's matches and results",

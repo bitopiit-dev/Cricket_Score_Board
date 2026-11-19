@@ -9,6 +9,7 @@ import {
   editLevel,
   hasScore,
   moveFixture,
+  setAbandoned,
   updateFixture,
   validateFixture,
 } from '../fixtureEdit';
@@ -173,5 +174,15 @@ describe('edits and the tournament tables', () => {
     m.teams[1].teamId = 'rainbow-cutting';
     const edited = moveFixture(updateFixture(FIXTURES, 'f1', { time: '14:00' }), 'f1', 1);
     expect(tournamentState([m], edited).outcomes.get('f1')!.status).toBe('live');
+  });
+});
+
+describe('setAbandoned', () => {
+  it('sets the flag and removes it again, leaving the rest as it was', () => {
+    const on = setAbandoned(FIXTURES, 'f2', true);
+    expect(on.find((f) => f.id === 'f2')?.abandoned).toBe(true);
+    const off = setAbandoned(on, 'f2', false);
+    expect(off.find((f) => f.id === 'f2')).toEqual(FIXTURES.find((f) => f.id === 'f2'));
+    expect('abandoned' in off.find((f) => f.id === 'f2')!).toBe(false);
   });
 });

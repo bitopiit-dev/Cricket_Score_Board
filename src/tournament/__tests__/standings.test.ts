@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { FIXTURES } from '../../data/fixtures';
+import { FIXTURES, type Fixture } from '../../data/fixtures';
 import { TOURNAMENT_TEAMS, findTeam } from '../../data/teams';
 import { Game, makeMatch } from '../../engine/__tests__/helpers';
 import type { Match } from '../../engine/types';
@@ -141,5 +141,33 @@ describe('fixture ids', () => {
     const ts = tournamentState([m], edited);
     expect(ts.outcomes.get('f2')!.status).toBe('completed');
     expect(ts.tables.groupA[0]).toMatchObject({ teamId: 'mcd-super-stars', points: 2 });
+  });
+
+  describe('abandoned match', () => {
+    const abandon = (no: number): Fixture[] =>
+      FIXTURES.map((f) => (f.no === no ? { ...f, abandoned: true } : f));
+
+    it('gives both teams 1 point and counts as played with no result', () => {
+      // Match 2: MCD Super Stars v Quality Flying Fighter, rained off before a ball
+      const ts = tournamentState([], abandon(2));
+      expect(ts.outcomes.get('f2')).toMatchObject({ status: 'completed', abandoned: true });
+      for (const id of ['mcd-super-stars', 'quality-flying-fighter']) {
+        expect(ts.tables.groupA.find((r) => r.teamId === id)).toMatchObject({
+          played: 1,
+          won: 0,
+          lost: 0,
+          tiedNr: 1,
+          points: 1,
+          nrr: 0,
+        });
+      }
+    });
+
+    it('ignores a partly scored match for points and NRR', () => {
+      const ts = tournamentState([play(2, 6, 3)], abandon(2));
+      const row = ts.tables.groupA.find((r) => r.teamId === 'mcd-super-stars')!;
+      expect(row).toMatchObject({ won: 0, tiedNr: 1, points: 1, runsFor: 0, ballsFaced: 0 });
+      expect(ts.outcomes.get('f2')?.result).toBeNull();
+    });
   });
 });
