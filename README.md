@@ -59,7 +59,7 @@ Every section has its own link, so the phone's back button returns to the previo
 | Points   | `#/points`   | Group A, Group B and Super Six tables (points, NRR) from scored matches                                                                                             |
 | Stats    | `#/stats`    | Coming soon (link to the current awards ranking)                                                                                                                    |
 | Teams    | `#/teams`    | The 12 teams; tap one for its squad                                                                                                                                 |
-| More     | `#/more`     | Rules, Committee, Media (coming soon), Awards                                                                                                                       |
+| More     | `#/more`     | Stats, Rules, Committee, Awards, Media, Match alerts                                                                                                                |
 
 On phones the tabs sit at the bottom of the screen; on wider screens they sit in the header.
 
@@ -179,6 +179,71 @@ Each team has its own folder under `public/players/`, named after the team's `id
 
 Team logos work the same way. Put the file in `public/icons/teams/`, for example
 `public/icons/teams/ddc.png`, and add `logo: 'icons/teams/ddc.png'` to the team.
+
+## Media gallery
+
+**More → Media** (`#/media`) shows photo albums by season (BPL-2027, and any
+earlier season that has photos). Inside a season, photos are grouped by match,
+latest match first, with loose photos under "Other photos". Tap a photo to see
+it full screen; swipe or use the arrows to move through the album.
+
+The super admin adds photos under **Admin → গ্যালারি**: pick the season and
+(optionally) the match and a caption, then choose any number of photos. Each
+photo is resized on the phone (1600 px, plus a 480 px thumbnail) before it is
+uploaded, so a batch from a match day stays small. Captions can be fixed and
+photos removed from the same tab; every phone updates at once.
+
+Photos are rows in `media_items` and files under `gallery/<season>/` in the
+public `media` bucket (patch 4).
+
+## Match alerts (push notifications)
+
+**More → Match alerts** (`#/alerts`) lets a fan switch on alerts for chosen
+teams (or all) and pick "Wickets and results" or "Results only". Alerts arrive
+even when the app is closed. On iPhone they work only from the Home Screen app
+(iOS 16.4 or later); the page explains this.
+
+How it works: every saved change to a match between two tournament teams calls
+the Edge Function `match-notify` (from a database trigger). The function replays
+the match with the app's own scoring engine (`src/push/moments.ts`, bundled into
+`supabase/functions/_shared/moments.js`) and sends: match start with the toss,
+each wicket, fifties and hundreds, the innings break with the target, a Super
+Over, and the result. Each alert is sent once (`push_log`), so a retry, a second
+scorer, or undoing and re-entering a wicket never repeats it. If a phone uploads
+a burst after being offline, only the newest moment (and the result) goes out.
+
+After changing anything in `src/engine` or `src/push`, run
+`npm run build:functions` and commit the result; CI fails if you forget.
+
+### Switching alerts on (once)
+
+1. Run `supabase/patch-4-push-and-gallery.sql` in the SQL Editor.
+2. Make a VAPID key pair: `npx web-push generate-vapid-keys`.
+3. Install the Supabase CLI, then from this folder:
+
+   ```bash
+   supabase link --project-ref dkdomfmhqdtlthpchrij
+   supabase secrets set NOTIFY_SECRET=<long random text> \
+     VAPID_PUBLIC_KEY=<public key> VAPID_PRIVATE_KEY=<private key> \
+     VAPID_SUBJECT=mailto:bitopi.it@gmail.com
+   supabase functions deploy match-notify --no-verify-jwt
+   ```
+
+   `--no-verify-jwt` is needed because the database calls the function with
+   `NOTIFY_SECRET`, not a user's sign-in.
+
+4. In the SQL Editor, tell the database where to send changes:
+
+   ```sql
+   select vault.create_secret('https://dkdomfmhqdtlthpchrij.supabase.co/functions/v1/match-notify', 'notify_url');
+   select vault.create_secret('<the same NOTIFY_SECRET>', 'notify_secret');
+   ```
+
+5. On GitHub, add the Actions variable `VITE_VAPID_PUBLIC_KEY` (the public key
+   only) and run the deploy. Until this variable exists, the Alerts link is hidden.
+
+The private VAPID key and `NOTIFY_SECRET` stay in Supabase secrets only. Never
+put them in the repository or in a `VITE_` variable.
 
 ## Committee members
 

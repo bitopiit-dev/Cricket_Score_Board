@@ -111,3 +111,40 @@ self.addEventListener('fetch', (event) => {
     }),
   );
 });
+
+/*
+ * Match alerts (src/push/client.ts, supabase/functions/match-notify). The
+ * payload is {title, body, url, tag}; alerts for one match share a tag, so a
+ * new wicket replaces the previous alert instead of piling up.
+ */
+self.addEventListener('push', (event) => {
+  let d = {};
+  try {
+    d = event.data ? event.data.json() : {};
+  } catch {
+    d = { body: event.data ? event.data.text() : '' };
+  }
+  event.waitUntil(
+    self.registration.showNotification(d.title || 'BPL-2027', {
+      body: d.body || '',
+      tag: d.tag,
+      renotify: !!d.tag,
+      icon: new URL('icons/icon-192-v2.png', scope).href,
+      lang: /[\u0980-\u09FF]/.test(`${d.title}${d.body}`) ? 'bn' : 'en',
+      data: { url: new URL(d.url || '', INDEX).href },
+    }),
+  );
+});
+
+// Tapping an alert opens that match: in the app if it is already open, or a new window
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const url = (event.notification.data && event.notification.data.url) || INDEX;
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((wins) => {
+      const win = wins.find((w) => w.url.startsWith(scope.href));
+      if (win) return win.focus().then((w) => (w || win).navigate(url));
+      return self.clients.openWindow(url);
+    }),
+  );
+});

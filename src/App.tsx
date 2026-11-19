@@ -23,9 +23,8 @@ const StatsPage = lazyPage(() => import('./pages/StatsPage'));
 const PlayerPage = lazyPage(() => import('./pages/PlayerPage'));
 const TeamPage = lazyPage(() => import('./pages/TeamPage'));
 const TeamsPage = lazyPage(() => import('./pages/TeamsPage'));
-const MediaPage = lazyPage(() =>
-  import('./pages/SoonPages').then((m) => ({ default: m.MediaPage })),
-);
+const MediaPage = lazyPage(() => import('./pages/MediaPage'));
+const AlertsPage = lazyPage(() => import('./pages/AlertsPage'));
 // Only the admin downloads the admin screens (not preloaded)
 const AdminPage = lazy(() => import('./pages/admin/AdminPage'));
 const MatchReportPage = lazy(() => import('./pages/MatchReportPage'));
@@ -65,6 +64,7 @@ export default function App() {
               <Route path="/rules" element={<RulesPage />} />
               <Route path="/committee" element={<CommitteePage />} />
               <Route path="/media" element={<MediaPage />} />
+              <Route path="/alerts" element={<AlertsPage />} />
             </Route>
             {/* Full-screen pages without the tab bar */}
             <Route
