@@ -601,7 +601,9 @@
     "bat": "Top batter",
     "bowl": "Top bowler",
     "downloaded": "Image downloaded",
-    "failed": "Couldn't make the image"
+    "failed": "Couldn't make the image",
+    "save": "Save",
+    "preparing": "Making the picture…"
   },
   "notice": {
     "label": "Announcement",
