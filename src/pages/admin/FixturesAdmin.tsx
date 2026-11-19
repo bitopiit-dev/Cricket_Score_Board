@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { btn, Card } from '../../components/common/controls';
-import { FIXTURES, type Fixture, type Slot, type StageId } from '../../data/fixtures';
+import { canAbandon, FIXTURES, type Fixture, type Slot, type StageId } from '../../data/fixtures';
 import { TOURNAMENT_TEAMS } from '../../data/teams';
 import { useTournament } from '../../hooks/useTournament';
 import {
@@ -9,6 +9,7 @@ import {
   editLevel,
   hasScore,
   moveFixture,
+  setAbandoned,
   updateFixture,
   validateFixture,
   type FixtureWarning,
@@ -206,7 +207,8 @@ export function FixturesAdmin({ email }: { email: string }) {
         {list.map((fx, i) => {
           const o = outcome(fx.id);
           // A match with a score keeps its teams; a started one asks first.
-          const lockTeams = hasScore(o);
+          // An abandoned one too, until the abandon is undone.
+          const lockTeams = hasScore(o) || !!fx.abandoned;
           const askTeams = () =>
             editLevel(o, 'teams') === 'ok' || confirm(`ম্যাচ ${fx.no} শুরু হয়ে গেছে। তবুও দল বদলাবেন?`);
           const warnings = validateFixture(fx, list);
@@ -250,10 +252,16 @@ export function FixturesAdmin({ email }: { email: string }) {
                     </option>
                   ))}
                 </select>
-                {hasScore(o) && (
-                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-800">
-                    স্কোর আছে
+                {fx.abandoned ? (
+                  <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-900">
+                    পরিত্যক্ত
                   </span>
+                ) : (
+                  hasScore(o) && (
+                    <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-800">
+                      স্কোর আছে
+                    </span>
+                  )
                 )}
                 <span className="ml-auto flex gap-1">
                   <button
@@ -297,6 +305,26 @@ export function FixturesAdmin({ email }: { email: string }) {
                   onChange={(s) => askTeams() && set({ teamB: s })}
                 />
               </div>
+              {canAbandon(fx.stage) && (
+                <label className="mt-1.5 flex min-h-11 items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    className="size-5 accent-amber-600"
+                    checked={!!fx.abandoned}
+                    onChange={(e) => {
+                      const on = e.target.checked;
+                      const ask = on
+                        ? `ম্যাচ ${fx.no} পরিত্যক্ত ঘোষণা করবেন? ফলাফল হবে "ফল হয়নি", দুই দল ১ পয়েন্ট করে পাবে।` +
+                          (hasScore(o)
+                            ? ' এ পর্যন্ত যে স্কোর হয়েছে তা পয়েন্ট বা NRR-এ ধরা হবে না।'
+                            : '')
+                        : `ম্যাচ ${fx.no}-এর পরিত্যক্ত ঘোষণা তুলে নেবেন?`;
+                      if (confirm(ask)) change(setAbandoned(list, fx.id, on));
+                    }}
+                  />
+                  বৃষ্টি বা অন্য কারণে পরিত্যক্ত (দুই দল ১ পয়েন্ট)
+                </label>
+              )}
               {warnings.length > 0 && (
                 <p className="mt-1 text-xs font-semibold text-amber-700">
                   ⚠ {warnings.map((w) => WARN[w]).join(' · ')}

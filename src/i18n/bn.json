@@ -359,6 +359,8 @@
     "filter_knockout": "সেমি ও ফাইনাল",
     "live": "চলছে",
     "completed": "সম্পন্ন",
+    "abandoned": "পরিত্যক্ত",
+    "abandonedResult": "ফল হয়নি (পরিত্যক্ত) · দুই দল ১ পয়েন্ট করে",
     "restDay": "বিরতি",
     "holiday": "ছুটি",
     "showPast": "আগের {{n}} দিনের খেলা ও ফলাফল দেখুন",

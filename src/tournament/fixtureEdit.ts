@@ -51,6 +51,20 @@ function indexOf(list: readonly Fixture[], id: string): number {
   return i;
 }
 
+/**
+ * Super admin: declare a match abandoned (no result, 1 point each) or undo it.
+ * The key is removed when undone, so the saved list stays as before.
+ */
+export function setAbandoned(list: readonly Fixture[], id: string, on: boolean): Fixture[] {
+  const i = indexOf(list, id);
+  const next = [...list];
+  const fx: Fixture = { ...list[i] };
+  if (on) fx.abandoned = true;
+  else delete fx.abandoned;
+  next[i] = fx;
+  return next;
+}
+
 export function updateFixture(
   list: readonly Fixture[],
   id: string,

@@ -37,7 +37,16 @@ export interface Fixture {
   teamB: Slot;
   /** Ground; not in the official fixture yet. */
   venue?: string;
+  /**
+   * Set by the super admin when the match is called off (e.g. rain) without a
+   * result. It then counts as a no result: 1 point each, no effect on NRR.
+   */
+  abandoned?: boolean;
 }
+
+/** Only league matches can be declared abandoned (knockouts need a winner). */
+export const canAbandon = (stage: StageId) =>
+  stage === 'groupA' || stage === 'groupB' || stage === 'superSix';
 
 const team = (teamId: string): Slot => ({ kind: 'team', teamId });
 const groupPos = (group: 'A' | 'B', pos: number): Slot => ({ kind: 'groupPos', group, pos });

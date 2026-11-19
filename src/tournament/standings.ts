@@ -19,6 +19,8 @@ export interface FixtureOutcome {
   /** The app match for this fixture, if one was started. */
   match?: Match;
   result?: MatchResult | null;
+  /** Declared abandoned by the admin: completed with no result. */
+  abandoned?: boolean;
   /** Main-innings totals, in batting order. */
   innings?: { teamId: string; runs: number; wickets: number; legalBalls: number }[];
 }
@@ -64,7 +66,11 @@ export function matchesByFixture(matches: Match[]): Map<string, Match> {
 
 const rank = (m: Match) => (deriveMatchState(m).phase === 'completed' ? 1e15 : 0) + m.updatedAt;
 
-function outcomeOf(match: Match | undefined): FixtureOutcome {
+function outcomeOf(match: Match | undefined, fixture?: Fixture): FixtureOutcome {
+  if (fixture?.abandoned) {
+    // Called off: a no result, whatever was scored before the rain
+    return { status: 'completed', abandoned: true, result: null, ...(match ? { match } : {}) };
+  }
   if (!match) return { status: 'scheduled' };
   const state = deriveMatchState(match);
   const innings = state.innings
@@ -113,6 +119,8 @@ export function leagueTable(
   teamIds: string[],
   byFixture: Map<string, Match>,
   fixtures: readonly Fixture[] = FIXTURES,
+  /** Team for a fixture side (Super Six sides are group places). */
+  resolveSlot: (slot: Slot) => string | null = (s) => (s.kind === 'team' ? s.teamId : null),
 ): TableRow[] {
   const rows = new Map(teamIds.map((id) => [id, emptyRow(id)]));
   const row = (id: string) => {
@@ -123,6 +131,18 @@ export function leagueTable(
   for (const f of fixtures) {
     if (f.stage !== stage) continue;
     const m = byFixture.get(f.id);
+    if (f.abandoned) {
+      // No result: 1 point each; runs and balls stay out of NRR
+      const ids = [resolveSlot(f.teamA), resolveSlot(f.teamB)];
+      if (!ids[0] || !ids[1]) continue;
+      for (const id of ids as string[]) {
+        const r = row(id);
+        r.played += 1;
+        r.tiedNr += 1;
+        r.points += LEAGUE_POINTS.noResult;
+      }
+      continue;
+    }
     if (!m) continue;
     const state = deriveMatchState(m);
     if (state.phase !== 'completed' || !state.result) continue;
@@ -181,7 +201,7 @@ export function tournamentState(
 ): TournamentState {
   const byFixture = matchesByFixture(matches);
   const outcomes = new Map<string, FixtureOutcome>(
-    fixtures.map((f) => [f.id, outcomeOf(byFixture.get(f.id))]),
+    fixtures.map((f) => [f.id, outcomeOf(byFixture.get(f.id), f)]),
   );
   const stageDone = (stage: StageId) =>
     fixtures
@@ -209,11 +229,18 @@ export function tournamentState(
   const superSixTeams = [1, 2, 3].flatMap((pos) =>
     (['A', 'B'] as const).map((g) => resolveGroupPos(g, pos)),
   );
+  const superSixSlot = (slot: Slot): string | null =>
+    slot.kind === 'team'
+      ? slot.teamId
+      : slot.kind === 'groupPos'
+        ? resolveGroupPos(slot.group, slot.pos)
+        : null;
   const superSix = leagueTable(
     'superSix',
     superSixTeams.filter((x): x is string => x !== null),
     byFixture,
     fixtures,
+    superSixSlot,
   );
 
   const winnerOf = (stage: StageId): string | null => {
