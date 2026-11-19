@@ -20,7 +20,7 @@ const GOLD = '#f59e0b';
 const SANS = '"Hind Siliguri", system-ui, sans-serif';
 const DISPLAY = '"Barlow Condensed", "Hind Siliguri", sans-serif';
 
-const loadImage = (src: string) =>
+export const loadImage = (src: string) =>
   new Promise<HTMLImageElement | null>((resolve) => {
     const img = new Image();
     img.onload = () => resolve(img);
@@ -29,7 +29,7 @@ const loadImage = (src: string) =>
   });
 
 /** Largest font size (down to `min`) at which `text` fits in `maxWidth`. */
-function fit(
+export function fit(
   ctx: CanvasRenderingContext2D,
   text: string,
   weight: number,
