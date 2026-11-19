@@ -15,6 +15,8 @@ const PAGES = [
   'rules',
   'committee',
   'awards',
+  'media',
+  'alerts',
   'new',
 ];
 

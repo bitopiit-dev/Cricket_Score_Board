@@ -61,6 +61,12 @@ const PATHS = {
       <path {...stroke} d="m4 17.5 4.5-4.5 3.5 3.5 2.5-2.5 5.5 5" />
     </>
   ),
+  bell: (
+    <>
+      <path {...stroke} d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15z" />
+      <path {...stroke} d="M10 20.5a2.2 2.2 0 0 0 4 0" />
+    </>
+  ),
   install: (
     <>
       <rect {...stroke} x="6.5" y="2.5" width="11" height="19" rx="2.5" />

@@ -8,6 +8,7 @@ import '@fontsource/barlow-condensed/800.css';
 import './index.css';
 import './i18n';
 import App from './App';
+import { refreshPush } from './push/client';
 import { requestPersistentStorage } from './db/repository';
 import { startMatchSync } from './sync/matchSync';
 import { loadData } from './sync/remoteData';
@@ -20,6 +21,7 @@ if (import.meta.env.PROD && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     void navigator.serviceWorker
       .register(`${import.meta.env.BASE_URL}sw.js`, { scope: import.meta.env.BASE_URL })
+      .then(() => refreshPush())
       .catch((e) => console.warn('Service worker not registered', e));
   });
 }

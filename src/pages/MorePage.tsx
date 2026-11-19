@@ -6,6 +6,7 @@ import { Sheet } from '../components/common/Sheet';
 import { toast } from '../components/common/Toast';
 import { btn } from '../components/common/controls';
 import { PageTitle } from '../components/layout/AppShell';
+import { pushSupport } from '../push/client';
 import { usePrefs } from '../store/prefsStore';
 import { assetUrl } from '../utils/asset';
 import { shareText } from '../utils/share';
@@ -15,6 +16,8 @@ const ITEMS: { to: string; icon: IconName; key: string }[] = [
   { to: '/rules', icon: 'rules', key: 'rules' },
   { to: '/committee', icon: 'committee', key: 'committee' },
   { to: '/awards', icon: 'awards', key: 'awards' },
+  { to: '/media', icon: 'image', key: 'media' },
+  { to: '/alerts', icon: 'bell', key: 'alerts' },
 ];
 
 /** "More" tab: links to the smaller sections. */
@@ -27,7 +30,7 @@ export default function MorePage() {
       <PageTitle>{t('tabs.more')}</PageTitle>
       <ShareApp />
       <ul className="flex flex-col gap-2">
-        {ITEMS.map((i) => (
+        {ITEMS.filter((i) => i.key !== 'alerts' || pushSupport() !== 'off').map((i) => (
           <li key={i.to}>
             <Link
               to={i.to}
