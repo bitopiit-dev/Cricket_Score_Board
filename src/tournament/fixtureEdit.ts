@@ -66,6 +66,27 @@ export function setAbandoned(list: readonly Fixture[], id: string, on: boolean):
 }
 
 /**
+ * Super admin: the committee will play an abandoned match again from the
+ * start. The no-result (1 point each) goes, the match is postponed until a
+ * new date is announced, and the matches already scored for it are set
+ * aside (kept, but no longer counted).
+ */
+export function replayAbandoned(
+  list: readonly Fixture[],
+  id: string,
+  scoredMatchIds: readonly string[],
+): Fixture[] {
+  const i = indexOf(list, id);
+  const next = [...list];
+  const fx: Fixture = { ...list[i], postponed: true };
+  delete fx.abandoned;
+  const voided = [...new Set([...(fx.voidMatchIds ?? []), ...scoredMatchIds])];
+  if (voided.length > 0) fx.voidMatchIds = voided;
+  next[i] = fx;
+  return next;
+}
+
+/**
  * Super admin or scorer: postpone a match (new date to be announced later)
  * or undo it. The key is removed when undone, so the saved list stays as before.
  */

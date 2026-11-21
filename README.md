@@ -200,6 +200,17 @@ and postponed changes. Run `supabase/patch-5-postpone.sql` once in the SQL
 Editor; until then a scorer's postpone is refused (the super admin can still
 postpone from Admin → Fixtures).
 
+### Replaying an abandoned match
+
+If the committee decides an abandoned match will be played again from the
+start, the super admin opens **Admin → Fixtures** and taps **আবার খেলা হবে**
+on that match, then saves. In one step the no result (1 point each) is taken
+back, the match shows as postponed until its new date is set, and any score
+from before the rain is set aside: it stays in the records (and in Admin →
+Matches) but no longer counts for the result, points, NRR, stats or the live
+lists, and it can no longer be scored. The replay is scored as a new match on
+the new date. Fixture ids in `voidMatchIds` hold the set-aside matches.
+
 ## Media gallery
 
 **More → Media** (`#/media`) shows photo albums by season (BPL-2027, and any

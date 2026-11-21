@@ -408,7 +408,9 @@
     "showPast_other": "Show matches and results from the previous {{n}} days",
     "hidePast": "Hide earlier days",
     "postponed": "Postponed",
-    "postponedNote": "Postponed. The new date will be announced later."
+    "postponedNote": "Postponed. The new date will be announced later.",
+    "replayed": "Called off · replay",
+    "replayedResult": "Called off · to be played again from the start"
   },
   "stage": {
     "groupA": "Group A",

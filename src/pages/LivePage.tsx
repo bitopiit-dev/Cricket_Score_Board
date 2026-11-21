@@ -7,7 +7,7 @@ import { NextMatchCountdown } from '../components/live/NextMatchCountdown';
 import { NoticeBanner } from '../components/layout/NoticeBanner';
 import { MatchHero } from '../components/match/MatchCenter';
 import { BallChip } from '../components/scoring/ThisOver';
-import { fixtureById, isAbandonedMatch } from '../data/fixtures';
+import { fixtureById, isAbandonedMatch, isCalledOff, isVoidMatch } from '../data/fixtures';
 import { matchRepository } from '../db/repository';
 import { deriveMatchState } from '../engine/scoring';
 import type { Match, MatchState } from '../engine/types';
@@ -76,21 +76,24 @@ export default function LivePage() {
 }
 
 const isLive = ({ m, s }: { m: Match; s: MatchState }) =>
-  s.phase !== 'completed' && m.events.length > 0 && !isAbandonedMatch(m);
+  s.phase !== 'completed' && m.events.length > 0 && !isCalledOff(m);
 
 function MatchCard({ m, s }: { m: Match; s: MatchState }) {
   const { t } = useTranslation();
   const f = useFormat();
   const live = isLive({ m, s });
   const fx = fixtureById(m.fixtureId);
-  const abandoned = isAbandonedMatch(m);
-  const status = abandoned
-    ? t('fixtures.abandoned')
-    : s.phase === 'completed'
-      ? t('home.completed')
-      : m.events.length === 0
-        ? t('home.notStarted')
-        : t('home.inProgress');
+  const voided = isVoidMatch(m);
+  const abandoned = isAbandonedMatch(m) || voided;
+  const status = voided
+    ? t('fixtures.replayed')
+    : abandoned
+      ? t('fixtures.abandoned')
+      : s.phase === 'completed'
+        ? t('home.completed')
+        : m.events.length === 0
+          ? t('home.notStarted')
+          : t('home.inProgress');
   return (
     <Link
       to={`/match/${m.id}`}

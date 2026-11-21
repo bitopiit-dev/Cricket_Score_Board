@@ -29,6 +29,7 @@ import { useCanScore } from '../sync/auth';
 import { Icon } from '../components/common/icons';
 import { useShareMatch } from '../hooks/useShareMatch';
 import { MatchCenter } from '../components/match/MatchCenter';
+import { isVoidMatch } from '../data/fixtures';
 import { SyncStatus } from '../components/scoring/SyncStatus';
 import { ballOutcome } from '../utils/ballText';
 import { PageSkeleton } from '../components/common/Skeleton';
@@ -105,8 +106,9 @@ export default function ScoringPage() {
   };
   const canUndo = match.events.length > 0;
 
-  // People following the match get the Match Center; only scorers get the scoring screen
-  if (!canScore) {
+  // People following the match get the Match Center; only scorers get the scoring screen.
+  // A match set aside for a replay is read-only: the replay is scored as a new match.
+  if (!canScore || isVoidMatch(match)) {
     return <MatchCenter match={match} state={state} title={title} onShare={() => void onShare()} />;
   }
 

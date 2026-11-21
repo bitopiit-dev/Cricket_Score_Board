@@ -53,11 +53,18 @@ export interface TournamentState {
   resolve: (slot: Slot) => string | null;
 }
 
-/** The app match that belongs to each fixture (a completed one wins, then the newest). */
-export function matchesByFixture(matches: Match[]): Map<string, Match> {
+/**
+ * The app match that belongs to each fixture (a completed one wins, then the
+ * newest). Matches set aside for a replay are left out.
+ */
+export function matchesByFixture(
+  matches: Match[],
+  fixtures: readonly Fixture[] = FIXTURES,
+): Map<string, Match> {
+  const voided = new Set(fixtures.flatMap((f) => f.voidMatchIds ?? []));
   const map = new Map<string, Match>();
   for (const m of matches) {
-    if (m.fixtureId === undefined) continue;
+    if (m.fixtureId === undefined || voided.has(m.id)) continue;
     const prev = map.get(m.fixtureId);
     if (!prev || rank(m) > rank(prev)) map.set(m.fixtureId, m);
   }
@@ -199,7 +206,7 @@ export function tournamentState(
   matches: Match[],
   fixtures: readonly Fixture[] = FIXTURES,
 ): TournamentState {
-  const byFixture = matchesByFixture(matches);
+  const byFixture = matchesByFixture(matches, fixtures);
   const outcomes = new Map<string, FixtureOutcome>(
     fixtures.map((f) => [f.id, outcomeOf(byFixture.get(f.id), f)]),
   );

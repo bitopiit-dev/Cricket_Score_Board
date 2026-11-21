@@ -1,3 +1,4 @@
+import { isVoidMatch } from '../data/fixtures';
 import { deriveMatchState } from '../engine/scoring';
 import type { Match, TeamIndex } from '../engine/types';
 
@@ -48,9 +49,9 @@ export function playerKey(teamId: string, name: string): string {
   return `${teamId}:${normalize(name)}`;
 }
 
-/** Completed matches between two teams from the tournament list. */
+/** Matches between two teams from the tournament list (a match set aside for a replay is not). */
 export function isTournamentMatch(m: Match): boolean {
-  return !!m.teams[0].teamId && !!m.teams[1].teamId;
+  return !!m.teams[0].teamId && !!m.teams[1].teamId && !isVoidMatch(m);
 }
 
 export function playerTotals(matches: Match[]): PlayerTotals[] {

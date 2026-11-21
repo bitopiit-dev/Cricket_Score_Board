@@ -67,9 +67,13 @@ export function pickHero(
   fixtures: readonly Fixture[] = FIXTURES,
 ): HomeHero {
   const byId = (id?: string) => fixtures.find((f) => f.id === id);
-  // A match on an abandoned fixture is over, however far it got
+  // A match on an abandoned fixture is over, however far it got; so is one set aside for a replay
   const withState = matches
-    .filter((m) => !(m.fixtureId && ts.outcomes.get(m.fixtureId)?.abandoned))
+    .filter(
+      (m) =>
+        !(m.fixtureId && ts.outcomes.get(m.fixtureId)?.abandoned) &&
+        !fixtures.find((f) => f.id === m.fixtureId)?.voidMatchIds?.includes(m.id),
+    )
     .map((m) => ({ m, s: deriveMatchState(m) }));
 
   // 1. A match being scored: fixture matches first, then the most recently updated

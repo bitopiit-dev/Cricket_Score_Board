@@ -49,6 +49,13 @@ export interface Fixture {
    * countdown and the "next match" lists. Giving it a new date clears it.
    */
   postponed?: boolean;
+  /**
+   * Scored matches that no longer count for this fixture: the super admin
+   * called off a match and the committee decided to play it again from the
+   * start. They stay in the records but are left out of the result, the
+   * points, the live lists and the player stats.
+   */
+  voidMatchIds?: string[];
 }
 
 /** True when the match is postponed and waits for a new date. */
@@ -58,6 +65,15 @@ export const isPostponed = (fx: Pick<Fixture, 'postponed'> | undefined): boolean
 export function isAbandonedMatch(m: { fixtureId?: string }): boolean {
   return !!fixtureById(m.fixtureId)?.abandoned;
 }
+
+/** True when this scored match was set aside because its fixture is being played again. */
+export function isVoidMatch(m: { id: string; fixtureId?: string }): boolean {
+  return !!fixtureById(m.fixtureId)?.voidMatchIds?.includes(m.id);
+}
+
+/** Abandoned or set aside for a replay: either way it is no longer live and has no result. */
+export const isCalledOff = (m: { id: string; fixtureId?: string }): boolean =>
+  isAbandonedMatch(m) || isVoidMatch(m);
 
 /** Only league matches can be declared abandoned (knockouts need a winner). */
 export const canAbandon = (stage: StageId) =>
