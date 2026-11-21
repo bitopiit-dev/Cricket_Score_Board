@@ -1,12 +1,17 @@
 import { useState } from 'react';
 import { btn, Card } from '../../components/common/controls';
+import { COMMITTEE_MEMBERS } from '../../data/committee';
 import { FIXTURES } from '../../data/fixtures';
 import { TOURNAMENT_TEAMS } from '../../data/teams';
 import { isValidDoc, saveData, type DocKey } from '../../sync/remoteData';
 import { StatusLine, useStatus } from './shared';
 
 const current = (key: DocKey) =>
-  JSON.stringify(key === 'fixtures' ? FIXTURES : TOURNAMENT_TEAMS, null, 2);
+  JSON.stringify(
+    key === 'fixtures' ? FIXTURES : key === 'committee' ? COMMITTEE_MEMBERS : TOURNAMENT_TEAMS,
+    null,
+    2,
+  );
 
 /**
  * Advanced: the whole fixture or team list as text, for changes the forms do not
@@ -39,7 +44,7 @@ export function JsonAdmin({ email }: { email: string }) {
         ভুল লেখা হলে সেভ হবে না।
       </p>
       <div className="flex flex-wrap gap-2">
-        {(['teams', 'fixtures'] as DocKey[]).map((k) => (
+        {(['teams', 'fixtures', 'committee'] as DocKey[]).map((k) => (
           <button
             key={k}
             type="button"
@@ -47,7 +52,7 @@ export function JsonAdmin({ email }: { email: string }) {
             onClick={() => pick(k)}
             className={`${key === k ? btn.primary : btn.secondary} py-2`}
           >
-            {k === 'teams' ? 'দল ও খেলোয়াড়' : 'ফিক্সচার'}
+            {k === 'teams' ? 'দল ও খেলোয়াড়' : k === 'committee' ? 'কমিটি' : 'ফিক্সচার'}
           </button>
         ))}
         <button type="button" className={`${btn.secondary} py-2`} onClick={backup}>

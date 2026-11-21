@@ -4,6 +4,7 @@ import { btn, Card, inputClass } from '../../components/common/controls';
 import { PageTitle } from '../../components/layout/AppShell';
 import { signIn, signOut, useAuth } from '../../sync/auth';
 import { supabase } from '../../sync/supabase';
+import { CommitteeAdmin } from './CommitteeAdmin';
 import { FixturesAdmin } from './FixturesAdmin';
 import { GalleryAdmin } from './GalleryAdmin';
 import { JsonAdmin } from './JsonAdmin';
@@ -11,12 +12,13 @@ import { MatchesAdmin } from './MatchesAdmin';
 import { TeamsAdmin } from './TeamsAdmin';
 import { UsersAdmin } from './UsersAdmin';
 
-type Tab = 'fixtures' | 'teams' | 'matches' | 'gallery' | 'users' | 'json';
+type Tab = 'fixtures' | 'teams' | 'matches' | 'gallery' | 'committee' | 'users' | 'json';
 const TABS: [Tab, string][] = [
   ['fixtures', 'ফিক্সচার'],
   ['teams', 'দল ও খেলোয়াড়'],
   ['matches', 'স্কোর'],
   ['gallery', 'গ্যালারি'],
+  ['committee', 'কমিটি'],
   ['users', 'অ্যাডমিন ও স্কোরার'],
   ['json', 'অ্যাডভান্সড'],
 ];
@@ -86,6 +88,7 @@ export default function AdminPage() {
           {tab === 'teams' && <TeamsAdmin email={auth.email} />}
           {tab === 'matches' && <MatchesAdmin />}
           {tab === 'gallery' && <GalleryAdmin />}
+          {tab === 'committee' && <CommitteeAdmin email={auth.email} />}
           {tab === 'users' && <UsersAdmin />}
           {tab === 'json' && <JsonAdmin email={auth.email} />}
         </>

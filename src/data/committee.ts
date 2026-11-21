@@ -1,6 +1,8 @@
 /**
- * BGL Sports Committee members. Seed data for the future Supabase
- * `committee_members` table, where the admin will add, edit and remove them.
+ * BGL Sports Committee members. This list is the built-in starting point; the
+ * super admin adds, edits and removes members (and their photos) in
+ * Admin → কমিটি, and that version (Supabase app_data 'committee') replaces
+ * this one on every phone.
  *
  * Only members with a name are listed. Names are shown exactly as written.
  */
@@ -12,9 +14,13 @@ export interface CommitteeMember {
   /** Shown exactly as written, never translated. Missing = placeholder. */
   name?: string;
   role: CommitteeRole;
-  /** Path under public/, e.g. 'committee/member-1.jpg'. Optional. */
+  /** Path under public/ (e.g. 'committee/member-1.jpg') or an uploaded photo's web address. */
   photo?: string;
+  /** Optional line under the name, e.g. a post or department. Shown as written. */
+  title?: string;
 }
+
+export const COMMITTEE_ROLES: readonly CommitteeRole[] = ['convener', 'memberSecretary', 'member'];
 
 export const COMMITTEE_LOGO = 'images/bgl-sports-committee-logo.webp';
 
@@ -32,7 +38,10 @@ const member = (id: string, name: string): CommitteeMember => ({
   photo: `committee/${id}.jpg`,
 });
 
-/** Listed in display order. Everyone is a member; no convener or secretary. */
+/**
+ * Listed in display order. Everyone is a member; no convener or secretary.
+ * The admin's saved version is copied into this array in place.
+ */
 export const COMMITTEE_MEMBERS: readonly CommitteeMember[] = [
   member('amzad-hossain', 'Mr. Amzad Hossain'),
   member('barkat-ullah', 'Mr. Barkat Ullah'),

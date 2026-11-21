@@ -51,6 +51,11 @@ export default function CommitteePage() {
                 >
                   <PlayerAvatar name={name} color="#065f46" photo={m.photo} size="lg" />
                   <span className="text-sm leading-tight font-semibold break-words">{name}</span>
+                  {m.title && (
+                    <span className="-mt-1 text-xs leading-tight break-words text-slate-500 dark:text-slate-400">
+                      {m.title}
+                    </span>
+                  )}
                   {/* Only special roles get a badge; a plain "Member" on every card is noise. */}
                   {m.role !== 'member' && (
                     <span

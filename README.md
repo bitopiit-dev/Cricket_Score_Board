@@ -227,6 +227,17 @@ photos removed from the same tab; every phone updates at once.
 Photos are rows in `media_items` and files under `gallery/<season>/` in the
 public `media` bucket (patch 4).
 
+## Sports committee
+
+**More → Committee** lists the BGL Sports Committee. The super admin manages it
+under **Admin → কমিটি**: add or remove members, change a name, add a post or
+department line, set the role (convener, member secretary, member), reorder,
+and tap a photo to upload a new one (cropped square and shrunk on the phone).
+Nothing changes for anyone until **Save**; "back to the built-in list" undoes
+everything. The list is saved in `app_data` under `committee` and photos go to
+`committee/` in the `media` bucket. Run `supabase/patch-6-committee.sql` once
+before the first save.
+
 ## Match alerts (push notifications)
 
 **More → Match alerts** (`#/alerts`) lets a fan switch on alerts for chosen
