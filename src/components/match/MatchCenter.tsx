@@ -13,7 +13,7 @@ import { WinChanceMeter } from './WinChance';
 import { BallChip, ThisOver } from '../scoring/ThisOver';
 import { BattingBadge, HaulBadge, MomBadge } from './Badges';
 import { manOfTheMatchId, playerFigures, teamOfPlayer } from '../../engine/milestones';
-import { isAbandonedMatch } from '../../data/fixtures';
+import { isAbandonedMatch, isVoidMatch } from '../../data/fixtures';
 import { findTeam } from '../../data/teams';
 import { buildCommentary, type CommentaryBall } from '../../engine/commentary';
 import { runRate, strikeRate } from '../../engine/rules';
@@ -120,7 +120,8 @@ export function MatchHero({ match, state }: { match: Match; state: MatchState })
   const { t } = useTranslation();
   const f = useFormat();
   const inn = state.current;
-  const abandoned = isAbandonedMatch(match);
+  const voided = isVoidMatch(match);
+  const abandoned = isAbandonedMatch(match) || voided;
   const live = !abandoned && match.events.length > 0 && state.phase !== 'completed';
   const color = (i: TeamIndex) =>
     findTeam(match.teams[i].teamId)?.color ?? 'var(--color-night-line)';
@@ -128,7 +129,8 @@ export function MatchHero({ match, state }: { match: Match; state: MatchState })
   const rrr = inn ? requiredRunRate(inn) : null;
 
   let status: string;
-  if (abandoned) status = t('fixtures.abandonedResult');
+  if (voided) status = t('fixtures.replayedResult');
+  else if (abandoned) status = t('fixtures.abandonedResult');
   else if (state.phase === 'completed' && state.result)
     status = resultText(state.result, match, t, f);
   else if (match.events.length === 0) status = t('home.notStarted');

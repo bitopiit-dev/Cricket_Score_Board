@@ -173,6 +173,10 @@ export function parseFixtureRows(
       ...(old?.abandoned && sameSlot(old.teamA, teamA) && sameSlot(old.teamB, teamB)
         ? { abandoned: true }
         : {}),
+      // Set-aside matches stay set aside while the teams are the same
+      ...(old?.voidMatchIds && sameSlot(old.teamA, teamA) && sameSlot(old.teamB, teamB)
+        ? { voidMatchIds: old.voidMatchIds }
+        : {}),
       // Still postponed until the file gives it a new date
       ...(old?.postponed &&
       old.date === date &&

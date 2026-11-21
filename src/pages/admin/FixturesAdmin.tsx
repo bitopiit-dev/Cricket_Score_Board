@@ -11,6 +11,7 @@ import {
   hasScore,
   moveFixture,
   setAbandoned,
+  replayAbandoned,
   setPostponed,
   updateFixture,
   validateFixture,
@@ -329,6 +330,33 @@ export function FixturesAdmin({ email }: { email: string }) {
                   />
                   বৃষ্টি বা অন্য কারণে পরিত্যক্ত (দুই দল ১ পয়েন্ট)
                 </label>
+              )}
+              {fx.abandoned && (
+                <button
+                  type="button"
+                  className={`${btn.secondary} mt-1.5 w-full text-sm`}
+                  onClick={() => {
+                    const scored = (tour?.matches ?? [])
+                      .filter((m) => m.fixtureId === fx.id)
+                      .map((m) => m.id);
+                    const ask =
+                      `ম্যাচ ${fx.no} আবার শুরু থেকে খেলা হবে?\n\n` +
+                      '• পরিত্যক্তের ১ পয়েন্ট করে দুই দল থেকে উঠে যাবে\n' +
+                      '• ম্যাচটা "স্থগিত, নতুন তারিখ পরে জানানো হবে" দেখাবে\n' +
+                      (scored.length > 0
+                        ? '• আগের আধা খেলার স্কোর রেকর্ডে থাকবে, কিন্তু ফল, পয়েন্ট বা পরিসংখ্যানে গোনা হবে না\n'
+                        : '') +
+                      '\nনতুন তারিখ ঠিক হলে ওপরে তারিখ বদলে দিন, তারপর সেভ করুন।';
+                    if (confirm(ask)) change(replayAbandoned(list, fx.id, scored));
+                  }}
+                >
+                  ↻ কমিটির সিদ্ধান্ত: আবার খেলা হবে (নতুন তারিখ পরে)
+                </button>
+              )}
+              {fx.voidMatchIds && fx.voidMatchIds.length > 0 && (
+                <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                  আগের {fx.voidMatchIds.length}টা স্কোর বাতিল ধরা হয়েছে (রেকর্ডে আছে, গোনা হয় না)।
+                </p>
               )}
               {!hasScore(o) && !fx.abandoned && (
                 <label className="flex min-h-11 items-center gap-2 text-sm">

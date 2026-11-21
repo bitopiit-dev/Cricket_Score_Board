@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { btn, Card } from '../../components/common/controls';
-import { fixtureById } from '../../data/fixtures';
+import { fixtureById, isVoidMatch } from '../../data/fixtures';
 import { matchRepository } from '../../db/repository';
 import { deriveMatchState } from '../../engine/scoring';
 import { useTournament } from '../../hooks/useTournament';
@@ -55,8 +55,12 @@ export function MatchesAdmin({ scorerOnly = false }: { scorerOnly?: boolean }) {
                 </p>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
                   {fx ? `ফিক্সচার ম্যাচ ${fx.no}` : 'ফিক্সচারের বাইরে'} ·{' '}
-                  {s.phase === 'completed' ? 'শেষ' : 'চলছে / শুরু হয়নি'} ·{' '}
-                  {new Date(m.updatedAt).toLocaleString()}
+                  {isVoidMatch(m)
+                    ? 'বাতিল, আবার খেলা হবে'
+                    : s.phase === 'completed'
+                      ? 'শেষ'
+                      : 'চলছে / শুরু হয়নি'}{' '}
+                  · {new Date(m.updatedAt).toLocaleString()}
                 </p>
               </div>
               {s.phase === 'completed' && (
