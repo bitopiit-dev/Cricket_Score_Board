@@ -3,6 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { noticesFor, type Notice } from '../../config/notices';
 import { todayInDhaka } from '../../data/fixtures';
+import { useFormat } from '../../hooks/useFormat';
+import { useTournament } from '../../hooks/useTournament';
+import { postponedFixtures } from '../../tournament/home';
+import { fixtureTeams } from '../../tournament/standings';
+import { formatDate, slotLabel } from '../../utils/fixtureText';
 import { usePrefs } from '../../store/prefsStore';
 import { isStandalone } from './InstallHint';
 
@@ -24,7 +29,12 @@ export function NoticeBanner({ page }: { page: 'home' | 'live' }) {
   const lang = usePrefs((s) => s.lang);
   const [closed, setClosed] = useState(readClosed);
   const today = todayInDhaka();
-  const shown = noticesFor(page, today, closed, isStandalone());
+  const postponed = usePostponedNotice();
+  const shown = [
+    // Made from the fixture list, so it appears and goes away by itself
+    ...(postponed && !closed.includes(postponed.id) ? [postponed] : []),
+    ...noticesFor(page, today, closed, isStandalone()),
+  ];
   if (shown.length === 0) return null;
 
   const close = (id: string) => {
@@ -44,6 +54,41 @@ export function NoticeBanner({ page }: { page: 'home' | 'live' }) {
       ))}
     </>
   );
+}
+
+/**
+ * "Matches 7, 8 postponed: the new date will be announced later", while any
+ * match is postponed. Its id names the matches, so closing it hides only this
+ * announcement: a newly postponed match shows it again.
+ */
+function usePostponedNotice(): Notice | null {
+  const { t } = useTranslation();
+  const f = useFormat();
+  const lang = usePrefs((s) => s.lang);
+  const bengaliDigits = usePrefs((s) => s.bengaliDigits);
+  const tour = useTournament();
+  if (!tour) return null;
+  const list = postponedFixtures(tour.ts);
+  if (list.length === 0) return null;
+  const nos = list.map((fx) => f.num(fx.no)).join(', ');
+  const lines = list.map((fx) => {
+    const sides = fixtureTeams(fx, tour.ts);
+    return `${t('fixtures.matchNo', { n: f.num(fx.no) })}: ${slotLabel(fx.teamA, sides[0], t, f)} ${t(
+      'common.vs',
+    )} ${slotLabel(fx.teamB, sides[1], t, f)} (${formatDate(fx.date, lang, bengaliDigits)})`;
+  });
+  const title = t('postponedNotice.title', { list: nos, count: list.length });
+  const body = `${t('postponedNotice.body')} ${lines.join('; ')}.`;
+  const link = t('postponedNotice.link');
+  return {
+    id: `postponed-${list.map((fx) => fx.id).join('-')}`,
+    until: '9999-12-31',
+    icon: '🌧️',
+    // Already in the reader's language
+    title: { bn: title, en: title },
+    body: { bn: body, en: body },
+    link: { to: '/fixtures', label: { bn: link, en: link } },
+  };
 }
 
 function NoticeStrip({

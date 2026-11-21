@@ -5,7 +5,12 @@ import { useFormat } from '../../hooks/useFormat';
 import { usePrefs } from '../../store/prefsStore';
 import { useAuth } from '../../sync/auth';
 import { dataSource, rescheduleFixtures, RescheduleFailure, saveData } from '../../sync/remoteData';
-import { changeFixtureTime, swapFixtureTimes } from '../../tournament/fixtureEdit';
+import {
+  changeFixtureTime,
+  postponeDay,
+  setPostponed,
+  swapFixtureTimes,
+} from '../../tournament/fixtureEdit';
 import type { TournamentState } from '../../tournament/standings';
 import { fixtureTeams } from '../../tournament/standings';
 import { formatTime, slotLabel } from '../../utils/fixtureText';
@@ -15,7 +20,8 @@ import { toast } from '../common/Toast';
 
 /**
  * Super admin or scorer: give a match that has not started a new start time,
- * or let it trade times with another match on the same day.
+ * let it trade times with another match on the same day, or postpone it
+ * (alone or with the rest of that day) until a new date is announced.
  */
 export function RescheduleSheet({
   fx,
@@ -65,6 +71,35 @@ export function RescheduleSheet({
     }
   };
 
+  // Today's other matches that could be postponed together with this one
+  const dayOpen = FIXTURES.filter((x) => x.date === fx.date && notStarted(x) && !x.postponed);
+  const postponed = !!fx.postponed;
+
+  const postponeOne = () => {
+    if (!confirm(t('reschedule.postponeAsk', { n: f.num(fx.no) }))) return;
+    void save(
+      setPostponed(FIXTURES, fx.id, true),
+      t('reschedule.savedPostponed', { n: f.num(fx.no) }),
+    );
+  };
+  const postponeAll = () => {
+    const n = f.num(dayOpen.length);
+    if (!confirm(t('reschedule.postponeDayAsk', { n }))) return;
+    void save(
+      postponeDay(
+        FIXTURES,
+        fx.date,
+        dayOpen.map((x) => x.id),
+      ),
+      t('reschedule.savedPostponedDay', { n }),
+    );
+  };
+  const unpostpone = () =>
+    void save(
+      setPostponed(FIXTURES, fx.id, false),
+      t('reschedule.savedUnpostponed', { n: f.num(fx.no) }),
+    );
+
   const validTime = /^([01]\d|2[0-3]):[0-5]\d$/.test(time);
 
   return (
@@ -94,6 +129,53 @@ export function RescheduleSheet({
       <p className="text-sm text-slate-500 dark:text-slate-400">
         {t('reschedule.now', { time: formatTime(fx.time, lang, f) })}
       </p>
+
+      <section className="mt-4 rounded-xl bg-amber-50 p-3 ring-1 ring-amber-300 dark:bg-amber-950/40 dark:ring-amber-700/60">
+        {postponed ? (
+          <>
+            <p className="text-sm font-semibold text-amber-900 dark:text-amber-200">
+              {t('reschedule.postponedNow')}
+            </p>
+            <button
+              type="button"
+              className={`${btn.secondary} mt-3 w-full`}
+              disabled={busy}
+              onClick={unpostpone}
+            >
+              {t('reschedule.unpostpone')}
+            </button>
+          </>
+        ) : (
+          <>
+            <h3 className="text-sm font-semibold text-amber-900 dark:text-amber-200">
+              {t('reschedule.postponeTitle')}
+            </h3>
+            <div className="mt-2 flex flex-col gap-2">
+              <button
+                type="button"
+                className="min-h-11 rounded-xl bg-amber-600 px-4 text-sm font-semibold text-white active:scale-[.98] disabled:opacity-50"
+                disabled={busy}
+                onClick={postponeOne}
+              >
+                {t('reschedule.postpone')}
+              </button>
+              {dayOpen.length > 1 && (
+                <button
+                  type="button"
+                  className="min-h-11 rounded-xl border border-amber-600 px-4 text-sm font-semibold text-amber-800 active:scale-[.98] disabled:opacity-50 dark:text-amber-300"
+                  disabled={busy}
+                  onClick={postponeAll}
+                >
+                  {t('reschedule.postponeDay', { n: f.num(dayOpen.length) })}
+                </button>
+              )}
+            </div>
+          </>
+        )}
+        <p className="mt-2 text-xs text-amber-900/80 dark:text-amber-200/80">
+          {t('reschedule.newDateNote')}
+        </p>
+      </section>
 
       <label className="mt-4 block">
         <span className="mb-1 block text-sm font-semibold">{t('reschedule.newTime')}</span>

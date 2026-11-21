@@ -1,5 +1,5 @@
 import { FIXTURES, type Fixture } from '../data/fixtures';
-import { onlyTimesChanged } from '../tournament/fixtureEdit';
+import { onlyScorerEdits } from '../tournament/fixtureEdit';
 import { TOURNAMENT_TEAMS, type TournamentTeam } from '../data/teams';
 import { supabase, withTimeout } from './supabase';
 
@@ -149,7 +149,8 @@ export class RescheduleFailure extends Error {
 }
 
 /**
- * Super admin or scorer: save new start times (and the day's new order).
+ * Super admin or scorer: save new start times (and the day's new order), or
+ * postpone a match / undo it.
  * The server checks that nothing else changed, so a scorer cannot edit teams
  * this way. When someone else saved in the meantime, the newer list is loaded
  * and 'stale' is thrown so the person can check and try again.
@@ -158,7 +159,7 @@ export async function rescheduleFixtures(next: Fixture[]): Promise<void> {
   if (!supabase) throw new RescheduleFailure('offline');
   const base = applied.fixtures;
   if (!base) throw new RescheduleFailure('notPublished');
-  if (!onlyTimesChanged(FIXTURES, next)) throw new RescheduleFailure('onlyTime');
+  if (!onlyScorerEdits(FIXTURES, next)) throw new RescheduleFailure('onlyTime');
   let res: { data: unknown; error: { message: string } | null; status?: number };
   try {
     res = await withTimeout(

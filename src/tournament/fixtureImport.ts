@@ -173,6 +173,13 @@ export function parseFixtureRows(
       ...(old?.abandoned && sameSlot(old.teamA, teamA) && sameSlot(old.teamB, teamB)
         ? { abandoned: true }
         : {}),
+      // Still postponed until the file gives it a new date
+      ...(old?.postponed &&
+      old.date === date &&
+      sameSlot(old.teamA, teamA) &&
+      sameSlot(old.teamB, teamB)
+        ? { postponed: true }
+        : {}),
     });
   }
 

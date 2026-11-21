@@ -65,6 +65,33 @@ export function setAbandoned(list: readonly Fixture[], id: string, on: boolean):
   return next;
 }
 
+/**
+ * Super admin or scorer: postpone a match (new date to be announced later)
+ * or undo it. The key is removed when undone, so the saved list stays as before.
+ */
+export function setPostponed(list: readonly Fixture[], id: string, on: boolean): Fixture[] {
+  const i = indexOf(list, id);
+  const next = [...list];
+  const fx: Fixture = { ...list[i] };
+  if (on) fx.postponed = true;
+  else delete fx.postponed;
+  next[i] = fx;
+  return next;
+}
+
+/**
+ * Postpones every listed match on one day at once (e.g. rain all day).
+ * Only the ids given are touched, so a match that already started is left alone.
+ */
+export function postponeDay(
+  list: readonly Fixture[],
+  date: string,
+  ids: readonly string[],
+): Fixture[] {
+  const pick = new Set(ids);
+  return list.map((f) => (f.date === date && pick.has(f.id) ? { ...f, postponed: true } : f));
+}
+
 export function updateFixture(
   list: readonly Fixture[],
   id: string,
@@ -72,7 +99,10 @@ export function updateFixture(
 ): Fixture[] {
   const i = indexOf(list, id);
   const next = [...list];
-  next[i] = { ...list[i], ...patch, id: list[i].id };
+  const fx: Fixture = { ...list[i], ...patch, id: list[i].id };
+  // A new date is the announcement a postponed match was waiting for
+  if (patch.date !== undefined && patch.date !== list[i].date) delete fx.postponed;
+  next[i] = fx;
   return next;
 }
 
@@ -182,8 +212,11 @@ export function swapFixtureTimes(list: readonly Fixture[], idA: string, idB: str
   return sortDay(swapped, a.date);
 }
 
-/** True when `next` differs from `prev` only in start times and order. */
-export function onlyTimesChanged(prev: readonly Fixture[], next: readonly Fixture[]): boolean {
+/**
+ * True when `next` differs from `prev` only in start times, order and the
+ * postponed mark: the changes a scorer may save (the server checks the same).
+ */
+export function onlyScorerEdits(prev: readonly Fixture[], next: readonly Fixture[]): boolean {
   if (prev.length !== next.length) return false;
   const byId = new Map(prev.map((f) => [f.id, f]));
   // Key order does not matter (the server compares JSON values the same way)
@@ -198,6 +231,7 @@ export function onlyTimesChanged(prev: readonly Fixture[], next: readonly Fixtur
   const strip = (f: Fixture) => {
     const rest: Partial<Fixture> = { ...f };
     delete rest.time;
+    delete rest.postponed;
     return JSON.stringify(canon(rest));
   };
   return (

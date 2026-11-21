@@ -56,7 +56,9 @@ export function teamRecord(
     won,
     lost,
     tiedNr,
-    next: mine.find((fx) => fx.date >= today && ts.outcomes.get(fx.id)?.status !== 'completed'),
+    next: mine.find(
+      (fx) => fx.date >= today && !fx.postponed && ts.outcomes.get(fx.id)?.status !== 'completed',
+    ),
     onlyGroupSoFar: mine.every((fx) => fx.stage === 'groupA' || fx.stage === 'groupB'),
   };
 }
