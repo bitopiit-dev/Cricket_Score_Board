@@ -180,6 +180,26 @@ Each team has its own folder under `public/players/`, named after the team's `id
 Team logos work the same way. Put the file in `public/icons/teams/`, for example
 `public/icons/teams/ddc.png`, and add `logo: 'icons/teams/ddc.png'` to the team.
 
+## Postponed matches (rain etc.)
+
+When a match cannot be played, a super admin or a scorer opens **Fixtures**,
+taps **Change time / Postpone** on the match and chooses **Postpone this match**
+(or **Postpone all matches this day**). Everyone then sees:
+
+- a **Postponed** badge on the match, with "The new date will be announced later";
+- a 🌧️ announcement at the top of Home and Live listing every postponed match;
+- the countdown and "next matches" skipping it.
+
+A postponed match earns no points and stays on its old date until the super
+admin gives it a new date in **Admin → Fixtures**; changing the date removes the
+mark on its own. The mark can also be undone from the same sheet if play goes
+ahead after all.
+
+Scorers save this through `reschedule_fixtures`, which accepts only start-time
+and postponed changes. Run `supabase/patch-5-postpone.sql` once in the SQL
+Editor; until then a scorer's postpone is refused (the super admin can still
+postpone from Admin → Fixtures).
+
 ## Media gallery
 
 **More → Media** (`#/media`) shows photo albums by season (BPL-2027, and any

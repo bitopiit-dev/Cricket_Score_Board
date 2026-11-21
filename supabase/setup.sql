@@ -129,7 +129,8 @@ drop trigger if exists stamp_app_data on public.app_data;
 create trigger stamp_app_data before insert or update on public.app_data
   for each row execute function public.stamp_app_data();
 
--- 9. Match times: a super admin or a scorer may change start times only (patch 3).
+-- 9. Match times: a super admin or a scorer may change start times, or mark a
+--    match postponed / undo it, and nothing else (patches 3 and 5).
 create or replace function public.reschedule_fixtures(next jsonb, base_updated_at timestamptz)
   returns timestamptz
   language plpgsql security definer set search_path = public as $$
@@ -159,7 +160,7 @@ begin
        select 1 from jsonb_array_elements(next) n
        where not exists (
          select 1 from jsonb_array_elements(cur) c
-         where c->>'id' = n->>'id' and (c - 'time') = (n - 'time')
+         where c->>'id' = n->>'id' and (c - 'time' - 'postponed') = (n - 'time' - 'postponed')
        )
      ) then
     raise exception 'only_time';
@@ -170,6 +171,14 @@ begin
     where coalesce(n->>'time', '') !~ '^([01][0-9]|2[0-3]):[0-5][0-9]$'
   ) then
     raise exception 'bad_time';
+  end if;
+
+  -- "postponed" is either missing or true
+  if exists (
+    select 1 from jsonb_array_elements(next) n
+    where n ? 'postponed' and n->'postponed' <> 'true'::jsonb
+  ) then
+    raise exception 'only_time';
   end if;
 
   new_at := now();

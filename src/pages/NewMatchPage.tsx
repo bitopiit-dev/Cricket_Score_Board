@@ -63,7 +63,9 @@ export default function NewMatchPage() {
       ? ` (${t('newMatch.statusDone')})`
       : status && status !== 'scheduled'
         ? ` (${t('newMatch.statusLive')})`
-        : '';
+        : fixtureById(id)?.postponed
+          ? ` (${t('newMatch.statusPostponed')})`
+          : '';
   };
   const sidesOf = (id: string): [string | null, string | null] =>
     tour ? fixtureTeams(fixtureById(id)!, tour.ts) : [null, null];

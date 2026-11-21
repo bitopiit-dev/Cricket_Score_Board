@@ -1,4 +1,4 @@
-import { FIXTURES, type Fixture, type StageId } from '../data/fixtures';
+import { FIXTURES, isPostponed, type Fixture, type StageId } from '../data/fixtures';
 import { BALLS_PER_OVER } from '../engine/rules';
 import { deriveMatchState } from '../engine/scoring';
 import type { InningsState, Match, MatchState } from '../engine/types';
@@ -27,7 +27,7 @@ export type HomeHero =
 
 const isLive = (m: Match, s: MatchState) => m.events.length > 0 && s.phase !== 'completed';
 
-/** The next fixture that has not started, allowing for a late start. */
+/** The next fixture that has not started, allowing for a late start. Postponed ones wait for a new date. */
 export function nextFixture(
   ts: TournamentState,
   now: number,
@@ -37,6 +37,7 @@ export function nextFixture(
     .sort((a, b) => fixtureStart(a) - fixtureStart(b))
     .find(
       (f) =>
+        !isPostponed(f) &&
         ts.outcomes.get(f.id)?.status === 'scheduled' &&
         fixtureStart(f) > now - LATE_START_GRACE_MS,
     );
@@ -101,6 +102,19 @@ export function pickHero(
   return next ? { kind: 'upcoming', fixture: next } : { kind: 'over' };
 }
 
+/**
+ * Postponed fixtures still waiting for a new date, by match number. A match
+ * that got going anyway is no longer listed.
+ */
+export function postponedFixtures(
+  ts: TournamentState,
+  fixtures: readonly Fixture[] = FIXTURES,
+): Fixture[] {
+  return fixtures
+    .filter((f) => isPostponed(f) && (ts.outcomes.get(f.id)?.status ?? 'scheduled') === 'scheduled')
+    .sort((a, b) => a.no - b.no);
+}
+
 /** The next `count` fixtures still to be played, after `skipId` (shown in the hero). */
 export function upcomingFixtures(
   ts: TournamentState,
@@ -116,6 +130,7 @@ export function upcomingFixtures(
     .filter(
       (f) =>
         !skipped.has(f.id) &&
+        !isPostponed(f) &&
         ts.outcomes.get(f.id)?.status === 'scheduled' &&
         fixtureStart(f) > now - LATE_START_GRACE_MS,
     )

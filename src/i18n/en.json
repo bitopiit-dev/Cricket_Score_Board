@@ -86,7 +86,8 @@
     "xiCount": "Playing XI: {{n}}/{{of}} picked",
     "statusDone": "finished",
     "statusLive": "in progress",
-    "teamsFromFixture": "Both teams were filled in from the fixture."
+    "teamsFromFixture": "Both teams were filled in from the fixture.",
+    "statusPostponed": "postponed"
   },
   "scoring": {
     "crr": "CRR",
@@ -405,7 +406,9 @@
     "holiday": "holiday",
     "showPast_one": "Show the previous day's matches and results",
     "showPast_other": "Show matches and results from the previous {{n}} days",
-    "hidePast": "Hide earlier days"
+    "hidePast": "Hide earlier days",
+    "postponed": "Postponed",
+    "postponedNote": "Postponed. The new date will be announced later."
   },
   "stage": {
     "groupA": "Group A",
@@ -678,8 +681,8 @@
     "generated": "Report made {{when}}"
   },
   "reschedule": {
-    "change": "Change time",
-    "title": "Match {{n}} start time",
+    "change": "Change time / Postpone",
+    "title": "Match {{n}}: time or postpone",
     "now": "Current time: {{time}}",
     "newTime": "New time",
     "save": "Save new time",
@@ -695,8 +698,19 @@
     "error_notPublished": "Ask the super admin to save the fixtures once from the admin page; then scorers can change times.",
     "error_stale": "Someone changed the fixtures meanwhile. The new list is loaded; check it and try again.",
     "error_notAllowed": "This account may not change match times.",
-    "error_onlyTime": "Only the start time can be changed here.",
-    "error_failed": "Not saved. Try again."
+    "error_onlyTime": "Only the start time or the postponed mark can be changed here. If postponing fails, ask the super admin to run patch-5 in Supabase.",
+    "error_failed": "Not saved. Try again.",
+    "postponeTitle": "Can’t play today (rain etc.)?",
+    "postpone": "Postpone this match",
+    "postponeDay": "Postpone all {{n}} matches this day",
+    "postponeAsk": "Postpone match {{n}}? Everyone will see “Postponed, new date to be announced later”.",
+    "postponeDayAsk": "Postpone all {{n}} matches on this day that have not started?",
+    "postponedNow": "This match is postponed. The new date will be announced later.",
+    "unpostpone": "Undo postpone (play on the old date)",
+    "savedPostponed": "Match {{n}} postponed",
+    "savedPostponedDay": "{{n}} matches postponed",
+    "savedUnpostponed": "Match {{n}} is back on its date",
+    "newDateNote": "The super admin sets the new date from Admin → Fixtures; the “Postponed” mark goes away then."
   },
   "playerCard": {
     "title": "Player cards",
@@ -708,5 +722,11 @@
     "bowlDetail": "in {{overs}} overs",
     "batting": "Batting",
     "bowling": "Bowling"
+  },
+  "postponedNotice": {
+    "title_one": "Match {{list}} postponed",
+    "title_other": "Matches {{list}} postponed",
+    "body": "The new date will be announced later.",
+    "link": "See fixtures"
   }
 }

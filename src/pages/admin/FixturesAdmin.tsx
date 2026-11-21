@@ -7,12 +7,13 @@ import {
   addFixture,
   deleteFixture,
   editLevel,
+  type FixtureWarning,
   hasScore,
   moveFixture,
   setAbandoned,
+  setPostponed,
   updateFixture,
   validateFixture,
-  type FixtureWarning,
 } from '../../tournament/fixtureEdit';
 import { dataSource, resetData, saveData } from '../../sync/remoteData';
 import { parseFixtureRows } from '../../tournament/fixtureImport';
@@ -256,6 +257,10 @@ export function FixturesAdmin({ email }: { email: string }) {
                   <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-900">
                     পরিত্যক্ত
                   </span>
+                ) : fx.postponed ? (
+                  <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-900">
+                    স্থগিত
+                  </span>
                 ) : (
                   hasScore(o) && (
                     <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-800">
@@ -324,6 +329,22 @@ export function FixturesAdmin({ email }: { email: string }) {
                   />
                   বৃষ্টি বা অন্য কারণে পরিত্যক্ত (দুই দল ১ পয়েন্ট)
                 </label>
+              )}
+              {!hasScore(o) && !fx.abandoned && (
+                <label className="flex min-h-11 items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    className="size-5 accent-amber-600"
+                    checked={!!fx.postponed}
+                    onChange={(e) => change(setPostponed(list, fx.id, e.target.checked))}
+                  />
+                  স্থগিত, নতুন তারিখ পরে জানানো হবে
+                </label>
+              )}
+              {fx.postponed && (
+                <p className="text-xs text-amber-800 dark:text-amber-300">
+                  নতুন তারিখ ঠিক হলে ওপরে তারিখ বদলে দিন; “স্থগিত” চিহ্ন নিজে থেকেই উঠে যাবে।
+                </p>
               )}
               {warnings.length > 0 && (
                 <p className="mt-1 text-xs font-semibold text-amber-700">

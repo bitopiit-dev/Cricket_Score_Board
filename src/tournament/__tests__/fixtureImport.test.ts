@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { FIXTURES } from '../../data/fixtures';
 import officialFixture from '../../../docs/fixture-bpl-2027.json';
+import { setPostponed } from '../fixtureEdit';
 import { parseFixtureRows, readDate, readSlot, readStage, readTime } from '../fixtureImport';
 import type { FixtureOutcome } from '../standings';
 
@@ -64,6 +65,19 @@ describe('fixture import', () => {
     );
     expect(r.changed).toBe(1);
     expect(r.fixtures[1]).toMatchObject({ id: FIXTURES[1].id, time: '14:30' });
+  });
+
+  it('keeps a postponed match postponed until the file gives it a new date', () => {
+    const current = setPostponed(FIXTURES, FIXTURES[0].id, true);
+    expect(parseFixtureRows(committeeSheet(), current).fixtures[0].postponed).toBe(true);
+    const moved = parseFixtureRows(
+      committeeSheet((row) => {
+        if (row[0] === 1) row[1] = Number(row[1]) + 30;
+      }),
+      current,
+    );
+    expect(moved.errors).toEqual([]);
+    expect(moved.fixtures[0].postponed).toBeUndefined();
   });
 
   it('refuses a file with an unknown team and says which row', () => {

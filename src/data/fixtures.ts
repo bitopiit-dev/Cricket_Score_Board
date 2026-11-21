@@ -42,7 +42,17 @@ export interface Fixture {
    * result. It then counts as a no result: 1 point each, no effect on NRR.
    */
   abandoned?: boolean;
+  /**
+   * Set by the super admin or a scorer when a match that has not started is
+   * put off (e.g. rain) and its new date will be announced later. It stays on
+   * the old date until then, earns no points, and is left out of the
+   * countdown and the "next match" lists. Giving it a new date clears it.
+   */
+  postponed?: boolean;
 }
+
+/** True when the match is postponed and waits for a new date. */
+export const isPostponed = (fx: Pick<Fixture, 'postponed'> | undefined): boolean => !!fx?.postponed;
 
 /** True when the match belongs to a fixture the admin declared abandoned. */
 export function isAbandonedMatch(m: { fixtureId?: string }): boolean {

@@ -3,7 +3,7 @@ import type { Fixture } from '../../data/fixtures';
 import {
   FixtureEditError,
   changeFixtureTime,
-  onlyTimesChanged,
+  onlyScorerEdits,
   swapFixtureTimes,
   updateFixture,
 } from '../fixtureEdit';
@@ -75,19 +75,19 @@ describe('changing one start time', () => {
 
 describe('what a scorer may save', () => {
   it('accepts new times and a new order', () => {
-    expect(onlyTimesChanged(LIST, swapFixtureTimes(LIST, 'f3', 'f4'))).toBe(true);
+    expect(onlyScorerEdits(LIST, swapFixtureTimes(LIST, 'f3', 'f4'))).toBe(true);
   });
 
   it('rejects any other change', () => {
-    expect(onlyTimesChanged(LIST, updateFixture(LIST, 'f3', { teamA: team('x') }))).toBe(false);
-    expect(onlyTimesChanged(LIST, updateFixture(LIST, 'f3', { date: '2026-11-20' }))).toBe(false);
-    expect(onlyTimesChanged(LIST, updateFixture(LIST, 'f3', { no: 9 }))).toBe(false);
-    expect(onlyTimesChanged(LIST, LIST.slice(1))).toBe(false);
-    expect(onlyTimesChanged(LIST, [...LIST.slice(1), LIST[1]])).toBe(false);
+    expect(onlyScorerEdits(LIST, updateFixture(LIST, 'f3', { teamA: team('x') }))).toBe(false);
+    expect(onlyScorerEdits(LIST, updateFixture(LIST, 'f3', { date: '2026-11-20' }))).toBe(false);
+    expect(onlyScorerEdits(LIST, updateFixture(LIST, 'f3', { no: 9 }))).toBe(false);
+    expect(onlyScorerEdits(LIST, LIST.slice(1))).toBe(false);
+    expect(onlyScorerEdits(LIST, [...LIST.slice(1), LIST[1]])).toBe(false);
   });
 
   it('ignores key order inside a fixture', () => {
     const reordered = LIST.map(({ teamB, teamA, ...rest }) => ({ teamB, ...rest, teamA }));
-    expect(onlyTimesChanged(LIST, reordered)).toBe(true);
+    expect(onlyScorerEdits(LIST, reordered)).toBe(true);
   });
 });

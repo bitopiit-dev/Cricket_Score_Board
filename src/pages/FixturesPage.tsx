@@ -337,7 +337,7 @@ function FixtureCard({
   ts: TournamentState;
   dark?: boolean;
   highlight?: boolean;
-  /** Set for a super admin or a scorer: opens the change-time sheet. */
+  /** Set for a super admin or a scorer: opens the change-time / postpone sheet. */
   onMove?: (fx: Fixture) => void;
 }) {
   const { t } = useTranslation();
@@ -397,6 +397,12 @@ function FixtureCard({
       </span>
     ) : outcome.status === 'completed' ? (
       <span className={`font-bold ${doneText}`}>{t('fixtures.completed')}</span>
+    ) : fx.postponed ? (
+      <span
+        className={`rounded-full px-2 py-0.5 font-bold ${dark ? 'bg-amber-300/15 text-amber-300' : 'bg-amber-100 text-amber-800 dark:bg-amber-300/15 dark:text-amber-300'}`}
+      >
+        {t('fixtures.postponed')}
+      </span>
     ) : (
       <span>{formatTime(fx.time, lang, f)}</span>
     );
@@ -445,6 +451,13 @@ function FixtureCard({
             {t('reschedule.change')}
           </button>
         </div>
+      )}
+      {fx.postponed && outcome.status === 'scheduled' && (
+        <p
+          className={`mt-2 text-sm font-semibold ${dark ? 'text-amber-300' : 'text-amber-700 dark:text-amber-300'}`}
+        >
+          {t('fixtures.postponedNote')}
+        </p>
       )}
       {outcome.abandoned && (
         <p
