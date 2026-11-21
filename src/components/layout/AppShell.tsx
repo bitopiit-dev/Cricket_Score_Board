@@ -11,6 +11,7 @@ import { LanguageToggle, useGoBack } from '../common/Header';
 import { AppSyncStatus } from './AppSyncStatus';
 import { TabBar } from './TabBar';
 import { DataUpdatedBar } from './DataUpdatedBar';
+import { LogoFireworks } from './LogoFireworks';
 
 /**
  * Layout for the main sections: dark header with the tournament name,
@@ -21,19 +22,23 @@ export function AppShell() {
   const { pathname } = useLocation();
   return (
     <div className="flex min-h-dvh flex-col pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:pb-8">
-      <header className="bg-night-950 text-white shadow-lg">
+      {/* Clipped so the fireworks never spill past the header or widen the page */}
+      <header className="overflow-hidden bg-night-950 text-white shadow-lg">
         <div className="mx-auto flex max-w-5xl flex-col gap-3 px-3 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 md:px-4">
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-4">
-              <Link to="/home" className="inline-block max-w-full shrink-0 active:scale-95">
-                <img
-                  src={assetUrl(BPL_LOGO)}
-                  width={331}
-                  height={200}
-                  alt={`${APP_TITLE} | ${APP_SUBTITLE}`}
-                  className="h-11 w-auto max-w-full object-contain sm:h-[56px] md:h-16"
-                />
-              </Link>
+              {/* Fireworks around the logo; tapping it sets off a bigger burst */}
+              <LogoFireworks>
+                <Link to="/home" className="inline-block max-w-full active:scale-95">
+                  <img
+                    src={assetUrl(BPL_LOGO)}
+                    width={331}
+                    height={200}
+                    alt={`${APP_TITLE} | ${APP_SUBTITLE}`}
+                    className="h-11 w-auto max-w-full object-contain sm:h-[56px] md:h-16"
+                  />
+                </Link>
+              </LogoFireworks>
               {/* The logo's alt text already names the league, so screen readers skip this.
                   On phones it wraps onto two lines between the two logos. */}
               <span
