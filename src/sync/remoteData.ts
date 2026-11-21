@@ -1,26 +1,40 @@
+import { COMMITTEE_MEMBERS, COMMITTEE_ROLES, type CommitteeMember } from '../data/committee';
 import { FIXTURES, type Fixture } from '../data/fixtures';
 import { onlyScorerEdits } from '../tournament/fixtureEdit';
 import { TOURNAMENT_TEAMS, type TournamentTeam } from '../data/teams';
 import { supabase, withTimeout } from './supabase';
 
 /**
- * Fixtures and teams the super admin edits live in Supabase (table app_data).
+ * Fixtures, teams and the committee the super admin edits live in Supabase (table app_data).
  * The copies in the code are the starting point and the fallback: with no
  * network, the last downloaded version (kept on the phone) or the built-in one
  * is used, so the app always opens.
  *
- * The rest of the app reads FIXTURES / TOURNAMENT_TEAMS directly, so a new
- * version is copied into those arrays in place.
+ * The rest of the app reads FIXTURES / TOURNAMENT_TEAMS / COMMITTEE_MEMBERS
+ * directly, so a new version is copied into those arrays in place.
  */
-export type DocKey = 'fixtures' | 'teams';
+export type DocKey = 'fixtures' | 'teams' | 'committee';
+const KEYS: DocKey[] = ['fixtures', 'teams', 'committee'];
 interface Doc<T> {
   value: T;
   updatedAt: string;
 }
 
-export const BUILT_IN: { fixtures: Fixture[]; teams: TournamentTeam[] } = {
+export const BUILT_IN: {
+  fixtures: Fixture[];
+  teams: TournamentTeam[];
+  committee: CommitteeMember[];
+} = {
   fixtures: structuredClone([...FIXTURES]),
   teams: structuredClone([...TOURNAMENT_TEAMS]),
+  committee: structuredClone([...COMMITTEE_MEMBERS]),
+};
+
+/** The array the app reads for each list. */
+const TARGET: Record<DocKey, readonly unknown[]> = {
+  fixtures: FIXTURES,
+  teams: TOURNAMENT_TEAMS,
+  committee: COMMITTEE_MEMBERS,
 };
 
 const CACHE = 'bpl:data:';
@@ -38,6 +52,18 @@ export function isValidDoc(key: DocKey, value: unknown): boolean {
         f && typeof f.id === 'string' && /^\d{4}-\d\d-\d\d$/.test(f.date) && f.teamA && f.teamB,
     );
   }
+  if (key === 'committee') {
+    return (
+      value.every(
+        (m) =>
+          m &&
+          typeof m.id === 'string' &&
+          typeof m.name === 'string' &&
+          m.name.trim() !== '' &&
+          COMMITTEE_ROLES.includes(m.role),
+      ) && new Set(value.map((m: CommitteeMember) => m.id)).size === value.length
+    );
+  }
   return value.every(
     (t) => t && typeof t.id === 'string' && typeof t.name === 'string' && Array.isArray(t.players),
   );
@@ -45,8 +71,7 @@ export function isValidDoc(key: DocKey, value: unknown): boolean {
 
 function apply(key: DocKey, doc: Doc<unknown>) {
   if (!isValidDoc(key, doc.value)) return false;
-  if (key === 'fixtures') replaceAll(FIXTURES, doc.value as Fixture[]);
-  else replaceAll(TOURNAMENT_TEAMS, doc.value as TournamentTeam[]);
+  replaceAll(TARGET[key], doc.value as unknown[]);
   applied[key] = doc.updatedAt;
   return true;
 }
@@ -79,26 +104,25 @@ export function dataSource(key: DocKey): string {
  * `ms` for a newer one from Supabase. Never throws.
  */
 export async function loadData(ms = 2500): Promise<void> {
-  for (const key of ['fixtures', 'teams'] as DocKey[]) {
+  for (const key of KEYS) {
     const cached = readCache(key);
     if (cached) apply(key, cached);
   }
   if (!supabase) return;
   try {
     const { data, error } = await withTimeout(
-      supabase.from('app_data').select('key, value, updated_at').in('key', ['fixtures', 'teams']),
+      supabase.from('app_data').select('key, value, updated_at').in('key', KEYS),
       ms,
     );
     if (error || !data) return;
     const remote = new Map(data.map((r) => [r.key as DocKey, r]));
-    for (const key of ['fixtures', 'teams'] as DocKey[]) {
+    for (const key of KEYS) {
       const row = remote.get(key);
       if (!row) {
         // The admin went back to the built-in version
         if (applied[key]) {
           writeCache(key, null);
-          if (key === 'fixtures') replaceAll(FIXTURES, BUILT_IN.fixtures);
-          else replaceAll(TOURNAMENT_TEAMS, BUILT_IN.teams);
+          replaceAll(TARGET[key], BUILT_IN[key]);
           delete applied[key];
         }
         continue;
@@ -111,7 +135,7 @@ export async function loadData(ms = 2500): Promise<void> {
   }
 }
 
-/** Calls `onChange` when the admin publishes a new fixture or team list. */
+/** Calls `onChange` when the admin publishes a new fixture, team or committee list. */
 export function watchData(onChange: () => void): () => void {
   if (!supabase) return () => {};
   const client = supabase;
@@ -192,7 +216,6 @@ export async function resetData(key: DocKey): Promise<void> {
   const { error } = await supabase.from('app_data').delete().eq('key', key);
   if (error) throw new Error(error.message);
   writeCache(key, null);
-  if (key === 'fixtures') replaceAll(FIXTURES, BUILT_IN.fixtures);
-  else replaceAll(TOURNAMENT_TEAMS, BUILT_IN.teams);
+  replaceAll(TARGET[key], BUILT_IN[key]);
   delete applied[key];
 }

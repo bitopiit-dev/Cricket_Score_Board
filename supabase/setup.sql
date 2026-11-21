@@ -22,7 +22,7 @@ grant execute on function public.my_role() to anon, authenticated;
 
 -- 2. Fixtures, teams and settings, each kept as one JSON document.
 create table if not exists public.app_data (
-  key text primary key check (key in ('fixtures', 'teams', 'settings')),
+  key text primary key check (key in ('fixtures', 'teams', 'settings', 'committee')),
   value jsonb not null,
   updated_at timestamptz not null default now(),
   updated_by text
