@@ -46,7 +46,7 @@ export default function PointsPage() {
   );
 }
 
-function Table({
+export function Table({
   stage,
   rows,
   qualify,

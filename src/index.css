@@ -380,3 +380,40 @@ table,
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* TV mode (#/tv): each side panel fades in when it takes its turn */
+.tv-panel {
+  animation: tv-panel-in 0.6s ease-out;
+}
+/*
+ * The side panel is narrower than the window, so the wide-screen column widths of
+ * the points table would squeeze the team names; give the numbers narrow columns.
+ */
+.tv-panel col {
+  width: 2rem;
+}
+.tv-panel col:first-child {
+  width: 1.5rem;
+}
+.tv-panel col:nth-child(2) {
+  width: auto;
+}
+.tv-panel col:nth-child(7) {
+  width: 2.75rem;
+}
+.tv-panel col:nth-child(8) {
+  width: 3.75rem;
+}
+.tv-panel td {
+  padding-block: 0.3rem;
+}
+@keyframes tv-panel-in {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tv-panel {
+    animation: none;
+  }
+}
