@@ -730,5 +730,10 @@
     "title_other": "Matches {{list}} postponed",
     "body": "The new date will be announced later.",
     "link": "See fixtures"
+  },
+  "tv": {
+    "title": "TV scoreboard",
+    "fullscreen": "Full screen",
+    "scan": "Scan the QR code to follow the score on your phone"
   }
 }

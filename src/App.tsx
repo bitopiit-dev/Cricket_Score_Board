@@ -28,6 +28,8 @@ const AlertsPage = lazyPage(() => import('./pages/AlertsPage'));
 // Only the admin downloads the admin screens (not preloaded)
 const AdminPage = lazy(() => import('./pages/admin/AdminPage'));
 const MatchReportPage = lazy(() => import('./pages/MatchReportPage'));
+// Only a TV opens this (not preloaded)
+const TvPage = lazy(() => import('./pages/TvPage'));
 
 /**
  * HashRouter so the app works from any static host (and offline) without
@@ -76,6 +78,7 @@ export default function App() {
               }
             />
             <Route path="/match/:id" element={<ScoringPage />} />
+            <Route path="/tv" element={<TvPage />} />
             <Route
               path="/report/:id"
               element={

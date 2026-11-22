@@ -63,6 +63,16 @@ Every section has its own link, so the phone's back button returns to the previo
 
 On phones the tabs sit at the bottom of the screen; on wider screens they sit in the header.
 
+### TV mode
+
+Open `#/tv` (live: `…/Cricket_Score_Board/#/tv`) on a smart TV's browser, or on a
+laptop or phone connected to the TV. It shows a full-screen board with no tab bar:
+the match on the left (countdown, live score, then the result) and, on the right,
+the points tables, the next matches and the tournament progress, changing every
+12 seconds. A QR code lets people open the app on their phone. Press OK on the
+remote (the **Full screen** button) to hide the browser bars. The screen is kept
+awake where the browser allows it.
+
 ## Tournament rules
 
 Match setup offers a "Tournament rules" preset; each rule can be switched on or off:

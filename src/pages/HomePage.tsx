@@ -255,7 +255,7 @@ function matchSides(m: Match): [Side, Side] {
   ];
 }
 
-function Hero({ hero, now }: { hero: HomeHero; now: number }) {
+export function Hero({ hero, now }: { hero: HomeHero; now: number }) {
   const { t } = useTranslation();
   const f = useFormat();
   const lang = usePrefs((s) => s.lang);
@@ -602,7 +602,7 @@ function LiveTicker({ match, state }: { match: Match; state: MatchState }) {
 
 /* ------------------------------- Below hero ------------------------------ */
 
-function Progress({ ts }: { ts: TournamentState }) {
+export function Progress({ ts }: { ts: TournamentState }) {
   const { t } = useTranslation();
   const f = useFormat();
   const p = tournamentProgress(ts);
@@ -644,7 +644,7 @@ function Progress({ ts }: { ts: TournamentState }) {
   );
 }
 
-function NextMatches({ fixtures, ts }: { fixtures: Fixture[]; ts: TournamentState }) {
+export function NextMatches({ fixtures, ts }: { fixtures: Fixture[]; ts: TournamentState }) {
   const { t } = useTranslation();
   const f = useFormat();
   const lang = usePrefs((s) => s.lang);
