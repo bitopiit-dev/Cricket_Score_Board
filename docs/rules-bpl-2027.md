@@ -88,3 +88,10 @@
     Any complaint must be submitted clearly in writing to the committee by the team head.
 34. কমিটি যে কোন সময় যে কোন সিদ্ধান্ত গ্রহণ, পরিবর্তন ও পরিমার্জন করার অধিকার বহন করবে।
     The committee reserves the right to take, change or amend any decision at any time.
+
+## সংযোজন / Addendum
+
+(অ্যাপে "ম্যাচ ও টুর্নামেন্ট" অংশে দেখানো হয় / shown in the "Match & Tournament" section of the app)
+
+35. বৃষ্টি বা যে কোন প্রাকৃতিক কারণে কোন খেলা পরিত্যক্ত হলে উভয় দল ১ পয়েন্ট করে পাবে।
+    If a match is abandoned due to rain or any other natural cause, both teams will get 1 point each.
