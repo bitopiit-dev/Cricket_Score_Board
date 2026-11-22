@@ -86,7 +86,7 @@ export const RULE_SECTIONS: RuleSection[] = [
         },
       },
       {
-        n: 35,
+        n: 8,
         text: {
           bn: 'বৃষ্টি বা যে কোন প্রাকৃতিক কারণে কোন খেলা পরিত্যক্ত হলে উভয় দল ১ পয়েন্ট করে পাবে।',
           en: 'If a match is abandoned due to rain or any other natural cause, both teams will get 1 point each.',
@@ -100,7 +100,7 @@ export const RULE_SECTIONS: RuleSection[] = [
     title: { bn: 'দল ও খেলোয়াড়', en: 'Teams & Players' },
     rules: [
       {
-        n: 8,
+        n: 9,
         text: {
           bn: 'প্রত্যেক দলে ১১ জন (অতিরিক্ত ৩ জন) সহ ১৪ জন খেলোয়াড় থাকতে পারবে।',
           en: 'Each team may have 14 players: 11 plus 3 extras.',
@@ -108,42 +108,42 @@ export const RULE_SECTIONS: RuleSection[] = [
         inApp: true,
       },
       {
-        n: 9,
+        n: 10,
         text: {
           bn: 'এক দলের খেলোয়াড় অন্য দলে খেলতে পারবেনা।',
           en: 'A player of one team cannot play for another team.',
         },
       },
       {
-        n: 10,
+        n: 11,
         text: {
           bn: 'প্রথম খেলায় খেলোয়াড়দের যে লিস্ট দেওয়া হবে, সেটাই চূড়ান্ত লিস্ট হিসাবে গণ্য হবে। পরবর্তীতে সেই লিস্টের কোন পরিবর্তন করা যাবে না। তবে কেউ যদি রিজাইন দিয়ে চলে যায়, বা যে কোন কারণে চাকুরীচ্যুত হয় তাহলে তার পরিবর্তে অন্য একজন খেলতে পারবে। সেক্ষেত্রে তার জয়েন ডেট ডিসেম্বরের ০১ তারিখের পূর্বে হতে হবে।',
           en: 'The player list submitted for the first match is final and cannot be changed later. However, if a player resigns or leaves employment for any reason, another player may replace them, provided the replacement joined before 1 December.',
         },
       },
       {
-        n: 11,
+        n: 12,
         text: {
           bn: 'প্রত্যেক দলকে অবশ্যই নিজ নিজ জার্সি পরিধান করে খেলতে হবে।',
           en: 'Every team must play in its own jersey.',
         },
       },
       {
-        n: 12,
+        n: 13,
         text: {
           bn: 'প্রত্যেক দল নিজ নিজ ব্যাট দিয়ে খেলতে হবে।',
           en: 'Every team must play with its own bats.',
         },
       },
       {
-        n: 13,
+        n: 14,
         text: {
           bn: 'বল ও টেপ খেলা পরিচালনা কমিটি বহন করবে।',
           en: 'Balls and tape will be provided by the organising committee.',
         },
       },
       {
-        n: 14,
+        n: 15,
         text: {
           bn: '(কিপিং, ব্যাটিং ও ফিল্ডিং) এর সময় কোন প্রকার গ্লাভস ব্যবহার করা যাবে না।',
           en: 'No gloves of any kind may be used while keeping, batting or fielding.',
@@ -156,42 +156,42 @@ export const RULE_SECTIONS: RuleSection[] = [
     title: { bn: 'বোলিং ও নো-বল', en: 'Bowling & No-balls' },
     rules: [
       {
-        n: 15,
+        n: 16,
         text: {
           bn: 'তিন (৩) আঙ্গুলে বল করতে হবে।',
           en: 'The ball must be bowled with three (3) fingers.',
         },
       },
       {
-        n: 16,
+        n: 17,
         text: {
           bn: 'বোলারের বল পিচে ড্রপ খেয়ে স্ট্যাম্পের উপরে উঠলে নো-বল হিসাবে গণ্য হবে।',
           en: 'If the ball bounces on the pitch and rises above stump height, it is a no-ball.',
         },
       },
       {
-        n: 17,
+        n: 18,
         text: {
           bn: 'অতিরিক্ত ঝুঁকে বল করলেও নো-বল হিসাবে গণ্য হবে।',
           en: 'Bowling while leaning forward excessively is a no-ball.',
         },
       },
       {
-        n: 18,
+        n: 19,
         text: {
           bn: 'বল সরাসরি (ফুলটস) হাঁটুর উপরে গেলে নো-বল হিসাবে গণ্য হবে।',
           en: 'A full toss above knee height is a no-ball.',
         },
       },
       {
-        n: 19,
+        n: 20,
         text: {
           bn: 'জোরে বল করলেও নো বল হিসাবে গণ্য হবে।',
           en: 'Bowling fast is also a no-ball.',
         },
       },
       {
-        n: 20,
+        n: 21,
         text: {
           bn: 'বোলারের বল সম্পর্কে ব্যাটসম্যান ছাড়া অন্য কারো অভিযোগ গ্রহণযোগ্য হবেনা।',
           en: "Only the batter may object to a bowler's delivery; complaints from anyone else will not be accepted.",
@@ -204,7 +204,7 @@ export const RULE_SECTIONS: RuleSection[] = [
     title: { bn: 'ব্যাটিং, রান ও আউট', en: 'Batting, Runs & Dismissals' },
     rules: [
       {
-        n: 21,
+        n: 22,
         text: {
           bn: 'ওভার বাউন্ডারী হলে আউট বলে গণ্য হবে।',
           en: 'Hitting the ball over the boundary (a six) is out.',
@@ -212,7 +212,7 @@ export const RULE_SECTIONS: RuleSection[] = [
         inApp: true,
       },
       {
-        n: 22,
+        n: 23,
         text: {
           bn: 'যে কোন ধরনের ক্যাচ আউট হলে পরবর্তী ব্যাটসম্যান স্ট্রাইক করবে।',
           en: 'After any catch dismissal, the incoming batter takes strike.',
@@ -220,14 +220,14 @@ export const RULE_SECTIONS: RuleSection[] = [
         inApp: true,
       },
       {
-        n: 23,
+        n: 24,
         text: {
           bn: 'বল ডেলিভারীর আগে ব্যাটসম্যান পিচ ছেড়ে বের হতে পারবেনা। যদি বের হয় তাহলে বোলার স্টাম্প ভেঙ্গে দিলে তা রান আউট হিসাবে বিবেচিত হবে।',
           en: 'A batter may not leave the crease before the ball is delivered. If they do and the bowler breaks the stumps, it counts as run out.',
         },
       },
       {
-        n: 24,
+        n: 25,
         text: {
           bn: 'সম্পূর্ণ খেলায় অতিরিক্ত রান (বাই রান) সিস্টেম থাকবে।',
           en: 'Extra runs (byes) apply throughout the match.',
@@ -235,7 +235,7 @@ export const RULE_SECTIONS: RuleSection[] = [
         inApp: true,
       },
       {
-        n: 25,
+        n: 26,
         text: {
           bn: 'ব্যাটসম্যান রান নেওয়ার সময় ইচ্ছাকৃত বলে লাথি মারলে ৪ রান মোট রান থেকে বিয়োগ করা হবে।',
           en: 'If a batter deliberately kicks the ball while running, 4 runs are deducted from the team total.',
@@ -243,7 +243,7 @@ export const RULE_SECTIONS: RuleSection[] = [
         inApp: true,
       },
       {
-        n: 26,
+        n: 27,
         text: {
           bn: 'প্রত্যেক দল একটি করে রিভিউ পাবে। রিভিউতে হারলে রিভিউ শেষ, আর রিভিউতে জিতলে রিভিউ থেকে যাবে।',
           en: 'Each team gets one review. An unsuccessful review is lost; a successful review is retained.',
@@ -257,28 +257,28 @@ export const RULE_SECTIONS: RuleSection[] = [
     title: { bn: 'আম্পায়ার ও পুরস্কার', en: 'Umpires & Awards' },
     rules: [
       {
-        n: 27,
+        n: 28,
         text: {
           bn: 'আম্পায়ারের সিদ্ধান্তই চূড়ান্ত বলে গণ্য হবে।',
           en: "The umpire's decision is final.",
         },
       },
       {
-        n: 28,
+        n: 29,
         text: {
           bn: 'খেলা শেষ হওয়ার পর আম্পায়ারদের আলোচনার ভিত্তিতে ম্যান অফ দা ম্যাচ নির্বাচন করা হবে।',
           en: 'After each match, the Man of the Match will be selected by the umpires.',
         },
       },
       {
-        n: 29,
+        n: 30,
         text: {
           bn: 'নক আউট পর্বে প্রত্যেক খেলায় সেরা খেলোয়াড়ের পুরস্কার দেওয়া হবে।',
           en: 'In the knockout stage, a best-player award will be given in every match.',
         },
       },
       {
-        n: 30,
+        n: 31,
         text: {
           bn: 'শুধুমাত্র ফাইনাল খেলায় ম্যান অফ দা ম্যাচ পুরস্কার দেওয়া হবে। এছাড়াও ম্যান অফ দা সিরিজ ও সেরা উইকেট টেকারের পুরস্কার থাকবে।',
           en: 'A Man of the Match prize will be awarded only in the final. There will also be Man of the Series and Best Wicket-Taker awards.',
@@ -292,28 +292,28 @@ export const RULE_SECTIONS: RuleSection[] = [
     title: { bn: 'আচরণ ও শৃঙ্খলা', en: 'Conduct & Discipline' },
     rules: [
       {
-        n: 31,
+        n: 32,
         text: {
           bn: 'খেলা চলাকালীন সময়ে অথবা খেলা শেষ হওয়ার পর আম্পায়ার অথবা অন্য কারো বিরুদ্ধে কোন খেলোয়াড় কোন ধরনের বাজে মন্তব্য, হয়রানীমূলক বক্তব্য ইত্যাদি ব্যবহার করতে পারবে না এবং কোন ধরনের অসন্তোষ দেখানো যাবে না।',
           en: 'During or after a match, no player may make abusive or harassing remarks against the umpire or anyone else, or show any form of dissent.',
         },
       },
       {
-        n: 32,
+        n: 33,
         text: {
           bn: 'আম্পায়ারের সাথে অসদাচরণের কারণে অথবা খেলায় বিশৃঙ্খলা সৃষ্টিকারীর জন্য কমিটির সিদ্ধান্তের ভিত্তিতে জরিমানা ও সাসপেন্ড সহ যে কোন সিদ্ধান্ত গ্রহণ করা হতে পারে।',
           en: 'For misconduct towards an umpire or causing disorder, the committee may impose any penalty, including fines and suspension.',
         },
       },
       {
-        n: 33,
+        n: 34,
         text: {
           bn: 'কোন অভিযোগ থাকলে দলের প্রধানকে লিখিত ভাবে কমিটির নিকট স্পষ্ট ভাবে অভিযোগনামা জমা দিতে হবে।',
           en: 'Any complaint must be submitted clearly in writing to the committee by the team head.',
         },
       },
       {
-        n: 34,
+        n: 35,
         text: {
           bn: 'কমিটি যে কোন সময় যে কোন সিদ্ধান্ত গ্রহণ, পরিবর্তন ও পরিমার্জন করার অধিকার বহন করবে।',
           en: 'The committee reserves the right to take, change or amend any decision at any time.',

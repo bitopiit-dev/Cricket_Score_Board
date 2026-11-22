@@ -3,7 +3,7 @@
  * admin can change them.
  */
 export const SQUAD_LIMITS = {
-  /** Players per squad, 11 plus extras (rule 8). */
+  /** Players per squad, 11 plus extras (rule 9). */
   maxPlayers: 14,
   /** Players outside the first XI. */
   maxSubstitutes: 3,

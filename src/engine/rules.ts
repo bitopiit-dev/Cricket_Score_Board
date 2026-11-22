@@ -28,7 +28,7 @@ export const DEFAULT_PLAYERS_PER_SIDE = 11;
 /** Super over: one over, ends after two wickets. */
 export const SUPER_OVER = { overs: 1, wickets: 2 } as const;
 
-/** Runs deducted when a batter deliberately kicks the ball (rule 25). */
+/** Runs deducted when a batter deliberately kicks the ball (rule 26). */
 export const KICK_PENALTY_RUNS = 4;
 
 /**

@@ -6,14 +6,11 @@ const all = RULE_SECTIONS.flatMap((s) => s.rules);
 describe('tournament rules data', () => {
   it('has 35 rules numbered 1 to 35 in 6 sections', () => {
     expect(RULE_SECTIONS).toHaveLength(6);
-    // Rule 35 was added later and sits in the Match section, so sort first.
-    expect(all.map((r) => r.n).sort((a, b) => a - b)).toEqual(
-      Array.from({ length: 35 }, (_, i) => i + 1),
-    );
+    expect(all.map((r) => r.n)).toEqual(Array.from({ length: 35 }, (_, i) => i + 1));
   });
 
-  it('rule 35: an abandoned match gives both teams 1 point', () => {
-    const r = all.find((x) => x.n === 35)!;
+  it('rule 8: an abandoned match gives both teams 1 point', () => {
+    const r = all.find((x) => x.n === 8)!;
     expect(RULE_SECTIONS.find((s) => s.rules.includes(r))?.id).toBe('match');
     expect(r.inApp).toBe(true);
   });
@@ -30,11 +27,11 @@ describe('tournament rules data', () => {
 describe('rule search', () => {
   it('finds by English or Bengali words, in any UI language', () => {
     expect(searchRules('super over').flatMap((s) => s.rules.map((r) => r.n))).toEqual([4]);
-    expect(searchRules('রিভিউ').flatMap((s) => s.rules.map((r) => r.n))).toEqual([26]);
-    expect(searchRules('abandoned').flatMap((s) => s.rules.map((r) => r.n))).toEqual([35]);
-    expect(searchRules('পরিত্যক্ত').flatMap((s) => s.rules.map((r) => r.n))).toEqual([35]);
+    expect(searchRules('রিভিউ').flatMap((s) => s.rules.map((r) => r.n))).toEqual([27]);
+    expect(searchRules('abandoned').flatMap((s) => s.rules.map((r) => r.n))).toEqual([8]);
+    expect(searchRules('পরিত্যক্ত').flatMap((s) => s.rules.map((r) => r.n))).toEqual([8]);
     expect(searchRules('NO-BALL').flatMap((s) => s.rules.map((r) => r.n))).toEqual([
-      16, 17, 18, 19,
+      17, 18, 19, 20,
     ]);
   });
 

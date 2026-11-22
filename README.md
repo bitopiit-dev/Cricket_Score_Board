@@ -73,12 +73,12 @@ Match setup offers a "Tournament rules" preset; each rule can be switched on or 
 - Six out: a ball hit over the boundary on the full dismisses the batter (no runs, legal delivery, wicket to the bowler)
 - Max 3 overs per bowler
 - No free hit: the ball after a no-ball is a normal delivery
-- After a catch, the new batter takes strike (rule 22)
-- One review per team: lost if unsuccessful, kept if successful (rule 26)
+- After a catch, the new batter takes strike (rule 23)
+- One review per team: lost if unsuccessful, kept if successful (rule 27)
 - A tie is decided by a one-over Super Over (2 wickets end it; repeated while tied) (rule 4)
 
 Always available on the scoring screen (⋮ menu): **Penalty −4** when a batter
-deliberately kicks the ball (rule 25), and **Review**.
+deliberately kicks the ball (rule 26), and **Review**.
 
 All 35 tournament rules are in the **Rules** tab, in Bengali and English, with
 search. The text lives in [`src/data/rules.ts`](src/data/rules.ts) (source:

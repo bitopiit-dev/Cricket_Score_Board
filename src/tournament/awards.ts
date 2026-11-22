@@ -3,7 +3,7 @@ import { deriveMatchState } from '../engine/scoring';
 import type { Match, TeamIndex } from '../engine/types';
 
 /**
- * Tournament awards (rule 30): Man of the Series and Best Wicket-Taker.
+ * Tournament awards (rule 31): Man of the Series and Best Wicket-Taker.
  *
  * Only completed tournament matches count (both teams picked from the team
  * list), and super overs are left out, as in official records.

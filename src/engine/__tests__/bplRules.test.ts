@@ -6,7 +6,7 @@ import type { MatchSettings } from '../types';
 const game = (settings: Partial<MatchSettings> = {}, players = 11) =>
   new Game(makeMatch(players, settings));
 
-describe('rule 22: after a catch the new batter takes strike', () => {
+describe('rule 23: after a catch the new batter takes strike', () => {
   it('on the last ball of an over the new batter still faces the next ball', () => {
     const g = game({ catchNewBatterOnStrike: true }).start('a1', 'a2', 'b1');
     g.balls(0, 0, 0, 0, 0).out('caught');
@@ -45,7 +45,7 @@ describe('rule 22: after a catch the new batter takes strike', () => {
   });
 });
 
-describe('rule 25: penalty for kicking the ball', () => {
+describe('rule 26: penalty for kicking the ball', () => {
   it('deducts from the team total only', () => {
     const g = game().start('a1', 'a2', 'b1').ball(2);
     g.do({ type: 'penalty', runs: -KICK_PENALTY_RUNS });
@@ -86,7 +86,7 @@ describe('rule 25: penalty for kicking the ball', () => {
   });
 });
 
-describe('rule 26: one review per team', () => {
+describe('rule 27: one review per team', () => {
   it('a failed review is lost, a successful one is kept', () => {
     const g = game({ reviewsPerTeam: 1 }).start('a1', 'a2', 'b1');
     expect(g.state.reviewsLeft).toEqual([1, 1]);

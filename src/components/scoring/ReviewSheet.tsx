@@ -6,7 +6,7 @@ import { btn } from '../common/controls';
 import { FieldLabel, OptionGrid } from '../common/OptionGrid';
 import { Sheet } from '../common/Sheet';
 
-/** Record a review: which team asked, and whether it succeeded (rule 26). */
+/** Record a review: which team asked, and whether it succeeded (rule 27). */
 export function ReviewSheet({
   match,
   inn,
