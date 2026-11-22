@@ -39,7 +39,7 @@ export interface TournamentTeam {
   color: string;
   /** Logo URL or path; when missing, a coloured initial badge is shown. */
   logo?: string;
-  /** Squad: first XI then up to 3 substitutes, 14 at most (rule 8). Empty until added. */
+  /** Squad: first XI then up to 3 substitutes, 14 at most (rule 9). Empty until added. */
   players: TournamentPlayer[];
 }
 

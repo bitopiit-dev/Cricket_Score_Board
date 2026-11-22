@@ -32,7 +32,7 @@ function sampleMatch(id: string): Match {
   return g.match;
 }
 
-describe('awards (rule 30)', () => {
+describe('awards (rule 31)', () => {
   it('adds up batting, bowling and fielding across matches', () => {
     const totals = playerTotals([sampleMatch('m1'), sampleMatch('m2')]);
     const b1 = totals.find((r) => r.name === 'B1')!;
