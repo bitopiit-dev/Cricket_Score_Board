@@ -1,5 +1,5 @@
 /**
- * BPL-2027 rules (34), in Bengali and English.
+ * BPL-2027 rules (35), in Bengali and English.
  * Source: docs/rules-bpl-2027.md. Kept as data so they can move to Supabase
  * and be edited by the admin later.
  */
@@ -9,7 +9,7 @@ export interface LocalText {
 }
 
 export interface TournamentRuleText {
-  /** Rule number as in the official list (1–34). */
+  /** Rule number as in the official list (1–35). */
   n: number;
   text: LocalText;
   /** True when the app enforces or calculates this rule. */
@@ -84,6 +84,14 @@ export const RULE_SECTIONS: RuleSection[] = [
           bn: 'খেলা আরম্ভ হওয়ার ১০ মিনিট পূর্বে মাঠে হাজির থাকতে হবে।',
           en: 'Teams must be present at the ground 10 minutes before the match starts.',
         },
+      },
+      {
+        n: 35,
+        text: {
+          bn: 'বৃষ্টি বা যে কোন প্রাকৃতিক কারণে কোন খেলা পরিত্যক্ত হলে উভয় দল ১ পয়েন্ট করে পাবে।',
+          en: 'If a match is abandoned due to rain or any other natural cause, both teams will get 1 point each.',
+        },
+        inApp: true,
       },
     ],
   },

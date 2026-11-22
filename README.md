@@ -80,7 +80,7 @@ Match setup offers a "Tournament rules" preset; each rule can be switched on or 
 Always available on the scoring screen (⋮ menu): **Penalty −4** when a batter
 deliberately kicks the ball (rule 25), and **Review**.
 
-All 34 tournament rules are in the **Rules** tab, in Bengali and English, with
+All 35 tournament rules are in the **Rules** tab, in Bengali and English, with
 search. The text lives in [`src/data/rules.ts`](src/data/rules.ts) (source:
 [`docs/rules-bpl-2027.md`](docs/rules-bpl-2027.md)).
 
