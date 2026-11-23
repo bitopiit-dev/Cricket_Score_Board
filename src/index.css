@@ -466,3 +466,224 @@ table,
     linear-gradient(90deg, var(--color-slate-900) 40%, transparent 75%),
     radial-gradient(45% 140% at 80% 120%, #fbbf24 0, #f97316 20%, #7c2d12 42%, transparent 66%);
 }
+
+/* =====================================================================
+ * Neon theme: the dark theme plus a stadium-broadcast look.
+ * Every rule here starts with `.neon` (set on <html> only when the viewer
+ * picks Neon on the More tab), so none of it touches the dark or the
+ * sunlight theme. Elements are found by data-* hooks that carry no style
+ * of their own.
+ * ===================================================================== */
+
+/* Night sky with floodlight glows */
+.neon body {
+  background:
+    radial-gradient(40% 30% at 8% 0%, rgb(56 189 248 / 0.16), transparent 70%),
+    radial-gradient(40% 30% at 92% 0%, rgb(168 85 247 / 0.16), transparent 70%),
+    radial-gradient(60% 40% at 50% 100%, rgb(236 72 153 / 0.07), transparent 70%),
+    linear-gradient(180deg, #070b1a 0%, #050816 100%) fixed;
+}
+.neon [data-app-header] {
+  position: relative;
+  background: linear-gradient(180deg, #060918, rgb(7 11 26 / 0.92));
+  box-shadow:
+    0 1px 0 rgb(129 140 248 / 0.25),
+    0 12px 32px -18px rgb(99 102 241 / 0.6);
+}
+/* Floodlight beams from both top corners */
+.neon [data-app-header]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    conic-gradient(
+      from 200deg at 4% -10%,
+      transparent 0 8deg,
+      rgb(147 197 253 / 0.1) 10deg 16deg,
+      transparent 18deg
+    ),
+    conic-gradient(
+      from 130deg at 96% -10%,
+      transparent 0 8deg,
+      rgb(216 180 254 / 0.1) 10deg 16deg,
+      transparent 18deg
+    );
+}
+.neon [data-app-header] > * {
+  position: relative;
+}
+
+/* Tab bars: glass, the open tab lit */
+.neon [data-tabbar='top'] ul {
+  background: rgb(10 14 35 / 0.75);
+  border-color: rgb(129 140 248 / 0.35);
+  box-shadow: 0 10px 30px -14px rgb(99 102 241 / 0.6);
+}
+.neon [data-tabbar='bottom'] {
+  background: rgb(5 8 22 / 0.94);
+  border-top-color: rgb(129 140 248 / 0.35);
+  box-shadow: 0 -10px 30px -18px rgb(99 102 241 / 0.7);
+}
+.neon [data-tabbar] a[aria-current='page'] {
+  background: linear-gradient(180deg, rgb(99 102 241 / 0.4), rgb(79 70 229 / 0.28));
+  box-shadow:
+    0 0 0 1px #818cf8,
+    0 0 18px -2px rgb(129 140 248 / 0.75);
+}
+
+/* Page titles: broadcast lettering */
+.neon main h1 {
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  text-shadow: 0 0 18px rgb(129 140 248 / 0.55);
+}
+
+/* Slanted broadcast lettering in English; Bengali has no italic, so it stays upright */
+.neon:lang(en) main h1,
+.neon:lang(en) [data-group] h2,
+.neon:lang(en) [data-stage] h2 {
+  font-style: italic;
+}
+
+/* Cards and panels: deep navy glass with a faint indigo edge */
+.neon main .rounded-2xl.dark\:bg-slate-900,
+.neon main .rounded-3xl.dark\:bg-slate-900 {
+  background-color: rgb(12 17 40 / 0.85);
+  box-shadow:
+    0 0 0 1px rgb(99 102 241 / 0.28),
+    0 12px 30px -20px rgb(99 102 241 / 0.6);
+}
+
+/* Scoreboards: the countdown glows indigo, a live match red */
+.neon [data-board] {
+  box-shadow:
+    0 0 0 1px rgb(129 140 248 / 0.55),
+    0 0 44px -12px rgb(129 140 248 / 0.7);
+}
+.neon [data-board='live'] {
+  box-shadow:
+    0 0 0 1px rgb(244 63 94 / 0.7),
+    0 0 48px -10px rgb(244 63 94 / 0.65);
+}
+
+/* Group colours: A cyan-green, B purple-pink, Super Six amber */
+.neon [data-group='A'],
+.neon [data-stage='groupA'] {
+  --g1: #22d3ee;
+  --g2: #4ade80;
+}
+.neon [data-group='B'],
+.neon [data-stage='groupB'] {
+  --g1: #a855f7;
+  --g2: #f472b6;
+}
+.neon [data-stage='superSix'] {
+  --g1: #f59e0b;
+  --g2: #fde047;
+}
+.neon [data-group] h2,
+.neon [data-stage] h2 {
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--g2);
+  text-shadow: 0 0 14px color-mix(in srgb, var(--g1) 70%, transparent);
+}
+.neon main [data-stage].rounded-2xl {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--g1) 55%, transparent),
+    0 0 36px -14px var(--g1);
+}
+
+/* Teams: each group a glowing panel; on wide screens stacked, six across */
+.neon [data-group] {
+  position: relative;
+  overflow: hidden;
+  padding: 0.875rem 1rem 1rem;
+  border-radius: 1.375rem;
+  background: linear-gradient(180deg, rgb(15 23 42 / 0.75), rgb(8 12 28 / 0.85));
+  border: 1px solid color-mix(in srgb, var(--g1) 55%, transparent);
+  box-shadow: 0 0 40px -14px var(--g1);
+}
+.neon [data-group] > div:first-child {
+  position: relative;
+  z-index: 1;
+  border-color: color-mix(in srgb, var(--g1) 30%, transparent);
+}
+.neon [data-group] h2 {
+  font-size: 2rem;
+}
+/* The group letter, big and faint in the corner */
+.neon [data-group]::after {
+  content: attr(data-group);
+  position: absolute;
+  top: -1.1rem;
+  right: 1.1rem;
+  font:
+    italic 800 7.5rem/1 'Barlow Condensed',
+    sans-serif; /* only the Latin letter A or B */
+  color: transparent;
+  -webkit-text-stroke: 2px color-mix(in srgb, var(--g1) 35%, transparent);
+  pointer-events: none;
+}
+@media (min-width: 1024px) {
+  .neon main div:has(> [data-group]) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .neon [data-group] ul {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+/* Team cards: lit in the team's own colour, darker where the text sits */
+.neon main a[data-code] {
+  border: 2px solid var(--c);
+  background-color: #070b1a;
+  background-image:
+    radial-gradient(
+      85% 45% at 50% 28%,
+      color-mix(in srgb, var(--c) 75%, transparent),
+      transparent 72%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--c) 45%, #070b1a),
+      color-mix(in srgb, var(--c) 12%, #070b1a) 62%
+    );
+  box-shadow:
+    0 0 22px -4px var(--c),
+    inset 0 0 18px -6px var(--c);
+}
+.neon main a[data-code]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: repeating-linear-gradient(
+    120deg,
+    transparent 0 18px,
+    rgb(255 255 255 / 0.035) 18px 19px
+  );
+}
+.neon main a[data-code]::before {
+  color: #fff;
+  opacity: 0.16;
+}
+.neon main a[data-code] img {
+  box-shadow: 0 0 26px 2px var(--c);
+}
+.neon main a[data-code] span {
+  text-shadow: 0 1px 6px rgb(0 0 0 / 0.7);
+}
+.neon main a[data-code] .dark\:text-slate-400 {
+  color: rgb(255 255 255 / 0.85);
+}
+
+/* More cards: their own colours glow */
+.neon .more-card {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--b) 70%, transparent),
+    0 0 30px -10px var(--b);
+}

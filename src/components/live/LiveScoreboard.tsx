@@ -35,6 +35,7 @@ export function LiveScoreboard({ m, s }: { m: Match; s: MatchState }) {
     // Always a dark card: `dark` gives what's inside (ball chips, win chance) their dark colours
     <Link
       to={`/match/${m.id}`}
+      data-board="live"
       style={style}
       className="dark relative block overflow-hidden rounded-3xl bg-night-950 text-white shadow-[0_20px_50px_-30px_var(--color-bpl-red)] ring-1 ring-bpl-red/50 active:opacity-90"
     >

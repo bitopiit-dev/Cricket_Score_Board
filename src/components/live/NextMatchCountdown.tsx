@@ -42,7 +42,7 @@ const FRAME =
 function Frame({ children }: { children: ReactNode }) {
   const { t } = useTranslation();
   return (
-    <section aria-label={t('homePage.nextMatch')} className={FRAME}>
+    <section aria-label={t('homePage.nextMatch')} data-board="next" className={FRAME}>
       {children}
     </section>
   );
@@ -96,6 +96,7 @@ function Carousel({
     <section
       aria-roledescription={t('homePage.carousel')}
       aria-label={t('homePage.nextMatch')}
+      data-board="next"
       className={FRAME}
       onMouseEnter={() => setHeld(true)}
       onMouseLeave={() => setHeld(false)}

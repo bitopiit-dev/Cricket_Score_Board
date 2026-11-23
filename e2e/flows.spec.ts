@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import { open, prefs } from './helpers';
 
 test.beforeEach(({ page }) => prefs(page, {}));
@@ -15,17 +15,38 @@ test('tab bar moves between sections and back works', async ({ page }) => {
   await expect(page).toHaveURL(/#\/fixtures/);
 });
 
+/** A theme option on the More tab: the label people tap (the radio inside is visually hidden). */
+const themeOption = (page: Page, name: string) =>
+  page.locator('label').filter({ has: page.getByRole('radio', { name, exact: true }) });
+
 test('sunlight mode switches the theme and is remembered', async ({ page }) => {
   await open(page, 'more');
   const html = page.locator('html');
   await expect(html).toHaveClass(/dark/);
-  // The switch itself is visually hidden; people tap its row
-  await page.getByText('রোদ মোড', { exact: true }).click();
-  await expect(page.getByRole('switch', { name: /রোদ মোড/ })).toBeChecked();
+  await expect(page.getByRole('radio', { name: 'ডার্ক' })).toBeChecked();
+  // The radio itself is visually hidden; people tap its label
+  await themeOption(page, 'রোদ').click();
+  await expect(page.getByRole('radio', { name: 'রোদ' })).toBeChecked();
   await expect(html).not.toHaveClass(/dark/);
   await page.reload();
   await expect(page.locator('main h1').first()).toBeAttached();
   await expect(html).not.toHaveClass(/dark/);
+});
+
+test('neon mode is dark with the neon look, and is remembered', async ({ page }) => {
+  await open(page, 'more');
+  const html = page.locator('html');
+  await themeOption(page, 'নিয়ন').click();
+  await expect(page.getByRole('radio', { name: 'নিয়ন' })).toBeChecked();
+  await expect(html).toHaveClass(/\bdark\b/);
+  await expect(html).toHaveClass(/\bneon\b/);
+  await page.reload();
+  await expect(page.locator('main h1').first()).toBeAttached();
+  await expect(html).toHaveClass(/\bneon\b/);
+  // Back to dark takes the neon look away
+  await themeOption(page, 'ডার্ক').click();
+  await expect(html).toHaveClass(/\bdark\b/);
+  await expect(html).not.toHaveClass(/\bneon\b/);
 });
 
 test('favourite team shows on Home, Points and Teams', async ({ page }) => {

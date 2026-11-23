@@ -21,7 +21,7 @@ import { TOURNAMENT_TEAMS } from '../data/teams';
 import { useFormat } from '../hooks/useFormat';
 import { listMedia, photoUrl } from '../media/gallery';
 import { pushSupport } from '../push/client';
-import { usePrefs } from '../store/prefsStore';
+import { usePrefs, type Theme } from '../store/prefsStore';
 import { assetUrl } from '../utils/asset';
 import { FIXTURE_PDF_NAME, fixturePdfUrl } from '../utils/fixturePdf';
 import { shareText } from '../utils/share';
@@ -102,7 +102,7 @@ export default function MorePage() {
             hint={t('more.mediaHint')}
             art={<MediaArt photo={photos?.[0]} logo={BPL_LOGO} />}
           />
-          <SunlightCard />
+          <ThemeCard />
         </div>
         <aside className="grid gap-4 md:grid-cols-2 lg:flex lg:flex-col">
           <Glance members={members.length} />
@@ -209,39 +209,56 @@ function FeatureCard({
   );
 }
 
-/** Sunlight mode: the light theme switch, across the full width of the cards. */
-function SunlightCard() {
+/** The three looks, in the order they are offered. 'system' (never chosen) shows as dark. */
+const THEMES: { id: Theme; label: string; icon: string }[] = [
+  { id: 'dark', label: 'more.themeDark', icon: '🌙' },
+  { id: 'light', label: 'more.themeLight', icon: '☀️' },
+  { id: 'neon', label: 'more.themeNeon', icon: '✨' },
+];
+
+/**
+ * Theme: dark, sunlight (the light theme, for bright sun) or neon (dark with a
+ * stadium-broadcast look), across the full width of the cards.
+ */
+function ThemeCard() {
   const { t } = useTranslation();
-  const sunlight = usePrefs((s) => s.theme === 'light');
+  const theme = usePrefs((s) => (s.theme === 'system' ? 'dark' : s.theme));
   const setTheme = usePrefs((s) => s.setTheme);
   return (
-    <label className="more-sun relative flex cursor-pointer items-center gap-4 overflow-hidden rounded-2xl border border-slate-200 p-4 shadow-sm sm:col-span-2 dark:border-slate-800">
+    <fieldset className="more-sun relative flex flex-wrap items-center gap-x-4 gap-y-3 overflow-hidden rounded-2xl border border-slate-200 p-4 shadow-sm sm:col-span-2 dark:border-slate-800">
       <span
         aria-hidden
         className="grid size-11 shrink-0 place-items-center rounded-xl bg-amber-100 text-amber-600 dark:bg-amber-400/15 dark:text-amber-400"
       >
         <Icon name="sun" />
       </span>
-      <span className="relative z-10 flex-1">
-        <span className="block font-display text-xl font-bold tracking-wide">
-          {t('more.sunlight')}
-        </span>
-        <span className="block text-sm text-slate-700 dark:text-slate-300">
-          {t('more.sunlightHint')}
+      <span className="relative z-10 min-w-0 flex-1">
+        <legend className="float-left block font-display text-xl font-bold tracking-wide">
+          {t('more.theme')}
+        </legend>
+        <span className="clear-left block text-sm text-slate-700 dark:text-slate-300">
+          {t('more.themeHint')}
         </span>
       </span>
-      <input
-        type="checkbox"
-        role="switch"
-        checked={sunlight}
-        onChange={(e) => setTheme(e.target.checked ? 'light' : 'dark')}
-        className="peer sr-only"
-      />
-      <span
-        aria-hidden
-        className="relative z-10 h-7 w-12 shrink-0 rounded-full bg-slate-300 transition peer-checked:bg-bpl-green peer-focus-visible:ring-2 peer-focus-visible:ring-bpl-green/50 after:absolute after:top-1 after:left-1 after:h-5 after:w-5 after:rounded-full after:bg-white after:transition peer-checked:after:translate-x-5 dark:bg-slate-700"
-      />
-    </label>
+      <span className="relative z-10 grid w-full grid-cols-3 gap-1 rounded-xl bg-slate-100 p-1 sm:w-auto dark:bg-night-950/80">
+        {THEMES.map((th) => (
+          <label key={th.id} className="cursor-pointer">
+            <input
+              type="radio"
+              name="theme"
+              value={th.id}
+              checked={theme === th.id}
+              onChange={() => setTheme(th.id)}
+              className="peer sr-only"
+            />
+            <span className="flex min-h-11 items-center justify-center gap-1.5 rounded-lg px-3 text-sm font-semibold whitespace-nowrap text-slate-700 peer-checked:bg-bpl-yellow peer-checked:text-night-950 peer-focus-visible:ring-2 peer-focus-visible:ring-bpl-yellow/60 dark:text-slate-200">
+              <span aria-hidden>{th.icon}</span>
+              {t(th.label)}
+            </span>
+          </label>
+        ))}
+      </span>
+    </fieldset>
   );
 }
 

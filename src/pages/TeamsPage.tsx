@@ -45,7 +45,7 @@ function GroupSection({ group, cards }: { group: GroupId; cards: GroupCard[] }) 
   const { t } = useTranslation();
   const f = useFormat();
   return (
-    <section aria-label={t('points.group', { g: group })}>
+    <section aria-label={t('points.group', { g: group })} data-group={group}>
       <div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-3 border-b border-slate-200 pb-2 dark:border-slate-800">
         <h2 className="font-display text-2xl font-bold tracking-wide">
           {t('points.group', { g: group })}

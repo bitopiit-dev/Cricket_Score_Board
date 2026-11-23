@@ -20,8 +20,8 @@ const PAGES = [
   'new',
 ];
 
-for (const theme of ['dark', 'light'] as const) {
-  test.describe(`${theme === 'light' ? 'sunlight' : 'dark'} theme`, () => {
+for (const theme of ['dark', 'light', 'neon'] as const) {
+  test.describe(`${theme === 'light' ? 'sunlight' : theme} theme`, () => {
     test.beforeEach(({ page }) => prefs(page, { theme }));
 
     for (const path of PAGES) {

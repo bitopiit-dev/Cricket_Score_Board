@@ -112,11 +112,16 @@ export function TabBar({ variant }: { variant: 'bottom' | 'top' }) {
   );
 
   if (variant === 'top') {
-    return <nav aria-label={t('tabs.label')}>{list}</nav>;
+    return (
+      <nav aria-label={t('tabs.label')} data-tabbar="top">
+        {list}
+      </nav>
+    );
   }
   return (
     <nav
       aria-label={t('tabs.label')}
+      data-tabbar="bottom"
       className="fixed inset-x-0 bottom-0 z-40 border-t border-night-line bg-night-950/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
     >
       {list}
