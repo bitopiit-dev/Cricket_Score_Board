@@ -3,7 +3,13 @@ import { FIXTURES, type Fixture } from '../../data/fixtures';
 import { TOURNAMENT_TEAMS, findTeam } from '../../data/teams';
 import { Game, makeMatch } from '../../engine/__tests__/helpers';
 import type { Match } from '../../engine/types';
-import { fixturesForTeams, matchFitsFixture, nrrBalls, tournamentState } from '../standings';
+import {
+  fixturesForTeams,
+  matchFitsFixture,
+  movedToFixture,
+  nrrBalls,
+  tournamentState,
+} from '../standings';
 
 let seq = 0;
 
@@ -198,11 +204,22 @@ describe('a match saved under the wrong match number', () => {
   it('counts once moved to the right fixture', () => {
     const [f12] = fixturesForTeams(fv, ppw);
     expect(f12.no).toBe(12);
-    const moved = { ...wrong(), fixtureId: f12.id };
+    const moved = movedToFixture(wrong(), f12.id, Date.now());
     const ts = tournamentState([moved]);
     expect(ts.outcomes.get(f12.id)?.status).toBe('completed');
     const rows = ts.tables.groupA.filter((r) => r.teamId === fv || r.teamId === ppw);
     expect(rows.map((r) => r.played)).toEqual([1, 1]);
+  });
+
+  it('is a new revision when moved, so the server takes it', () => {
+    const before = wrong();
+    const moved = movedToFixture(before, 'f12', 1_800_000_000_000);
+    expect(moved.rev).toBe((before.rev ?? 0) + 1);
+    expect(moved.fixtureId).toBe('f12');
+    expect(moved.updatedAt).toBe(1_800_000_000_000);
+    // The scoring itself is untouched
+    expect(moved.events).toEqual(before.events);
+    expect(before.fixtureId).not.toBe('f12');
   });
 
   it('accepts the fixture’s teams in either order', () => {
