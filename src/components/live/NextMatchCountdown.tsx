@@ -7,7 +7,11 @@ import { useFormat } from '../../hooks/useFormat';
 import { useNow, useTournament } from '../../hooks/useTournament';
 import { usePrefs } from '../../store/prefsStore';
 import { countdown, fixtureStart, nextMatchDay } from '../../tournament/home';
-import { fixtureTeams, type TournamentState } from '../../tournament/standings';
+import { Link } from 'react-router-dom';
+import { pushSupport } from '../../push/client';
+import { QUALIFIERS } from '../../tournament/format';
+import { placeIn } from '../../tournament/pointsView';
+import { fixtureTeams, type LeagueStage, type TournamentState } from '../../tournament/standings';
 import { formatDate, formatTime, slotLabel, stageLabel } from '../../utils/fixtureText';
 
 /**
@@ -204,6 +208,35 @@ function CountdownSlide({
     [c.seconds, t('homePage.seconds')],
   ];
 
+  const board = c.due ? (
+    <p className="countdown-due py-3 text-center font-display text-4xl font-extrabold tracking-wide text-bpl-yellow">
+      {t('homePage.startingSoon')}
+    </p>
+  ) : (
+    <div
+      role="timer"
+      aria-label={t('homePage.startsIn')}
+      className="countdown-board flex items-start justify-center gap-1 sm:gap-2"
+    >
+      {groups.map(([n, label], i) => (
+        <div key={label} className="flex items-start gap-1 sm:gap-2">
+          {i > 0 && <Colon />}
+          <div className="flex flex-col items-center gap-1.5">
+            <div className="flex gap-1">
+              {String(Math.min(n, 99))
+                .padStart(2, '0')
+                .split('')
+                .map((d, j) => (
+                  <Digit key={j} value={f.num(d)} />
+                ))}
+            </div>
+            <span className="text-xs text-night-muted">{label}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
   return (
     <>
       <SideGlow fx={fx} ids={[idA, idB]} />
@@ -217,45 +250,34 @@ function CountdownSlide({
           </span>
         </div>
 
-        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-center">
-          <Side slot={fx.teamA} id={idA} />
-          <span className="font-display text-xl font-bold text-night-muted">{t('common.vs')}</span>
-          <Side slot={fx.teamB} id={idB} />
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-center sm:gap-4">
+          <Side slot={fx.teamA} id={idA} fx={fx} ts={ts} />
+          <span className="font-display text-xl font-bold text-night-muted sm:hidden">
+            {t('common.vs')}
+          </span>
+          {/* Wider screens: the clock between the two teams */}
+          <div className="hidden sm:block">{board}</div>
+          <Side slot={fx.teamB} id={idB} fx={fx} ts={ts} />
         </div>
 
-        {c.due ? (
-          <p className="countdown-due py-3 text-center font-display text-4xl font-extrabold tracking-wide text-bpl-yellow">
-            {t('homePage.startingSoon')}
-          </p>
-        ) : (
-          <div
-            role="timer"
-            aria-label={t('homePage.startsIn')}
-            className="countdown-board flex items-start justify-center gap-1 sm:gap-2"
-          >
-            {groups.map(([n, label], i) => (
-              <div key={label} className="flex items-start gap-1 sm:gap-2">
-                {i > 0 && <Colon />}
-                <div className="flex flex-col items-center gap-1.5">
-                  <div className="flex gap-1">
-                    {String(Math.min(n, 99))
-                      .padStart(2, '0')
-                      .split('')
-                      .map((d, j) => (
-                        <Digit key={j} value={f.num(d)} />
-                      ))}
-                  </div>
-                  <span className="text-xs text-night-muted">{label}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        <div className="sm:hidden">{board}</div>
 
-        <p className="text-center text-sm text-white/85">
-          {formatDate(fx.date, lang, bengaliDigits)}, {formatTime(fx.time, lang, f)}
-          {fx.venue && <span className="text-night-muted">, {fx.venue}</span>}
-        </p>
+        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+          <p className="text-center text-sm text-white/85">
+            {formatDate(fx.date, lang, bengaliDigits)}, {formatTime(fx.time, lang, f)}
+            {fx.venue && <span className="text-night-muted">, {fx.venue}</span>}
+          </p>
+          {/* Match alerts, where the phone can take them */}
+          {pushSupport() !== 'off' && (
+            <Link
+              to="/alerts"
+              className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-bpl-yellow px-4 text-sm font-semibold text-night-950 active:scale-95"
+            >
+              <span aria-hidden>🔔</span>
+              {t('live.remind')}
+            </Link>
+          )}
+        </div>
       </div>
     </>
   );
@@ -286,17 +308,46 @@ function Colon() {
   );
 }
 
-function Side({ slot, id }: { slot: Fixture['teamA']; id: string | null }) {
+function Side({
+  slot,
+  id,
+  fx,
+  ts,
+}: {
+  slot: Fixture['teamA'];
+  id: string | null;
+  fx: Fixture;
+  ts: TournamentState;
+}) {
   const { t } = useTranslation();
   const f = useFormat();
   const team = findTeam(id ?? (slot.kind === 'team' ? slot.teamId : undefined));
   const name = team?.name ?? slotLabel(slot, id, t, f);
+  // Where the team stands in this match's league table, once it has started
+  const league = fx.stage === 'groupA' || fx.stage === 'groupB' || fx.stage === 'superSix';
+  const pos = team && league ? placeIn(fx.stage as LeagueStage, team.id, ts) : undefined;
+  const qualifying =
+    pos !== undefined && pos <= (fx.stage === 'superSix' ? QUALIFIERS.superSix : QUALIFIERS.group);
   return (
     <div className="flex min-w-0 flex-col items-center gap-1.5">
-      <TeamAvatar name={name} color={team?.color} logo={team?.logo} size="lg" />
-      <span lang="en" className="line-clamp-2 text-sm leading-tight font-semibold">
+      <span
+        className="rounded-full p-[3px]"
+        style={{ backgroundColor: team?.color ?? 'transparent' }}
+      >
+        <TeamAvatar name={name} color={team?.color} logo={team?.logo} size="lg" />
+      </span>
+      <span lang="en" className="line-clamp-2 text-sm leading-tight font-semibold sm:text-base">
         {name}
       </span>
+      {pos !== undefined && (
+        <span
+          className={`rounded-md bg-night-950/70 px-2 text-[11px] leading-5 font-semibold ${
+            qualifying ? 'text-emerald-300' : 'text-white/80'
+          }`}
+        >
+          {t('live.place', { pos: t(`slot.ord${pos}`), stage: stageLabel(fx.stage, t) })}
+        </span>
+      )}
     </div>
   );
 }
