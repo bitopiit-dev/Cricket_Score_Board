@@ -90,6 +90,15 @@ export function fixturesForTeams(
   });
 }
 
+/**
+ * The match filed under another fixture, as a new revision: the server only
+ * takes a copy whose revision is higher than the one it has (see
+ * supabase/patch-2-revisions.sql), so a move must count as a change like a ball.
+ */
+export function movedToFixture(m: Match, fixtureId: string, now: number): Match {
+  return { ...m, fixtureId, updatedAt: now, rev: (m.rev ?? 0) + 1 };
+}
+
 export function matchesByFixture(
   matches: Match[],
   fixtures: readonly Fixture[] = FIXTURES,

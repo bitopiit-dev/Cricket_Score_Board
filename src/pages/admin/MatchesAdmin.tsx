@@ -7,13 +7,13 @@ import { matchRepository } from '../../db/repository';
 import { deriveMatchState } from '../../engine/scoring';
 import { useTournament } from '../../hooks/useTournament';
 import { MATCHES_CHANGED, pendingUploads, uploadAllFromThisPhone } from '../../sync/matchSync';
-import { fixturesForTeams, matchFitsFixture } from '../../tournament/standings';
+import { fixturesForTeams, matchFitsFixture, movedToFixture } from '../../tournament/standings';
 import type { Match } from '../../engine/types';
 import { StatusLine, useStatus } from './shared';
 
 /** Moves a match to another fixture (the right match number) and sends it to every phone. */
 async function moveToFixture(m: Match, fx: Fixture) {
-  await matchRepository.save({ ...m, fixtureId: fx.id, updatedAt: Date.now() });
+  await matchRepository.save(movedToFixture(m, fx.id, Date.now()));
   window.dispatchEvent(new Event(MATCHES_CHANGED));
 }
 
