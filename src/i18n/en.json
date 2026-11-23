@@ -594,7 +594,23 @@
     "message": "🏏 Live scores, fixtures and the points table for BPL-2027:"
   },
   "live": {
-    "details": "Full match"
+    "details": "Full match",
+    "subtitle": "Ball-by-ball scores from the ground, on every phone at once",
+    "batting": "{{team}} batting",
+    "overOf": "{{innings}}, over {{n}} of {{total}}",
+    "runRate": "Run rate",
+    "required": "Required",
+    "projected": "Projected",
+    "results": "Results",
+    "resultsCount_one": "{{n}} match, newest first",
+    "resultsCount_other": "{{n}} matches, newest first",
+    "showEarlier_one": "Show {{n}} earlier result",
+    "showEarlier_other": "Show {{n}} earlier results",
+    "hideEarlier": "Show fewer",
+    "didNotBat": "Did not bat",
+    "today": "Today",
+    "remind": "Remind me",
+    "place": "{{pos}} in {{stage}}"
   },
   "sync": {
     "synced": "Uploaded",
