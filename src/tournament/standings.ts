@@ -57,14 +57,50 @@ export interface TournamentState {
  * The app match that belongs to each fixture (a completed one wins, then the
  * newest). Matches set aside for a replay are left out.
  */
+/** The two teams a fixture names outright (group matches); null while a side is a place still to be decided. */
+function namedTeams(f: Fixture): [string, string] | null {
+  return f.teamA.kind === 'team' && f.teamB.kind === 'team'
+    ? [f.teamA.teamId, f.teamB.teamId]
+    : null;
+}
+
+/**
+ * False when a match was saved under a fixture but between other teams, as when
+ * the wrong match number was picked and the teams were then changed by hand.
+ * Such a match must not count for that fixture, or its teams would turn up in
+ * another group's table. Fixtures whose sides are still places (Super Six,
+ * knockouts) and matches without team ids are taken as they are.
+ */
+export function matchFitsFixture(m: Match, f: Fixture): boolean {
+  const named = namedTeams(f);
+  const ids = m.teams.map((t) => t.teamId);
+  if (!named || !ids[0] || !ids[1]) return true;
+  return ids.includes(named[0]) && ids.includes(named[1]);
+}
+
+/** Fixtures between exactly these two teams, in schedule order (group stage). */
+export function fixturesForTeams(
+  a: string,
+  b: string,
+  fixtures: readonly Fixture[] = FIXTURES,
+): Fixture[] {
+  return fixtures.filter((f) => {
+    const named = namedTeams(f);
+    return !!named && a !== b && named.includes(a) && named.includes(b);
+  });
+}
+
 export function matchesByFixture(
   matches: Match[],
   fixtures: readonly Fixture[] = FIXTURES,
 ): Map<string, Match> {
   const voided = new Set(fixtures.flatMap((f) => f.voidMatchIds ?? []));
+  const byId = new Map(fixtures.map((f) => [f.id, f]));
   const map = new Map<string, Match>();
   for (const m of matches) {
     if (m.fixtureId === undefined || voided.has(m.id)) continue;
+    const fixture = byId.get(m.fixtureId);
+    if (fixture && !matchFitsFixture(m, fixture)) continue;
     const prev = map.get(m.fixtureId);
     if (!prev || rank(m) > rank(prev)) map.set(m.fixtureId, m);
   }

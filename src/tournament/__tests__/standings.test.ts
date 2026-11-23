@@ -3,7 +3,7 @@ import { FIXTURES, type Fixture } from '../../data/fixtures';
 import { TOURNAMENT_TEAMS, findTeam } from '../../data/teams';
 import { Game, makeMatch } from '../../engine/__tests__/helpers';
 import type { Match } from '../../engine/types';
-import { nrrBalls, tournamentState } from '../standings';
+import { fixturesForTeams, matchFitsFixture, nrrBalls, tournamentState } from '../standings';
 
 let seq = 0;
 
@@ -169,5 +169,44 @@ describe('fixture ids', () => {
       expect(row).toMatchObject({ won: 0, tiedNr: 1, points: 1, runsFor: 0, ballsFaced: 0 });
       expect(ts.outcomes.get('f2')?.result).toBeNull();
     });
+  });
+});
+
+describe('a match saved under the wrong match number', () => {
+  // As on 23 Nov: Finishing Victorians v Power (match 12, Group A) saved under
+  // match 13 (Power Player v Engineer Warrior, Group B) with the teams changed by hand
+  const fv = 'finishing-victorians';
+  const ppw = 'power-printing-washing';
+  const wrong = () => play(13, 6, 3, [fv, ppw]);
+
+  it('is not counted for that fixture', () => {
+    const f13 = FIXTURES.find((f) => f.no === 13)!;
+    expect(matchFitsFixture(wrong(), f13)).toBe(false);
+    const ts = tournamentState([wrong()]);
+    expect(ts.outcomes.get(f13.id)?.status).toBe('scheduled');
+  });
+
+  it('keeps both teams out of the other group’s table', () => {
+    const ts = tournamentState([wrong()]);
+    const groupB = ts.tables.groupB.map((r) => r.teamId);
+    expect(groupB).toHaveLength(6);
+    expect(groupB).not.toContain(fv);
+    expect(groupB).not.toContain(ppw);
+    expect(ts.tables.groupB.every((r) => r.played === 0)).toBe(true);
+  });
+
+  it('counts once moved to the right fixture', () => {
+    const [f12] = fixturesForTeams(fv, ppw);
+    expect(f12.no).toBe(12);
+    const moved = { ...wrong(), fixtureId: f12.id };
+    const ts = tournamentState([moved]);
+    expect(ts.outcomes.get(f12.id)?.status).toBe('completed');
+    const rows = ts.tables.groupA.filter((r) => r.teamId === fv || r.teamId === ppw);
+    expect(rows.map((r) => r.played)).toEqual([1, 1]);
+  });
+
+  it('accepts the fixture’s teams in either order', () => {
+    const f12 = FIXTURES.find((f) => f.no === 12)!;
+    expect(matchFitsFixture(play(12, 6, 3, [ppw, fv]), f12)).toBe(true);
   });
 });

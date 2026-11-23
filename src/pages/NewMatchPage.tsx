@@ -24,7 +24,7 @@ import { FIXTURE_OVERS, FIXTURES, fixtureById } from '../data/fixtures';
 import { TOURNAMENT_TEAMS, findTeam, playerDisplayName } from '../data/teams';
 import { useNow, useTournament } from '../hooks/useTournament';
 import { usePrefs } from '../store/prefsStore';
-import { fixtureTeams } from '../tournament/standings';
+import { fixtureTeams, fixturesForTeams } from '../tournament/standings';
 import { nextFixture } from '../tournament/home';
 import { fixtureLabel, formatDate, formatTime, slotLabel, stageLabel } from '../utils/fixtureText';
 import { captainMark } from '../utils/matchText';
@@ -142,7 +142,18 @@ export default function NewMatchPage() {
     (i) => squadOf(i).length === 0 || xiOf(i).length === xiNeeded(i),
   );
   const sameTeam = teamIds[0] !== '' && teamIds[0] === teamIds[1];
-  const canStart = !saving && !alreadyStarted && xiReady && !sameTeam;
+  // Teams changed by hand to a pair that isn't this fixture's: the match number is wrong.
+  // Starting would file the match under the wrong fixture (and the wrong group's table).
+  const fixtureSides = fixture ? sidesOf(fixture.id) : [null, null];
+  const wrongTeams =
+    !!fixture &&
+    !!fixtureSides[0] &&
+    !!fixtureSides[1] &&
+    !!teamIds[0] &&
+    !!teamIds[1] &&
+    !(teamIds.includes(fixtureSides[0]) && teamIds.includes(fixtureSides[1]));
+  const rightFixtures = wrongTeams ? fixturesForTeams(teamIds[0], teamIds[1]) : [];
+  const canStart = !saving && !alreadyStarted && xiReady && !sameTeam && !wrongTeams;
 
   // Opens on the next match still to be played, with its teams already filled in
   const [autoPicked, setAutoPicked] = useState(false);
@@ -370,6 +381,32 @@ export default function NewMatchPage() {
               );
             })}
           </div>
+          {wrongTeams && (
+            <div
+              role="alert"
+              className="mt-4 flex flex-col gap-2 rounded-xl bg-amber-50 p-3 text-sm text-amber-900 dark:bg-amber-950/40 dark:text-amber-200"
+            >
+              <p className="font-semibold">
+                {t(
+                  rightFixtures.length > 0 ? 'newMatch.wrongTeams' : 'newMatch.noFixtureForTeams',
+                  {
+                    n: f.num(fixture!.no),
+                  },
+                )}
+              </p>
+              {rightFixtures.map((fx) => (
+                <button
+                  key={fx.id}
+                  type="button"
+                  onClick={() => pickFixture(fx.id)}
+                  className={btn.primary}
+                >
+                  {t('newMatch.useFixture', { n: f.num(fx.no) })}
+                  {statusNote(fx.id)}
+                </button>
+              ))}
+            </div>
+          )}
         </Card>
 
         <Card className="ring-2 ring-emerald-600/30">
