@@ -430,7 +430,16 @@
     "postponed": "স্থগিত",
     "postponedNote": "ম্যাচটি স্থগিত। নতুন তারিখ পরে জানানো হবে।",
     "replayed": "বাতিল · আবার খেলা",
-    "replayedResult": "বাতিল · নতুন করে আবার খেলা হবে"
+    "replayedResult": "বাতিল · নতুন করে আবার খেলা হবে",
+    "progress": "{{total}}টার মধ্যে {{played}}টা ম্যাচ খেলা হয়েছে",
+    "finalOn": "ফাইনাল {{date}}",
+    "startsIn": "{{time}} পরে শুরু",
+    "startsAt": "{{time}}-এ শুরু",
+    "mins": "{{n}} মিনিট",
+    "hoursMins": "{{h}} ঘণ্টা {{m}} মিনিট",
+    "dates": "ম্যাচের দিন",
+    "dayMatches": "{{n}}টা ম্যাচ",
+    "dayNone": "কোনো ম্যাচ নেই"
   },
   "stage": {
     "groupA": "গ্রুপ A",

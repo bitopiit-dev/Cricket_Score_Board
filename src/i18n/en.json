@@ -437,7 +437,17 @@
     "postponed": "Postponed",
     "postponedNote": "Postponed. The new date will be announced later.",
     "replayed": "Called off · replay",
-    "replayedResult": "Called off · to be played again from the start"
+    "replayedResult": "Called off · to be played again from the start",
+    "progress": "{{played}} of {{total}} matches played",
+    "finalOn": "Final on {{date}}",
+    "startsIn": "Starts in {{time}}",
+    "startsAt": "Starts at {{time}}",
+    "mins": "{{n}} min",
+    "hoursMins": "{{h}} h {{m}} min",
+    "dates": "Match days",
+    "dayMatches_one": "{{n}} match",
+    "dayMatches_other": "{{n}} matches",
+    "dayNone": "no matches"
   },
   "stage": {
     "groupA": "Group A",
