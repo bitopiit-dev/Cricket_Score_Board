@@ -345,7 +345,19 @@
     "admin": "অ্যাডমিন",
     "adminHint": "লগইন করে ফিক্সচার, দল আর স্কোর বদলান",
     "sunlight": "রোদ মোড",
-    "sunlightHint": "উজ্জ্বল রোদে পড়ার জন্য সাদা থিম"
+    "sunlightHint": "উজ্জ্বল রোদে পড়ার জন্য সাদা থিম",
+    "subtitle": "BPL-2027-এর সবকিছু এক জায়গায়",
+    "glance": "এক নজরে BPL-2027",
+    "glanceMatches": "ম্যাচ",
+    "glanceTeams": "দল",
+    "glanceRules": "নিয়ম",
+    "glanceCommittee": "কমিটি সদস্য",
+    "quick": "শর্টকাট",
+    "showQr": "অ্যাপের QR কোড দেখান",
+    "fixturePdf": "ফিক্সচার ডাউনলোড (PDF)",
+    "qrPoster": "QR পোস্টার ডাউনলোড",
+    "latestPhotos": "সর্বশেষ ছবি",
+    "viewAll": "সব দেখুন"
   },
   "comingSoon": {
     "badge": "শীঘ্রই আসছে",

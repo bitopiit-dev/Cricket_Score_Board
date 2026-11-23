@@ -351,7 +351,19 @@
     "admin": "Admin",
     "adminHint": "Sign in to edit fixtures, teams and scores",
     "sunlight": "Sunlight mode",
-    "sunlightHint": "A light theme that's easier to read in bright sun"
+    "sunlightHint": "A light theme that's easier to read in bright sun",
+    "subtitle": "Everything about BPL-2027 in one place",
+    "glance": "BPL-2027 at a glance",
+    "glanceMatches": "Matches",
+    "glanceTeams": "Teams",
+    "glanceRules": "Rules",
+    "glanceCommittee": "Committee members",
+    "quick": "Shortcuts",
+    "showQr": "Show the app QR code",
+    "fixturePdf": "Download fixture (PDF)",
+    "qrPoster": "Download QR poster",
+    "latestPhotos": "Latest photos",
+    "viewAll": "View all"
   },
   "comingSoon": {
     "badge": "Coming soon",
