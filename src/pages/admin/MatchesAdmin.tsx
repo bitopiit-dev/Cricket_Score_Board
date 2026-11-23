@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { btn, Card } from '../../components/common/controls';
-import { fixtureById, isVoidMatch, type Fixture } from '../../data/fixtures';
+import { fixtureById, isAbandonedMatch, isVoidMatch, type Fixture } from '../../data/fixtures';
 import { findTeam } from '../../data/teams';
 import { matchRepository } from '../../db/repository';
 import { deriveMatchState } from '../../engine/scoring';
@@ -69,9 +69,12 @@ export function MatchesAdmin({ scorerOnly = false }: { scorerOnly?: boolean }) {
                   {fx ? `ফিক্সচার ম্যাচ ${fx.no}` : 'ফিক্সচারের বাইরে'} ·{' '}
                   {isVoidMatch(m)
                     ? 'বাতিল, আবার খেলা হবে'
-                    : s.phase === 'completed'
-                      ? 'শেষ'
-                      : 'চলছে / শুরু হয়নি'}{' '}
+                    : // Marked abandoned in the fixture: a no result, whatever was scored
+                      isAbandonedMatch(m)
+                      ? 'পরিত্যক্ত (দুই দল ১ পয়েন্ট)'
+                      : s.phase === 'completed'
+                        ? 'শেষ'
+                        : 'চলছে / শুরু হয়নি'}{' '}
                   · {new Date(m.updatedAt).toLocaleString()}
                 </p>
                 {fx && !matchFitsFixture(m, fx) && (
