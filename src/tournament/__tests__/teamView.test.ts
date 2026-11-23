@@ -4,7 +4,14 @@ import { TOURNAMENT_TEAMS, findTeam } from '../../data/teams';
 import { Game, makeMatch } from '../../engine/__tests__/helpers';
 import type { Match } from '../../engine/types';
 import { tournamentState } from '../standings';
-import { teamFixtures, teamLiveFixture, teamRecord, teamResults, teamStanding } from '../teamView';
+import {
+  groupCards,
+  teamFixtures,
+  teamLiveFixture,
+  teamRecord,
+  teamResults,
+  teamStanding,
+} from '../teamView';
 
 let seq = 0;
 
@@ -165,5 +172,35 @@ describe('team page: results, form and standing', () => {
     expect(s?.stage).toBe('groupA');
     expect(s?.row.lost).toBe(1);
     expect(s?.position).toBeGreaterThan(1);
+  });
+});
+
+describe('groupCards', () => {
+  it('keeps the team-list order with no places before the first match', () => {
+    const cards = groupCards('A', tournamentState([]).tables.groupA);
+    expect(cards.map((c) => c.team.id)).toEqual(
+      TOURNAMENT_TEAMS.filter((t) => t.group === 'A').map((t) => t.id),
+    );
+    expect(cards.every((c) => c.position === undefined && c.row === undefined)).toBe(true);
+  });
+
+  it('follows the points table once a group match is played', () => {
+    // Group A's first fixture, won by the side batting second
+    const first = FIXTURES.find((f) => f.stage === 'groupA')!;
+    const ts = tournamentState([play(first.no, 3, 6)]);
+    const cards = groupCards('A', ts.tables.groupA);
+    expect(cards.map((c) => c.team.id)).toEqual(ts.tables.groupA.map((r) => r.teamId));
+    expect(cards.map((c) => c.position)).toEqual([1, 2, 3, 4, 5, 6]);
+    expect(cards[0].row?.points).toBe(2);
+    const winner = first.teamB.kind === 'team' ? first.teamB.teamId : '';
+    expect(cards[0].team.id).toBe(winner);
+  });
+
+  it('still shows a team the table does not list', () => {
+    const first = FIXTURES.find((f) => f.stage === 'groupB')!;
+    const rows = tournamentState([play(first.no, 6, 3)]).tables.groupB.slice(0, 5);
+    const cards = groupCards('B', rows);
+    expect(cards).toHaveLength(6);
+    expect(cards[5].position).toBeUndefined();
   });
 });

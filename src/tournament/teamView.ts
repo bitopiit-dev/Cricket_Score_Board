@@ -1,4 +1,6 @@
 import { FIXTURES, type Fixture } from '../data/fixtures';
+import type { GroupId, TournamentTeam } from '../data/teams';
+import { teamsOfGroup } from './groups';
 import {
   fixtureTeams,
   type FixtureOutcome,
@@ -116,4 +118,37 @@ export function teamStanding(
     if (i >= 0) return { stage, position: i + 1, row: ts.tables[stage][i] };
   }
   return null;
+}
+
+export interface GroupCard {
+  team: TournamentTeam;
+  /** The team's row in the group table, once the group has started. */
+  row?: TableRow;
+  /** 1-based place in the group, once the group has started. */
+  position?: number;
+}
+
+/**
+ * The teams of a group for the Teams tab. Once a group match has been played
+ * the teams follow the points table (1st first) and carry their row and place;
+ * before that they keep the team-list order with no place, so nobody looks
+ * ranked by accident.
+ */
+export function groupCards(
+  group: GroupId,
+  rows: readonly TableRow[] | undefined,
+  fixtures: readonly Fixture[] = FIXTURES,
+): GroupCard[] {
+  const teams = teamsOfGroup(group, fixtures);
+  if (!rows?.some((r) => r.played > 0)) return teams.map((team) => ({ team }));
+  const ranked: GroupCard[] = [];
+  rows.forEach((row) => {
+    const team = teams.find((t) => t.id === row.teamId);
+    if (team) ranked.push({ team, row, position: ranked.length + 1 });
+  });
+  // A team missing from the table (e.g. a half-edited list) still gets a card
+  for (const team of teams) {
+    if (!ranked.some((c) => c.team.id === team.id)) ranked.push({ team });
+  }
+  return ranked;
 }
