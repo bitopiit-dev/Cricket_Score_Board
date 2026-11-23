@@ -58,7 +58,7 @@ Every section has its own link, so the phone's back button returns to the previo
 | Fixtures | `#/fixtures` | The 48 fixture matches by date, filter by stage, today first, results and live status                                                                               |
 | Points   | `#/points`   | Group A, Group B and Super Six tables (points, NRR) from scored matches                                                                                             |
 | Stats    | `#/stats`    | Coming soon (link to the current awards ranking)                                                                                                                    |
-| Teams    | `#/teams`    | The 12 teams; tap one for its squad                                                                                                                                 |
+| Teams    | `#/teams`    | The 12 teams by group, in points-table order once a group starts (place, points, won, lost); tap one for its squad                                                  |
 | More     | `#/more`     | Stats, Rules, Committee, Awards, Media, Match alerts                                                                                                                |
 
 On phones the tabs sit at the bottom of the screen; on wider screens they sit in the header.

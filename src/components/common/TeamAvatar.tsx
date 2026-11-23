@@ -7,6 +7,8 @@ const SIZES = {
   md: 'size-12 text-lg',
   lg: 'size-16 text-2xl',
   xl: 'size-24 text-4xl',
+  /** Teams tab cards: a little smaller on narrow phones. */
+  hero: 'size-20 text-3xl sm:size-24 sm:text-4xl',
 } as const;
 
 type Size = keyof typeof SIZES;
