@@ -23,7 +23,7 @@ export function AppShell() {
   return (
     <div className="flex min-h-dvh flex-col pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:pb-8">
       {/* Clipped so the fireworks never spill past the header or widen the page */}
-      <header className="overflow-hidden bg-night-950 text-white shadow-lg">
+      <header data-app-header className="overflow-hidden bg-night-950 text-white shadow-lg">
         <div className="mx-auto flex max-w-5xl flex-col gap-3 px-3 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 md:px-4">
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-4">

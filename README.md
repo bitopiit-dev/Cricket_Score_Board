@@ -59,7 +59,7 @@ Every section has its own link, so the phone's back button returns to the previo
 | Points   | `#/points`   | Today's matches with each side's place; Group A, Group B and Super Six tables (points, NRR, form, most points still possible, next match, the qualifying line); before the Super Six, who would go through if the groups ended today                           |
 | Stats    | `#/stats`    | Coming soon (link to the current awards ranking)                                                                                                                                                                                                               |
 | Teams    | `#/teams`    | The 12 teams by group, in points-table order once a group starts (place, points, won, lost); tap one for its squad                                                                                                                                             |
-| More     | `#/more`     | Cards for Share the app, Stats, Rules, Committee, Awards and Media; Sunlight mode; the tournament at a glance; shortcuts (QR code, fixture PDF, QR poster, Match alerts); the latest gallery photos                                                            |
+| More     | `#/more`     | Cards for Share the app, Stats, Rules, Committee, Awards and Media; the theme (Dark, Sunlight or Neon); the tournament at a glance; shortcuts (QR code, fixture PDF, QR poster, Match alerts); the latest gallery photos                                       |
 
 On phones the tabs sit at the bottom of the screen; on wider screens they sit in the header.
 

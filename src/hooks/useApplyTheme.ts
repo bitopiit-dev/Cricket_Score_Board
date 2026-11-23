@@ -8,13 +8,18 @@ import { usePrefs } from '../store/prefsStore';
  */
 export const THEME_COLOR = '#0b1120';
 
-/** Keeps the `dark` class on <html> in step with the saved preference. */
+/**
+ * Keeps the `dark` and `neon` classes on <html> in step with the saved
+ * preference. Neon is dark plus a stadium-broadcast layer: every neon style
+ * sits under `.neon`, so it changes nothing in the dark or sunlight theme.
+ */
 export function useApplyTheme() {
   const theme = usePrefs((s) => s.theme);
   useEffect(() => {
     const dark = theme !== 'light';
     const root = document.documentElement;
     root.classList.toggle('dark', dark);
+    root.classList.toggle('neon', theme === 'neon');
     root.style.colorScheme = dark ? 'dark' : 'light';
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', THEME_COLOR);
   }, [theme]);

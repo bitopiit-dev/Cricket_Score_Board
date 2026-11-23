@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#0b1120" />
     <script>
-      // Sunlight mode: switch before first paint so the page doesn't flash dark
+      // Sunlight / neon mode: switch before first paint so the page doesn't flash
       try {
-        if (JSON.parse(localStorage.getItem('csb-prefs')).state.theme === 'light') {
+        var theme = JSON.parse(localStorage.getItem('csb-prefs')).state.theme;
+        if (theme === 'light') {
           document.documentElement.classList.remove('dark');
           document.documentElement.style.colorScheme = 'light';
+        } else if (theme === 'neon') {
+          document.documentElement.classList.add('neon');
         }
       } catch {
         /* no saved preference */

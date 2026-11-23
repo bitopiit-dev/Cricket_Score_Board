@@ -271,7 +271,10 @@ function LeagueTable({
         });
 
   return (
-    <section className="overflow-hidden rounded-2xl bg-white shadow-sm dark:bg-slate-900">
+    <section
+      data-stage={stage}
+      className="overflow-hidden rounded-2xl bg-white shadow-sm dark:bg-slate-900"
+    >
       <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2 px-4 pt-3">
         <div>
           <h2 className="font-display text-2xl font-bold tracking-wide">{stageLabel(stage, t)}</h2>

@@ -2,7 +2,8 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 export type Lang = 'bn' | 'en';
-export type Theme = 'system' | 'light' | 'dark';
+/** 'neon' is the dark theme with the stadium-broadcast look on top (the `neon` class). */
+export type Theme = 'system' | 'light' | 'dark' | 'neon';
 
 /** Match alerts this phone asked for (see src/push/client.ts); null when off. */
 export interface PushPrefs {
