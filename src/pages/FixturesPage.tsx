@@ -23,16 +23,11 @@ import { teamFixtures, teamRecord } from '../tournament/teamView';
 import { resultText } from '../utils/matchText';
 // Imported through Vite, the PDF is published under a name with a content fingerprint
 // (bpl-2027-fixture-AbC123.pdf), so phones and the host's cache never serve an old copy.
-// Rebuild both files with: python scripts/build-fixture-pdf.py
-import fixturePdfUrl from '../assets/bpl-2027-fixture.pdf?url';
-import fixturePdfInfo from '../assets/bpl-2027-fixture.json';
+import { FIXTURE_PDF_NAME, fixturePdfUrl } from '../utils/fixturePdf';
 import { PageSkeleton } from '../components/common/Skeleton';
 import { groupOf } from '../tournament/groups';
 import { roleCanScore, useAuth } from '../sync/auth';
 import { RescheduleSheet } from '../components/fixtures/RescheduleSheet';
-
-/** Download name carries the update date, so a new copy never overwrites or hides behind the old one. */
-const FIXTURE_PDF_NAME = `BPL-2027-Fixture-${fixturePdfInfo.updated}.pdf`;
 
 type Filter = 'all' | 'groupA' | 'groupB' | 'superSix' | 'knockout';
 const FILTERS: Filter[] = ['all', 'groupA', 'groupB', 'superSix', 'knockout'];

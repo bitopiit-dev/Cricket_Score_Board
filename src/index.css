@@ -417,3 +417,52 @@ table,
     animation: none;
   }
 }
+
+/*
+ * More tab cards. Each card sets --a (deep) and --b (bright) to its colours.
+ * The plain background colour stays if a browser can't do color-mix.
+ */
+.more-card {
+  background-color: #fff;
+  background-image:
+    radial-gradient(
+      120% 140% at 100% 100%,
+      color-mix(in srgb, var(--b) 24%, transparent),
+      transparent 60%
+    ),
+    linear-gradient(135deg, color-mix(in srgb, var(--b) 14%, #fff), #fff 75%);
+  border: 1px solid color-mix(in srgb, var(--b) 35%, transparent);
+  box-shadow: 0 10px 24px -18px var(--a);
+}
+.dark .more-card {
+  background-color: var(--color-slate-900);
+  background-image:
+    radial-gradient(
+      120% 140% at 100% 100%,
+      color-mix(in srgb, var(--b) 45%, transparent),
+      transparent 60%
+    ),
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--a) 55%, var(--color-night-950)),
+      var(--color-slate-900) 75%
+    );
+  border-color: color-mix(in srgb, var(--b) 45%, var(--color-slate-800));
+}
+.more-icon {
+  background-image: linear-gradient(135deg, var(--b), var(--a));
+  box-shadow: 0 6px 16px -6px var(--b);
+}
+/* Sunlight card: a low sun behind a hill on the right */
+.more-sun {
+  background-color: #fff;
+  background-image:
+    linear-gradient(90deg, #fff 40%, transparent 75%),
+    radial-gradient(45% 140% at 80% 120%, #fde68a 0, #fdba74 22%, #fed7aa 40%, transparent 66%);
+}
+.dark .more-sun {
+  background-color: var(--color-slate-900);
+  background-image:
+    linear-gradient(90deg, var(--color-slate-900) 40%, transparent 75%),
+    radial-gradient(45% 140% at 80% 120%, #fbbf24 0, #f97316 20%, #7c2d12 42%, transparent 66%);
+}

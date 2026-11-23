@@ -73,6 +73,39 @@ const PATHS = {
       <path {...stroke} d="M12 7v7M9 11.5l3 3 3-3M10.5 18.5h3" />
     </>
   ),
+  calendar: (
+    <>
+      <rect {...stroke} x="4" y="5" width="16" height="15" rx="2.5" />
+      <path {...stroke} d="M4 10h16M9 3v4M15 3v4" />
+    </>
+  ),
+  teams: (
+    <>
+      <circle {...stroke} cx="9" cy="8" r="3" />
+      <path {...stroke} d="M3.5 19a5.5 5.5 0 0 1 11 0" />
+      <circle {...stroke} cx="17" cy="9" r="2.4" />
+      <path {...stroke} d="M15.5 14.3A4.5 4.5 0 0 1 21 19" />
+    </>
+  ),
+  qr: (
+    <>
+      <rect {...stroke} x="4" y="4" width="6" height="6" rx="1" />
+      <rect {...stroke} x="14" y="4" width="6" height="6" rx="1" />
+      <rect {...stroke} x="4" y="14" width="6" height="6" rx="1" />
+      <path {...stroke} d="M14 14h2v2h-2zM18 14h2M14 18h2v2M18 18h2v2" />
+    </>
+  ),
+  download: <path {...stroke} d="M12 4v11M7 10l5 5 5-5M5 20h14" />,
+  arrowRight: <path {...stroke} d="M5 12h14M13 6l6 6-6 6" />,
+  sun: (
+    <>
+      <circle {...stroke} cx="12" cy="12" r="4" />
+      <path
+        {...stroke}
+        d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+      />
+    </>
+  ),
 } satisfies Record<string, ReactNode>;
 
 export type IconName = keyof typeof PATHS;
