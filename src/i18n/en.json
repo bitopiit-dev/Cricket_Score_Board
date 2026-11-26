@@ -213,7 +213,8 @@
     "batterNotAvailable": "That batter cannot come in.",
     "bowlerNotEligible": "That bowler cannot bowl now.",
     "reviewsOff": "Reviews are not on for this match",
-    "noReviewLeft": "This team has no review left"
+    "noReviewLeft": "This team has no review left",
+    "matchLocked": "This match is finished and its score is locked."
   },
   "team": {
     "position": "{{pos}} place",
@@ -802,5 +803,14 @@
     "title": "TV scoreboard",
     "fullscreen": "Full screen",
     "scan": "Scan the QR code to follow the score on your phone"
+  },
+  "finish": {
+    "button": "Finish match",
+    "hint": "Locks the score: no more balls or undo. You can still choose the Man of the Match.",
+    "ask": "Finish this match and lock the score? Only a super admin can unlock it.",
+    "locked": "Match finished. The score is locked.",
+    "lockedAt": "Finished {{when}}",
+    "reopen": "Unlock the score",
+    "reopenAsk": "Unlock this match so the score can be changed?"
   }
 }

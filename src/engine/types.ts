@@ -182,6 +182,11 @@ export interface Match {
   fixtureId?: string;
   /** Player id of the Man of the Match, chosen by the scorer once the match is over. */
   manOfTheMatch?: string;
+  /**
+   * When the scorer tapped Finish match. The score is then locked: no balls,
+   * no undo. Only a super admin can unlock it (and the server checks that too).
+   */
+  finishedAt?: number;
 }
 
 /* ------------------------------- Derived state ------------------------------ */

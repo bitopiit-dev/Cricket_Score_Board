@@ -102,6 +102,14 @@ begin
     end if;
     -- The same copy sent again (a retry after a lost answer): nothing to do
     if new.data is not distinct from old.data then return old; end if;
+    -- A finished match (patch 7): only a super admin may change its score or
+    -- unlock it. A scorer may still choose the Man of the Match. A refused copy
+    -- gets 'stale_match', so the phone takes the server's locked copy.
+    if old.data ? 'finishedAt' and coalesce(public.my_role(), '') <> 'super'
+       and (new.data - 'manOfTheMatch' - 'updatedAt' - 'rev')
+           is distinct from (old.data - 'manOfTheMatch' - 'updatedAt' - 'rev') then
+      raise exception 'stale_match' using errcode = 'P0001', hint = old.rev::text;
+    end if;
     -- A newer revision always goes in
     if new.rev > old.rev then return new; end if;
     -- Rows and apps from before revisions: the old rule by time

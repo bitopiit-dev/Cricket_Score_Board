@@ -128,6 +128,14 @@ export function useCanScore(): boolean {
 /** The same check outside React (the match store). */
 export const mayScore = () => !supabase || canScore();
 
+/** Super admin only (or everyone without Supabase): may unlock a finished match. */
+export const mayUnlock = () => !supabase || state.role === 'super';
+
+export function useCanUnlock(): boolean {
+  const { role } = useAuth();
+  return !supabase || role === 'super';
+}
+
 export async function signIn(email: string, password: string): Promise<void> {
   if (!supabase) throw new Error('Not connected');
   const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });

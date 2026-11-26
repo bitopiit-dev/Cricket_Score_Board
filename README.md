@@ -221,6 +221,12 @@ Matches) but no longer counts for the result, points, NRR, stats or the live
 lists, and it can no longer be scored. The replay is scored as a new match on
 the new date. Fixture ids in `voidMatchIds` hold the set-aside matches.
 
+## Finishing a match (score lock)
+
+When a match is over, the scorer taps **Finish match** under the result and confirms. The score is then locked on every phone: no more balls, penalties or undo, and the result screen shows 🔒 with the time it was finished. The Man of the Match can still be chosen afterwards.
+
+Only a super admin can tap **Unlock the score** to correct a finished match, then finish it again. The server enforces the lock too: run `supabase/patch-7-finish-lock.sql` once in the SQL Editor. Until then the lock works in the app, but an older app version could still change a finished score.
+
 ## Media gallery
 
 **More → Media** (`#/media`) shows photo albums by season (BPL-2027, and any

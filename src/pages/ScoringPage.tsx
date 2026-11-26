@@ -25,7 +25,7 @@ import { KICK_PENALTY_RUNS } from '../engine/rules';
 import type { ExtraType } from '../engine/types';
 import { useFormat } from '../hooks/useFormat';
 import { useMatchStore } from '../store/matchStore';
-import { useCanScore } from '../sync/auth';
+import { useCanScore, useCanUnlock } from '../sync/auth';
 import { Icon } from '../components/common/icons';
 import { useShareMatch } from '../hooks/useShareMatch';
 import { MatchCenter } from '../components/match/MatchCenter';
@@ -44,6 +44,9 @@ export default function ScoringPage() {
   const { id } = useParams<{ id: string }>();
   const { match, state, notFound, lastError, load, dispatch, undo, clearError } = useMatchStore();
   const setManOfTheMatch = useMatchStore((s) => s.setManOfTheMatch);
+  const finishMatch = useMatchStore((s) => s.finish);
+  const reopenMatch = useMatchStore((s) => s.reopen);
+  const canUnlock = useCanUnlock();
   const [open, setOpen] = useState<Open>(null);
   /** The ball just recorded, shown briefly so the scorer can see it went in right. */
   const [done, setDone] = useState<{ key: number; text: string } | null>(null);
@@ -227,6 +230,8 @@ export default function ScoringPage() {
             state={state}
             onUndo={canScore ? undo : undefined}
             onPickMom={canScore ? setManOfTheMatch : undefined}
+            onFinish={canScore ? finishMatch : undefined}
+            onReopen={canScore && canUnlock ? reopenMatch : undefined}
           />
         )}
 

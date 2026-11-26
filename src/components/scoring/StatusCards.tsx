@@ -4,7 +4,9 @@ import { useFormat } from '../../hooks/useFormat';
 import { inningsLabel, resultText } from '../../utils/matchText';
 import { btn } from '../common/controls';
 import { manOfTheMatchId } from '../../engine/milestones';
+import { isMatchLocked } from '../../engine/scoring';
 import { ManOfTheMatchCard } from '../match/MatchCenter';
+import { usePrefs } from '../../store/prefsStore';
 import { suggestManOfTheMatch, type MomCandidate } from '../../tournament/momSuggest';
 
 function InningsLines({ match, state }: { match: Match; state: MatchState }) {
@@ -85,6 +87,8 @@ export function ResultCard({
   state,
   onUndo,
   onPickMom,
+  onFinish,
+  onReopen,
 }: {
   match: Match;
   state: MatchState;
@@ -92,10 +96,31 @@ export function ResultCard({
   onUndo?: () => void;
   /** Scorer only: choose (or clear, with null) the Man of the Match. */
   onPickMom?: (playerId: string | null) => void;
+  /** Scorer only: finish the match and lock the score. */
+  onFinish?: () => void;
+  /** Super admin only: unlock a finished match. */
+  onReopen?: () => void;
 }) {
   const { t } = useTranslation();
   const f = useFormat();
   const mom = manOfTheMatchId(match);
+  const locked = isMatchLocked(match);
+  const lang = usePrefs((s) => s.lang);
+  const bengaliDigits = usePrefs((s) => s.bengaliDigits);
+  // Dhaka time, like the rest of the tournament
+  const finishedText = locked
+    ? new Intl.DateTimeFormat(
+        lang === 'bn' ? (bengaliDigits ? 'bn-BD' : 'bn-BD-u-nu-latn') : 'en-GB',
+        {
+          timeZone: 'Asia/Dhaka',
+          day: 'numeric',
+          month: 'long',
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true,
+        },
+      ).format(match.finishedAt)
+    : '';
   return (
     <div className="flex flex-col gap-4 p-4">
       <h2 className="text-center text-sm font-semibold tracking-wide text-slate-500 dark:text-slate-400 uppercase">
@@ -131,10 +156,49 @@ export function ResultCard({
           <span className="text-xs text-slate-500 dark:text-slate-400">{t('mom.hint')}</span>
         </label>
       )}
-      {onUndo && (
-        <button type="button" className={btn.secondary} onClick={onUndo}>
-          ↶ {t('common.undoLast')}
-        </button>
+      {locked ? (
+        <div
+          role="status"
+          className="flex flex-col gap-2 rounded-2xl bg-emerald-50 p-3 text-emerald-900 ring-1 ring-emerald-600/30 dark:bg-emerald-950/40 dark:text-emerald-200"
+        >
+          <p className="font-semibold">🔒 {t('finish.locked')}</p>
+          <p className="text-sm">{t('finish.lockedAt', { when: finishedText })}</p>
+          {onReopen && (
+            <button
+              type="button"
+              className={btn.secondary}
+              onClick={() => {
+                if (confirm(t('finish.reopenAsk'))) onReopen();
+              }}
+            >
+              🔓 {t('finish.reopen')}
+            </button>
+          )}
+        </div>
+      ) : (
+        <>
+          {onFinish && (
+            <button
+              type="button"
+              className={`${btn.primary} text-lg`}
+              onClick={() => {
+                if (confirm(t('finish.ask'))) onFinish();
+              }}
+            >
+              ✅ {t('finish.button')}
+            </button>
+          )}
+          {onFinish && (
+            <p className="-mt-2 text-center text-xs text-slate-500 dark:text-slate-400">
+              {t('finish.hint')}
+            </p>
+          )}
+          {onUndo && (
+            <button type="button" className={btn.secondary} onClick={onUndo}>
+              ↶ {t('common.undoLast')}
+            </button>
+          )}
+        </>
       )}
     </div>
   );

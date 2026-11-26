@@ -401,7 +401,9 @@ export type ValidationError =
   | 'batterNotAvailable'
   | 'bowlerNotEligible'
   | 'reviewsOff'
-  | 'noReviewLeft';
+  | 'noReviewLeft'
+  /** The scorer finished the match: the score is locked. */
+  | 'matchLocked';
 
 /** Returns why `input` cannot be applied in `state`, or null if it can. */
 export function validateEvent(
@@ -501,6 +503,7 @@ export function addEvent(
   input: MatchEventInput,
   meta: { id: string; at: number },
 ): { match: Match } | { error: ValidationError } {
+  if (isMatchLocked(match)) return { error: 'matchLocked' };
   const error = validateEvent(match, deriveMatchState(match), input);
   if (error) return { error };
   const event = { ...input, ...meta } as MatchEvent;
@@ -516,7 +519,7 @@ export function addEvent(
 
 /** Removes the most recent event. */
 export function undoLastEvent(match: Match, at: number): Match {
-  if (match.events.length === 0) return match;
+  if (match.events.length === 0 || isMatchLocked(match)) return match;
   return {
     ...match,
     events: match.events.slice(0, -1),
@@ -538,5 +541,27 @@ export function setManOfTheMatch(match: Match, playerId: string | null, at: numb
   const next: Match = { ...match, updatedAt: at, rev: (match.rev ?? 0) + 1 };
   if (playerId === null) delete next.manOfTheMatch;
   else next.manOfTheMatch = playerId;
+  return next;
+}
+
+/** The scorer has finished the match, so its score can't change. */
+export function isMatchLocked(match: Match): boolean {
+  return typeof match.finishedAt === 'number';
+}
+
+/**
+ * Finishes the match and locks its score. Only a match with a result can be
+ * finished. Counts as a change like a ball, so the lock syncs to every phone.
+ */
+export function finishMatch(match: Match, at: number): Match {
+  if (isMatchLocked(match) || deriveMatchState(match).phase !== 'completed') return match;
+  return { ...match, finishedAt: at, updatedAt: at, rev: (match.rev ?? 0) + 1 };
+}
+
+/** Super admin only: unlocks a finished match so its score can be corrected. */
+export function reopenMatch(match: Match, at: number): Match {
+  if (!isMatchLocked(match)) return match;
+  const next: Match = { ...match, updatedAt: at, rev: (match.rev ?? 0) + 1 };
+  delete next.finishedAt;
   return next;
 }

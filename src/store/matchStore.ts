@@ -3,12 +3,14 @@ import { matchRepository } from '../db/repository';
 import {
   addEvent,
   deriveMatchState,
+  finishMatch,
+  reopenMatch,
   setManOfTheMatch,
   undoLastEvent,
   type ValidationError,
 } from '../engine/scoring';
 import type { Match, MatchEventInput, MatchState } from '../engine/types';
-import { canScore, mayScore } from '../sync/auth';
+import { canScore, mayScore, mayUnlock } from '../sync/auth';
 import { compareCopies, MATCH_CONFLICT, MATCHES_CHANGED } from '../sync/matchSync';
 import { newId } from '../utils/id';
 
@@ -24,6 +26,10 @@ interface MatchStore {
   undo: () => void;
   /** Scorer only: picks (or clears) the Man of the Match. */
   setManOfTheMatch: (playerId: string | null) => void;
+  /** Scorer: finishes the match and locks its score. */
+  finish: () => void;
+  /** Super admin: unlocks a finished match. */
+  reopen: () => void;
   clearError: () => void;
 }
 
@@ -79,6 +85,24 @@ export const useMatchStore = create<MatchStore>((set, get) => ({
     const { match } = get();
     if (!match || !mayScore()) return;
     const next = setManOfTheMatch(match, playerId, Date.now());
+    if (next === match) return;
+    set({ match: next, state: deriveMatchState(next) });
+    persist(next);
+  },
+
+  finish() {
+    const { match } = get();
+    if (!match || !mayScore()) return;
+    const next = finishMatch(match, Date.now());
+    if (next === match) return;
+    set({ match: next, state: deriveMatchState(next) });
+    persist(next);
+  },
+
+  reopen() {
+    const { match } = get();
+    if (!match || !mayUnlock()) return;
+    const next = reopenMatch(match, Date.now());
     if (next === match) return;
     set({ match: next, state: deriveMatchState(next) });
     persist(next);
