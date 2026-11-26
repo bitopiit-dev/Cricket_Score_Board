@@ -678,7 +678,13 @@
     "short": "MoM",
     "pick": "Choose the Man of the Match",
     "none": "Not chosen yet",
-    "hint": "Shown to everyone following the match."
+    "hint": "Shown to everyone following the match.",
+    "orPick": "Or choose anyone",
+    "suggestedWinner": "Best performers from the winning team",
+    "suggestedBoth": "Best performers from both teams",
+    "points": "{{n}} pts",
+    "chosen": "Chosen",
+    "basis": "Ranked by this match: 1 point per run, 20 per wicket, 10 per catch, stumping, run out or maiden. Tap to choose; tap again to clear."
   },
   "favorite": {
     "add": "Make favourite",

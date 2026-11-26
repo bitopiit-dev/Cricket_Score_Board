@@ -5,6 +5,7 @@ import { inningsLabel, resultText } from '../../utils/matchText';
 import { btn } from '../common/controls';
 import { manOfTheMatchId } from '../../engine/milestones';
 import { ManOfTheMatchCard } from '../match/MatchCenter';
+import { suggestManOfTheMatch, type MomCandidate } from '../../tournament/momSuggest';
 
 function InningsLines({ match, state }: { match: Match; state: MatchState }) {
   const { t } = useTranslation();
@@ -107,9 +108,10 @@ export function ResultCard({
       )}
       <InningsLines match={match} state={state} />
       <ManOfTheMatchCard match={match} state={state} />
+      {onPickMom && <MomSuggestions match={match} state={state} mom={mom} onPick={onPickMom} />}
       {onPickMom && (
         <label className="flex flex-col gap-1.5 rounded-2xl bg-white p-3 shadow-sm dark:bg-slate-900">
-          <span className="text-sm font-semibold">🏅 {t('mom.pick')}</span>
+          <span className="text-sm font-semibold">🏅 {t('mom.orPick')}</span>
           <select
             value={mom ?? ''}
             onChange={(e) => onPickMom(e.target.value || null)}
@@ -170,5 +172,90 @@ export function SuperOverBreakCard({
         </button>
       )}
     </div>
+  );
+}
+
+/** Scorer only: the best performers of the match, one tap to choose. */
+function MomSuggestions({
+  match,
+  state,
+  mom,
+  onPick,
+}: {
+  match: Match;
+  state: MatchState;
+  mom: string | null;
+  onPick: (playerId: string | null) => void;
+}) {
+  const { t } = useTranslation();
+  const f = useFormat();
+  const list = suggestManOfTheMatch(match, state);
+  if (list.length === 0) return null;
+  const won = state.result?.kind === 'won';
+
+  const figures = (c: MomCandidate) => {
+    const parts: string[] = [];
+    if (c.batted) parts.push(`🏏 ${f.num(c.runs)}${c.notOut ? '*' : ''} (${f.num(c.balls)})`);
+    if (c.legalBalls > 0)
+      parts.push(`● ${f.num(c.wickets)}/${f.num(c.runsConceded)} (${f.overs(c.legalBalls)})`);
+    if (c.fielding > 0) parts.push(`🧤 ${f.num(c.fielding)}`);
+    return parts.join(' · ');
+  };
+
+  return (
+    <section
+      aria-labelledby="mom-suggest"
+      className="flex flex-col gap-2 rounded-2xl bg-white p-3 shadow-sm dark:bg-slate-900"
+    >
+      <h3 id="mom-suggest" className="text-sm font-semibold">
+        🏅 {t(won ? 'mom.suggestedWinner' : 'mom.suggestedBoth')}
+      </h3>
+      <ul className="flex flex-col gap-2">
+        {list.map((c, i) => {
+          const chosen = mom === c.playerId;
+          return (
+            <li key={c.playerId}>
+              <button
+                type="button"
+                aria-pressed={chosen}
+                onClick={() => onPick(chosen ? null : c.playerId)}
+                className={`flex min-h-14 w-full items-center gap-3 rounded-xl border px-3 py-2 text-left ${
+                  chosen
+                    ? 'border-bpl-yellow bg-bpl-yellow/15 ring-2 ring-bpl-yellow'
+                    : 'border-slate-200 dark:border-slate-700'
+                }`}
+              >
+                <span
+                  aria-hidden
+                  className={`flex size-8 shrink-0 items-center justify-center rounded-full font-bold ${
+                    i === 0 ? 'bg-bpl-yellow text-night-950' : 'bg-slate-100 dark:bg-slate-800'
+                  }`}
+                >
+                  {f.num(i + 1)}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate font-semibold">
+                    {c.name}
+                    {!won && (
+                      <span className="font-normal text-slate-500 dark:text-slate-400">
+                        {' '}
+                        ({match.teams[c.team].name})
+                      </span>
+                    )}
+                  </span>
+                  <span className="tabular block truncate text-sm text-slate-600 dark:text-slate-300">
+                    {figures(c)}
+                  </span>
+                </span>
+                <span className="tabular shrink-0 text-right text-sm font-bold">
+                  {chosen ? `✓ ${t('mom.chosen')}` : t('mom.points', { n: f.num(c.points) })}
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+      <p className="text-xs text-slate-500 dark:text-slate-400">{t('mom.basis')}</p>
+    </section>
   );
 }
